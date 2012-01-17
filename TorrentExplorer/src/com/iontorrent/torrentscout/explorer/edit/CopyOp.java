@@ -1,0 +1,40 @@
+/*
+ * Copyright (C) 2011 Life Technologies Inc.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package com.iontorrent.torrentscout.explorer.edit;
+
+import com.iontorrent.rawdataaccess.wells.BitMask;
+import javax.swing.JOptionPane;
+
+/**
+ *
+ * @author Chantal Roth 
+ * chantal.roth@lifetech.com
+ */
+public class CopyOp extends AbstractOperation{
+    
+    public CopyOp( ) {
+        super("Copy", "Copy mask");        
+        nrargs = 1;
+    }
+
+    @Override
+    public boolean execute(BitMask m1, BitMask unused, BitMask m3) {        
+        boolean res= m3.copyFrom(m1);       
+        return res;
+    }   
+    
+}

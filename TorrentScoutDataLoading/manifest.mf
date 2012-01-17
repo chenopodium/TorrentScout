@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: com.iontorrent.dataloading
+OpenIDE-Module-Localizing-Bundle: com/iontorrent/dataloading/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

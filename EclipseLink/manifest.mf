@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: com.iontorrent.eclipselink
+OpenIDE-Module-Localizing-Bundle: com/iontorrent/eclipselink/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

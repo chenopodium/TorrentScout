@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: com.iontorrent.utils
+OpenIDE-Module-Localizing-Bundle: com/iontorrent/utils/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

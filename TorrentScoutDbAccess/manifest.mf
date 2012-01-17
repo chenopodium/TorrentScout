@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: org.iontorrent.scout.dbaccess
+OpenIDE-Module-Localizing-Bundle: org/iontorrent/scout/dbaccess/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

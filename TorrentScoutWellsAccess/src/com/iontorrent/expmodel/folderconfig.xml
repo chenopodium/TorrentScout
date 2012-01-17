@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+    Document   : folderconfig.xml
+    Created on : 11. April 2011, 08:25
+    Author     : Chantal Roth
+    Description:
+        Purpose of the document follows.
+-->
+<folderconfig-config>
+     <version>1.6</version>
+    
+     <offline>
+        <name>Offline (no DB)</name>
+        <os></os>
+        <server></server>
+        <raw_rule>/results6/</raw_rule>
+        <cache_rule>/tmp/</cache_rule>
+        <results_rule>/output/</results_rule>
+        <default_base_dir>0</default_base_dir>
+         <base_directories>                 
+         </base_directories>
+    </offline>
+    
+     <localhost>
+        <name>Windows Local PC</name>
+        <os>windows</os>
+        <server>localhost:5432/iondb</server>
+        <raw_rule>${BASE}/raw</raw_rule>
+        <cache_rule>${BASE}/cache</cache_rule>
+        <results_rule>${BASE}/results</results_rule>
+        <default_base_dir>0</default_base_dir>
+         <base_directories>        
+         C:/data/
+         </base_directories>
+    </localhost>      
+    
+    <ioneast>
+        <name>Unix Some Server</name>
+        <os>unix</os>
+        <server>some.server.com:5432/iondb</server>
+        <raw_rule>/${EXP_DIR}</raw_rule>
+        <cache_rule>~/torrentscout/${RESULT_NAME}</cache_rule>
+        <results_rule>/${RESULT_DIR}</results_rule>
+        <default_base_dir>0</default_base_dir>
+        <base_directories> /net/some.drive4/c/results        
+        /net/some.drive1/c/results         /net/some.drive3/c/results  
+        /net/some.drive2/c/results         
+        </base_directories>
+        <fstab>
+some.drive1:/results       /results1       nfs     defaults        0 0
+some.drive2:/results       /results2       nfs     defaults        0 0
+some.drive3:/results       /results6       nfs     defaults        0 0
+some.drive4:/results       /results7       nfs     defaults        0 0
+        </fstab>        
+    </ioneast>
+    
+    <wioneast>
+        <name>Windows Some Server</name>
+        <os>windows</os>
+        <server>some.server.com:5432/iondb</server>
+        <raw_rule>${BASE}\results\${PGM_NAME}\${EXP_NAME}</raw_rule>
+        <cache_rule>C:\tmp\${RESULT_NAME}</cache_rule>
+        <results_rule>${BASE}\results\analysis\output\Home\${RESULT_NAME}</results_rule>
+        <default_base_dir>1</default_base_dir>        
+        <base_directories>\\some.drive1 \\some.drive2 \\some.drive3 \\some.drive4
+ </base_directories>
+        <isdefault>false</isdefault>
+        <fstab>
+some.drive1:/results       /results1       nfs     defaults        0 0
+some.drive2:/results       /results2       nfs     defaults        0 0
+some.drive3:/results       /results6       nfs     defaults        0 0
+some.drive4:/results       /results7       nfs     defaults        0 0
+        </fstab>
+</wioneast>
+
+</folderconfig-config>

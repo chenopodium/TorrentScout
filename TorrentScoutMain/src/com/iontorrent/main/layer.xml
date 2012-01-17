@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+   
+    <folder name="Loaders">
+        <folder name="binary">
+            <folder name="dat">
+                <folder name="Actions">
+                    <file name="org-openide-actions-CopyAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CopyAction.instance"/>
+                        <attr name="position" intvalue="300"/>
+                    </file>
+                    <file name="org-openide-actions-CutAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CutAction.instance"/>
+                        <attr name="position" intvalue="200"/>
+                    </file>
+                    <file name="org-openide-actions-DeleteAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-DeleteAction.instance"/>
+                        <attr name="position" intvalue="500"/>
+                    </file>
+                    <file name="org-openide-actions-FileSystemAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-FileSystemAction.instance"/>
+                        <attr name="position" intvalue="1000"/>
+                    </file>
+                    <file name="org-openide-actions-PropertiesAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-PropertiesAction.instance"/>
+                        <attr name="position" intvalue="1300"/>
+                    </file>
+                    <file name="org-openide-actions-RenameAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-RenameAction.instance"/>
+                        <attr name="position" intvalue="600"/>
+                    </file>
+                    <file name="org-openide-actions-SaveAsTemplateAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAsTemplateAction.instance"/>
+                        <attr name="position" intvalue="800"/>
+                    </file>
+                    <file name="org-openide-actions-ToolsAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-ToolsAction.instance"/>
+                        <attr name="position" intvalue="1200"/>
+                    </file>
+                    <file name="sep-1.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="100"/>
+                    </file>
+                    <file name="sep-2.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="400"/>
+                    </file>
+                    <file name="sep-3.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="700"/>
+                    </file>
+                    <file name="sep-4.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="900"/>
+                    </file>
+                    <file name="sep-5.instance">
+                        <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                        <attr name="position" intvalue="1100"/>
+                    </file>
+                </folder>
+                <folder name="Factories">
+                    <file name="RawDataLoader.instance">
+                        <attr name="SystemFileSystem.icon" urlvalue="nbresloc:/com/iontorrent/main/data/office-chart-area.png"/>
+                        <attr name="dataObjectClass" stringvalue="com.iontorrent.main.data.RawDataObject"/>
+                        <attr name="instanceCreate" methodvalue="org.openide.loaders.DataLoaderPool.factory"/>
+                        <attr name="mimeType" stringvalue="binary/dat"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <file name="Edit_hidden"/>
+        <folder name="Tools">
+            <file name="LibrariesCustomizerAction.shadow_hidden"/>
+            <file name="ServerManagerAction3.shadow_hidden"/>
+            <file name="VariablesCustomizerAction.shadow_hidden"/>
+            <file name="org-netbeans-modules-favorites-templates-TemplatesAction.shadow_hidden"/>
+        </folder>
+    </folder>
+    <folder name="Services">
+        <folder name="MIMEResolver">
+            <file name="RawResolver.xml" url="RawResolver.xml">
+                <attr name="displayName" bundlevalue="com.iontorrent.main.Bundle#Services/MIMEResolver/RawResolver.xml"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Templates">
+        <folder name="Other">
+            <file name="RawTemplate.dat" url="RawTemplate.dat">
+                <attr name="displayName" bundlevalue="com.iontorrent.main.Bundle#Templates/Other/RawTemplate.dat"/>
+                <attr name="template" boolvalue="true"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Toolbars">
+        <file name="Build_hidden"/>
+        <file name="Debug_hidden"/>
+        <folder name="File">
+            <file name="com-iontorrent-scout-actions-CheckFolderAction.shadow_hidden"/>
+        </folder>
+        <file name="UndoRedo_hidden"/>
+    </folder>
+    <folder name="Windows2">       
+        <folder name="Modes">   
+         <file name="table_mode.wsmode">          
+ <![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mode PUBLIC
+          "-//NetBeans//DTD Mode Properties 2.0//EN"
+          "http://www.netbeans.org/dtds/mode-properties2_0.dtd">
+
+<mode version="2.0">
+    <name unique="table_mode" />
+    <kind type="view" />
+    <state type="joined" />
+    <constraints>
+        <path orientation="vertical" number="80" weight="0.3" />
+    <!--    <path orientation="horizontal" number="20" weight="1.0" /> -->
+    </constraints>
+    <empty-behavior permanent="true" />
+</mode>
+]]>          
+          </file>
+          <file name="ionogram_mode.wsmode">
+              <![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mode PUBLIC
+          "-//NetBeans//DTD Mode Properties 2.0//EN"
+          "http://www.netbeans.org/dtds/mode-properties2_0.dtd">
+
+<mode version="2.0">
+    <name unique="ionogram_mode" />
+    <kind type="view" />
+    <state type="joined" />
+    <constraints>
+        <path orientation="vertical" number="70" weight="0.2" />
+       <!-- <path orientation="horizontal" number="20" weight="1.0" /> -->
+    </constraints>    
+    <empty-behavior permanent="true" />
+</mode>
+]]>
+              </file>
+              
+          <file name="top_left.wsmode">          
+ <![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mode PUBLIC
+          "-//NetBeans//DTD Mode Properties 2.0//EN"
+          "http://www.netbeans.org/dtds/mode-properties2_0.dtd">
+
+<mode version="2.0">
+    <name unique="top_left" />
+    <kind type="view" />
+    <state type="joined" />
+    <constraints>
+        <path orientation="horizontal" number="20" weight="0.3" />
+        <path orientation="vertical" number="20" weight="0.6" />
+    </constraints>
+    <relative-bounds x="10" y="24" width="23" height="60" />
+    <empty-behavior permanent="true" />
+</mode>
+]]>          
+          </file>
+         
+         
+           <file name="left_editor_mode.wsmode">          
+ <![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mode PUBLIC
+          "-//NetBeans//DTD Mode Properties 2.0//EN"
+          "http://www.netbeans.org/dtds/mode-properties2_0.dtd">
+
+<mode version="2.0">
+    <name unique="left_editor_mode" />
+    <kind type="editor" />
+    <state type="joined" />
+    <constraints>        
+        <path orientation="horizontal" number="0" weight="0.5" />
+    </constraints>
+    <empty-behavior permanent="true" />
+</mode>
+]]>          
+          </file>
+           <file name="right_editor_mode.wsmode">          
+ <![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mode PUBLIC
+          "-//NetBeans//DTD Mode Properties 2.0//EN"
+          "http://www.netbeans.org/dtds/mode-properties2_0.dtd">
+
+<mode version="2.0">
+    <name unique="right_editor_mode" />
+    <kind type="editor" />
+    <state type="joined" />
+    <constraints>        
+        <path orientation="horizontal" number="50" weight="0.5" />
+    </constraints>
+    <empty-behavior permanent="true" />
+</mode>
+]]>          
+          </file>
+          
+           <file name="output.wsmode">          
+ <![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mode PUBLIC
+          "-//NetBeans//DTD Mode Properties 2.0//EN"
+          "http://www.netbeans.org/dtds/mode-properties2_0.dtd">
+
+<mode version="2.0">
+    <name unique="output" />
+    <kind type="view" />
+    <state type="separated" />
+    <constraints>
+        <path orientation="horizontal" number="20" weight="0.3" />
+        <path orientation="vertical" number="20" weight="0.6" />
+    </constraints>
+    <relative-bounds x="10" y="24" width="60" height="60" />
+    <empty-behavior permanent="true" />
+</mode>
+]]>          
+          </file>
+           <folder name="ionogram_mode">
+            </folder>   
+          <folder name="table_mode">
+            </folder>
+                 
+            <folder name="top_left">
+            </folder>
+            <folder name="left_editor_mode">
+            </folder>
+            <folder name="right_editor_mode">
+            </folder>
+         </folder>
+    </folder>
+</filesystem>

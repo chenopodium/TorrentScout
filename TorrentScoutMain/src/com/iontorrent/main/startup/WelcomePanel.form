@@ -1,0 +1,47 @@
+<?xml version="1.1" encoding="UTF-8" ?>
+
+<Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Component id="jScrollPane1" alignment="0" pref="600" max="32767" attributes="0"/>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Component id="jScrollPane1" alignment="0" pref="543" max="32767" attributes="0"/>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+      <AuxValues>
+        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+      </AuxValues>
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Component class="javax.swing.JEditorPane" name="jEditorPane1">
+          <Properties>
+            <Property name="contentType" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="com/iontorrent/main/startup/Bundle.properties" key="WelcomePanel.jEditorPane1.contentType" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="&lt;html&gt;&#xd;&#xa;  &lt;head&gt;&#xd;&#xa;&#xd;&#xa;  &lt;/head&gt;&#xd;&#xa;  &lt;body&gt;&#xd;&#xa;  &#xa;      &#xd;&lt;h1&gt;Welcome to TorrentScout!&lt;/h1&gt;&#xa;&lt;p&gt;&#xa;The first time you use this tool, there are a few things to check: in the following settings panel, make sure that the rules to access the &lt;b&gt;raw, results and cache directories&lt;/b&gt; make sense, and that you select a &lt;b&gt;torrent server&lt;/b&gt; that has a database (it is not required, but would be nice :-).&lt;/p&gt;&#xa;&lt;p&gt;&#xa;And here a hint of how to get started:&#xa;&lt;ul&gt;&#xa;&lt;li&gt;Select the &lt;b&gt;ExperimentViewer&lt;/b&gt; component and select an experiment and &lt;b&gt;result&lt;/b&gt;&#xa;(this will set the context to the directories etc)&#xa;&lt;li&gt;Next, select the MaskView component. If the file path looks ok, click refresh to load the data.&#xa;&lt;li&gt;Pick a small area of the chip, and then you should see a table with the selected wells&#xa;&lt;li&gt;Pick a row in the table to view further details&#xa;&lt;li&gt;&lt;font color=&apos;aa0000&apos;&gt;&lt;b&gt;Now the tool will probalby index an .sff file which may take a minute &lt;b&gt;&lt;/font&gt;&#xa;&lt;li&gt;If you also want to view raw data, the tool will have to &lt;b&gt;convert the raw data files&lt;/b&gt; to a format that allows &lt;b&gt;fast access&lt;/b&gt;. &#xa;You will see a table where you can select &lt;b&gt;how many flows you wish to convert&lt;/b&gt;.&#xa;&lt;font color=&apos;aa0000&apos;&gt;The conversion might take a few minutes&lt;/font&gt;&lt;br&gt;&#xa; After this conversion is done, you will be able to view the raw data. This happens for every new experiment you look at.&#xa;&lt;/ul&gt;&#xa;&lt;/p&gt;&#xa;&#xa;And here a few more tips:&#xa;&lt;ul&gt;&#xa;&lt;li&gt;You can select the window position by &lt;b&gt;right clicking on the title bar of the window and selecting the location&lt;/b&gt;&#xa;&lt;li&gt;You can also move windows around  by &lt;b&gt;dragging the window&lt;/b&gt;&#xa;&lt;li&gt;If you can&apos;t see a component or have closed it, go to Menu &lt;b&gt;window&lt;/b&gt; and select it again.&#xa;&lt;/ul&gt;&#xa;  &#xa;  &lt;/body&gt;&#xd;&#xa;&lt;/html&gt;&#xd;&#xa;" noResource="true"/>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+  </SubComponents>
+</Form>

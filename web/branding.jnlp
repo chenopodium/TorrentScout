@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE jnlp PUBLIC "-//Sun Microsystems, Inc//DTD JNLP Descriptor 6.0//EN" "http://java.sun.com/dtd/JNLP-6.0.dtd">
+<jnlp spec="1.0+" codebase="$$codebase">
+  <information>
+      <title>${app.title}</title>
+      <vendor>IonTorrent</vendor>
+      <description>${app.name} application</description>
+      <icon href="chip.png"/>
+	   <offline-allowed/> 
+	   <shortcut online="true">
+      <desktop/>
+      <menu submenu="${app.title}"/>
+	  </shortcut>
+  </information>
+  ${jnlp.permissions}
+  <resources>
+    ${jnlp.branding.jars}
+  </resources>
+  <component-desc/>
+</jnlp>

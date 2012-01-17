@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.0+" codebase="$$codebase" href="master.jnlp">
+  <information>
+      <title>${app.title}</title>
+      <vendor>IonTorrent</vendor>
+      <description>${app.name} application</description>
+       <icon href="chip.png"/>
+	  <icon href="chip_32.png" height="32" width="32"/> 
+	  <icon href="chip_48.png" height="48" width="48"/> 
+	  <icon href="chip_64.png" height="64" width="64"/> 
+	  <icon href="chip_128.png" height="128" width="128"/> 
+	  <icon href="chip_256.png" height="256" width="256"/> 
+	  <offline-allowed/> 
+	   <shortcut online="true">
+      <desktop/>
+      <menu submenu="${app.title}"/>
+	  </shortcut>
+  </information>
+  <security><all-permissions/></security>
+  <resources>
+    <!-- The following property is needed when running with unsigned jars: -->
+    <property name="netbeans.jnlp.fixPolicy" value="${netbeans.jnlp.fixPolicy}"/>
+    <property name="version" value="1.6"/>
+    <property name="release" value="iontorrent"/>
+    <property name="properties" value="$$properties"/>
+    <property name="run_name" value="$$properties"/>
+    <property name="codebase" value="$$codebase"/>
+    <extension name='branding' href='branding.jnlp' />
+<!-- The following line will be replaced with an automatically generated list of resources: -->
+<!--${jnlp.resources}-->
+  </resources>
+  <resources os="Mac OS X">
+      <property name="netbeans.user" value="${user.home}/Library/Application Support/${app.name}"/>
+  </resources>
+  <application-desc>
+    <argument>--branding</argument>
+    <argument>${branding.token}</argument>
+  </application-desc>
+  <update check="timeout" policy="always"/> 
+</jnlp>
