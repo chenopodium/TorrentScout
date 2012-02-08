@@ -502,7 +502,10 @@ public class HistoStatistics {
         //	p("value: "+value+" -> bucket:"+counter+", bucketvalue: "+bucketvalue);
         return bucketvalue;
     }
-
+ public double computeCumulativeProbabilityForBuckets(int ba, int bb) {
+     return computeCumulativeProbability(this.getBucketXValue(ba), this.getBucketXValue(bb));
+ }
+    
     /** compute the cumulative prob from a to 
      * 
      */

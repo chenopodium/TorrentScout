@@ -60,8 +60,8 @@ import org.openide.util.LookupListener;
 autostore = false)
 @TopComponent.Description(preferredID = "TorrentScoutIonogramTopComponent",
 iconBase = "com/iontorrent/ionogram/insert-chart-bar.png",
-persistenceType = TopComponent.PERSISTENCE_ALWAYS)
-@TopComponent.Registration(mode = "ionogram_mode", openAtStartup = true)
+persistenceType = TopComponent.PERSISTENCE_NEVER)
+@TopComponent.Registration(mode = "ionogram_mode", openAtStartup = false)
 @ActionID(category = "Window", id = "com.iontorrent.ionogram.TorrentScoutIonogramTopComponent")
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
 @TopComponent.OpenActionRegistration(displayName = "#CTL_TorrentScoutIonogramAction",

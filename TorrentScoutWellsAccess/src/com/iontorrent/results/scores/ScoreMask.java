@@ -323,8 +323,8 @@ public class ScoreMask {
     }
 
     private void p(String msg) {
-        System.out.println(ScoreMask.class.getName() + ":" + msg);
-        Logger.getLogger(ScoreMask.class.getName()).log(Level.INFO, msg);
+    //    System.out.println(ScoreMask.class.getName() + ":" + msg);
+   //     Logger.getLogger(ScoreMask.class.getName()).log(Level.INFO, msg);
     }
 //
 //    public ScoreMaskDataPoint[][] getData() {

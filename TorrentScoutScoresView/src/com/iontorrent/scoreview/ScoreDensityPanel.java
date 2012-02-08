@@ -55,6 +55,7 @@ public class ScoreDensityPanel extends GeneralDensityPanel implements WellModel 
     int max;
     public ScoreDensityPanel( ExperimentContext exp) {
         super(exp);
+        this.setNrWidgets(3);
     }
 
     @Override

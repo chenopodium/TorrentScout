@@ -20,17 +20,19 @@
  */
 package com.iontorrent.guiutils;
 
+import java.awt.AWTException;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.Image;
+import java.awt.SystemTray;
 import java.awt.Toolkit;
+import java.awt.TrayIcon;
+import java.awt.TrayIcon.MessageType;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.net.URL;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
@@ -43,7 +45,7 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
-import org.openide.windows.WindowManager;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -54,23 +56,40 @@ public class GuiUtils {
     static final String IMG_INFO1 = "dialog-information-4.png";
     static final String IMG_INFO2 = "dialog-information.png";
 
+    static int dy = 0;
     public GuiUtils() {
     }
 
     public static void showNonModalMsg(String msg) {
         showNonModalMsg(msg, false);
     }
-
+    public static void showNonModalMsg(String msg, String title) {
+        showNonModelMsg(title,  msg, false, 5);
+    }
     public static void showNonModalMsg(String msg, int secs) {
-        showNonModelMsg(msg, msg, false, secs);
+        showNonModelMsg("Information", msg, false, secs);
     }
 
     public static void showNonModalMsg(String msg, boolean lbl) {
-        showNonModelMsg(msg, msg, lbl, 3);
+        showNonModelMsg("Information", msg, lbl, 3);
     }
 
     public static void showNonModalMsg(String msg, boolean lbl, int secs) {
-        showNonModelMsg(msg, msg, lbl, secs);
+        showNonModelMsg("Information", msg, lbl, secs);
+    }
+
+    public static void showSystemTray(String msg, String title) {
+        SystemTray tray = SystemTray.getSystemTray();
+        Image image = Toolkit.getDefaultToolkit().getImage("tray.gif");
+        TrayIcon trayIcon = new TrayIcon(image, "Tray Demo");
+
+        try {
+            tray.add(trayIcon);
+        } catch (AWTException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
+        trayIcon.displayMessage(title, msg, MessageType.INFO);
     }
 
     public static JFrame showNonModalProgress(ProgressHandle handle) {
@@ -108,6 +127,9 @@ public class GuiUtils {
     }
 
     public static JFrame showNonModalDialog(String msg, String title) {
+        if (msg.indexOf("<br>")>0 && !msg.startsWith("<html>")) {
+            msg = "<html>"+msg+"</html>";
+        }
         return showNonModalDialog(new JLabel(msg), title);
     }
 
@@ -179,49 +201,26 @@ public class GuiUtils {
         return msgframe;
     }
 
+    public static void showNonModelMsg(String title, String msg) {
+        showNonModelMsg(title, msg, false, 5);
+    }
+
     public static void showNonModelMsg(String title, String msg, boolean lbl, int secs) {
-        JLabel label;
-        final JFrame f = new JFrame();
-        URL u = GuiUtils.class.getResource(IMG_INFO2);
-        if (u != null) {
-            f.setIconImage(new ImageIcon(u).getImage());
-        }
-        label = new JLabel(msg);
-        if (lbl) {
-            f.getContentPane().add(label);
-        }
-        f.setTitle(title);
-        p(msg);
-
-        int w = Math.max(title.length() * 15, 300);
-        int h = 28;
-        if (lbl) {
-            h = 80;
-        }
-        setMiddleAndShow(f, w, h);
-        if (lbl) {
-            label.paintImmediately(0, 0, w, h);
-        }
-        f.repaint();
-//Must schedule the close before the dialog becomes visible
-        ScheduledExecutorService s = Executors.newSingleThreadScheduledExecutor();
-        s.schedule(new Runnable() {
-
-            public void run() {
-                f.setVisible(false); //should be invoked on the EDT
-                f.dispose();
-            }
-        }, secs, TimeUnit.SECONDS);
+        p(title+":"+msg);
+        new Splash(title, msg, secs);
 
     }
 
     private static void setMiddleAndShow(Frame f, int w, int h) {
         int x = (int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2);
         int y = (int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2);
-        y = Math.max(0, y - h / 2);
+        y = Math.max(0, y - h / 2+dy);
         x = Math.max(0, x - w / 2);
         f.setLocation(x, y);
         f.setSize(w, h);
+        dy += h;
+        if (dy> 400 || dy+h >Toolkit.getDefaultToolkit().getScreenSize().getHeight() ) dy = 0;
+
         f.setVisible(true);
         f.setAlwaysOnTop(true);
         f.toFront();

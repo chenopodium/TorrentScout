@@ -228,40 +228,76 @@ public final class ExperimentViewerTopComponent extends TopComponent implements 
             dirs = dirs.replace(" ", "<br>");
             GuiUtils.showNonModelMsg("Locating data (Checking multiple drives...)", "<html>Checking:<br>" + dirs + "</html>", true, 50);
         }
-        p("First clear all old experimental data!");
+        //  p("First clear all old experimental data!");
         clearOldData(exp);
 
         context.setExperimentContext(exp, true);
         if (!arePathsForExpOk()) {
             return false;
         }
-        p("Checking for composite experiment: " + exp.getChipType());
+        p("Checking for Proton: " + exp.getChipType());
         if (exp.isChipBB() && !exp.isThumbnails() && !exp.isBlock()) {
             p("Composite: parsing blocks");
             comp = new CompositeExperiment(exp);
             comp.maybParseBlocks();
-            p("Got blocks: " + comp.getBlocks());
+            //  p("Got blocks: " + comp.getBlocks());
             p("Publishing CompositeExperiment");
             LookupUtils.publish(compContent, comp);
             // check for thumbnails            
-            TopComponent tc = (TopComponent) WindowManager.getDefault().findTopComponent("TorrentScoutCompositeViewTopComponent");
-            GuiUtils.showNonModalMsg("Loading whole image view for " + exp.getResultsDirectory());
-            if (tc != null) {
-                tc.requestActive();
-                tc.requestVisible();
-                tc.requestAttention(true);
-            }
-//            if (!exp.isThumbnails())  {
-//                exp = comp.getThumbnailsContext();
-//                context.setExperimentContext(exp, false);
-//            }
 
         }
         if (exp != null) {
             justPublishExp(exp);
         }
-
+        afterExperimentOpened(exp);
         return false;
+    }
+
+    public static void afterExperimentOpened(ExperimentContext exp) {
+        TopComponent tc = null;
+        if (exp.doesExplogHaveBlocks()) {
+            tc = (TopComponent) WindowManager.getDefault().findTopComponent("TorrentScoutCompositeViewTopComponent");
+        } else {
+            if (exp.hasBam()) {
+                tc = (TopComponent) WindowManager.getDefault().findTopComponent("TorrentScoutMaskViewTopComponent");
+            } else {
+                tc = (TopComponent) WindowManager.getDefault().findTopComponent("WholeChipViewTopComponent");
+            }
+
+        }
+        openComponent(tc, true);
+    }
+
+    protected static void openComponent(TopComponent tc, boolean attention) {
+        if (tc != null) {
+            if (!tc.isOpened()) {
+                tc.open();
+            }
+            tc.requestActive();
+            tc.requestVisible();
+            tc.toFront();
+            if (attention) {
+                tc.requestAttention(true);
+            }
+        }
+    }
+
+    protected void pickSite() throws HeadlessException {
+        SiteList pan = new SiteList();
+        int ans = JOptionPane.showConfirmDialog(this, pan, "Pick a site", JOptionPane.OK_CANCEL_OPTION);
+        if (ans == JOptionPane.OK_OPTION) {
+            String site = pan.getSelectedValue().getKey();
+
+            if (context == null) {
+                context = GlobalContext.getContext();
+            }
+            context.setContext(site);
+
+            setStatus("Selecting site " + site + "/" + FolderManager.getManager().getRule() + ": " + FolderManager.getManager().getDbUrl());
+            this.txtUrl.setText(context.getDbUrl());
+            this.URL = context.getDbUrl();
+            loadDataFromDb(false);
+        }
     }
 
     protected void removeEmptyNodes(Children pgms) {
@@ -285,7 +321,7 @@ public final class ExperimentViewerTopComponent extends TopComponent implements 
                         rm[0] = exper;
                         exp.remove(rm);
                     } else {
-                       // p(exper.getDisplayName() + " has " + exper.getChildren().getNodesCount() + " results");
+                        // p(exper.getDisplayName() + " has " + exper.getChildren().getNodesCount() + " results");
                     }
                 }
                 if (pgm.isLeaf() || pgm.getChildren().getNodesCount() < 1) {
@@ -330,9 +366,11 @@ public final class ExperimentViewerTopComponent extends TopComponent implements 
             if (ans == 0) { //edit
                 OfflineTopComponent tc = (OfflineTopComponent) WindowManager.getDefault().findTopComponent("OfflineTopComponent");
                 if (tc != null) {
+                    if (!tc.isOpened())tc.open();
                     tc.setExperimentContext(context.getExperimentContext());
                     tc.requestActive();
                     tc.requestVisible();
+                    tc.toFront();
                     tc.requestAttention(true);
                 }
             } else if (ans == 2) {
@@ -354,21 +392,9 @@ public final class ExperimentViewerTopComponent extends TopComponent implements 
         TopComponent tc = null;
         // if (!exp.isBB()) {
         tc = (TopComponent) WindowManager.getDefault().findTopComponent("TorrentScoutMaskViewTopComponent");
-        GuiUtils.showNonModalMsg("ExperimentViewer: Loading data for " + exp.getRawDir());
+        GuiUtils.showNonModalMsg("Loading data for " + exp.getRawDir(), "Db Browser");
         LookupUtils.publish(loadContent, new LoadDataContext());
-//        } else {
-//            tc = (TopComponent) WindowManager.getDefault().findTopComponent("TorrentScoutCompositeViewTopComponent");
-//            if (tc == null) {
-//                //WindowManager.getDefault()
-//                JOptionPane.showMessageDialog(this, "To view black bird data, please open the Windows/Composite Experiments Window");
-//            }
-        //}
-        if (tc != null) {
-            tc.requestActive();
-            tc.requestVisible();
-            tc.requestAttention(true);
-        }
-
+        afterExperimentOpened(exp);
     }
 
     private void doHintAction() {
@@ -485,17 +511,12 @@ public final class ExperimentViewerTopComponent extends TopComponent implements 
                 }
                 URL = context.getDbUrl();
 
-                if (URL
-                        != null && URL.length()
-                        > 0) {
+                if (URL != null && URL.length() > 0) {
                     p("Got a global clontext with dir:" + URL);
                     setStatus("Got a context with db URL " + URL);
                     this.txtUrl.setText(URL);
-                    try {
-                        this.toFront();
-                    } catch (Exception e) {
-                    }
-                    loadDataFromDb();
+                  
+                    loadDataFromDb(false);
 
                 } else {
                     // showOfflineComponent();
@@ -510,7 +531,9 @@ public final class ExperimentViewerTopComponent extends TopComponent implements 
             public void run() {
                 TopComponent tc = (TopComponent) WindowManager.getDefault().findTopComponent("OfflineTopComponent");
                 if (tc != null) {
+
                     tc.requestActive();
+                    tc.toFront();
                     tc.requestVisible();
                 }
             }
@@ -746,14 +769,20 @@ public final class ExperimentViewerTopComponent extends TopComponent implements 
         task.execute();
     }
 
-    private void loadDataFromDb() {
+    private void loadDataFromDb(boolean pick) {
         //loadDataFromRest();
         if (this.context == null) {
             return;
         }
         URL = context.getDbUrl();
         if (URL == null || URL.trim().length() < 1) {
-            showOfflineComponent();
+            p("Got no url");
+            if (pick) {
+                pickSite();
+            } else {
+                showOfflineComponent();
+            }
+
             return;
         }
 
@@ -1082,6 +1111,7 @@ public final class ExperimentViewerTopComponent extends TopComponent implements 
         btnLoadFavorite = new javax.swing.JButton();
         hint1 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
         btnView = new javax.swing.JButton();
         hint = new javax.swing.JButton();
         jToolBar1 = new javax.swing.JToolBar();
@@ -1170,13 +1200,29 @@ public final class ExperimentViewerTopComponent extends TopComponent implements 
         });
         jToolBar2.add(jButton4);
 
-        btnView.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jPanel2.setMaximumSize(new java.awt.Dimension(10, 20));
+        jPanel2.setMinimumSize(new java.awt.Dimension(10, 20));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 10, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+
+        jToolBar2.add(jPanel2);
+
+        btnView.setFont(new java.awt.Font("Tahoma", 1, 12));
         btnView.setForeground(new java.awt.Color(0, 153, 51));
         org.openide.awt.Mnemonics.setLocalizedText(btnView, org.openide.util.NbBundle.getMessage(ExperimentViewerTopComponent.class, "ExperimentViewerTopComponent.btnView.text")); // NOI18N
         btnView.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnView.setMaximumSize(new java.awt.Dimension(99, 21));
-        btnView.setMinimumSize(new java.awt.Dimension(99, 21));
-        btnView.setPreferredSize(new java.awt.Dimension(99, 21));
+        btnView.setMaximumSize(new java.awt.Dimension(150, 21));
+        btnView.setMinimumSize(new java.awt.Dimension(120, 21));
+        btnView.setPreferredSize(new java.awt.Dimension(120, 21));
         btnView.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnViewActionPerformed(evt);
@@ -1304,16 +1350,15 @@ public final class ExperimentViewerTopComponent extends TopComponent implements 
         context.setDbUrl(URL);
         Preferences pref = NbPreferences.forModule(ExperimentViewerTopComponent.class);
         if (URL != null && old != null && !old.equalsIgnoreCase(URL)) {
-            loadDataFromDb();
+            loadDataFromDb(false);
         } else if (old == null && URL != null) {
-            loadDataFromDb();
+            loadDataFromDb(false);
         }
     }//GEN-LAST:event_txtUrlActionPerformed
 
     private void btnReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReloadActionPerformed
         URL = txtUrl.getText();
-
-        loadDataFromDb();
+        loadDataFromDb(false);
     }//GEN-LAST:event_btnReloadActionPerformed
 
     private void btnFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFilterActionPerformed
@@ -1332,21 +1377,7 @@ public final class ExperimentViewerTopComponent extends TopComponent implements 
     }//GEN-LAST:event_btnFilterActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        SiteList pan = new SiteList();
-        int ans = JOptionPane.showConfirmDialog(this, pan, "Pick a site", JOptionPane.OK_CANCEL_OPTION);
-        if (ans == JOptionPane.OK_OPTION) {
-            String site = pan.getSelectedValue().getKey();
-
-            if (context == null) {
-                context = GlobalContext.getContext();
-            }
-            context.setContext(site);
-
-            setStatus("Selecting site " + site + "/" + FolderManager.getManager().getRule() + ": " + FolderManager.getManager().getDbUrl());
-            this.txtUrl.setText(context.getDbUrl());
-            this.URL = context.getDbUrl();
-            loadDataFromDb();
-        }
+        pickSite();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void btnViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewActionPerformed
@@ -1448,6 +1479,7 @@ public final class ExperimentViewerTopComponent extends TopComponent implements 
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBar2;
     private javax.swing.JLabel lblExp;
@@ -1463,18 +1495,17 @@ public final class ExperimentViewerTopComponent extends TopComponent implements 
         if (context == null || context.getDbUrl() == null || context.getDbUrl().length() < 1) {
             String default_rule = FolderManager.setDefaultRule();
             if (default_rule == null) {
-                // OptionsDisplayer.getDefault().open("TorrentScoutOptions/TorrentScoutSettings");
+                OptionsDisplayer.getDefault().open("TorrentScoutOptions/TorrentScoutSettings");
                 return;
+            } else {
+                p("Got no db url");
+              
             }
         } else {
             p("Got db url: " + context.getDbUrl());
         }
-        try {
-            this.toFront();
-
-        } catch (Exception e) {
-        }
-        loadDataFromDb();
+       
+        loadDataFromDb(true);
     }
 
     @Override

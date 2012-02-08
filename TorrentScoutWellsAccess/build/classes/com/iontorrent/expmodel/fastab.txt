@@ -1,0 +1,6 @@
+ion-nas3:/results       /results1       nfs     defaults        0 0
+ion-nas4:/results       /results2       nfs     defaults        0 0
+ion-nas6:/results       /results6       nfs     defaults        0 0
+ion-nas7:/results       /results7       nfs     defaults        0 0
+ion-nas10:/results      /results10      nfs     defaults        0 0
+ion-nas11:/results      /results11      nfs     defaults        0 0

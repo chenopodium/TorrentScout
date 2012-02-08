@@ -79,12 +79,13 @@ public class MultiAcqChartPanel extends JPanel {
     boolean showRawSignal;
     XYSeriesCollection dataset;
     JFreeChart chart;
-    int subtract = -1;
+    int subtract;
 
     public MultiAcqChartPanel() {
         super(false);
         setLayout(new BorderLayout());
         yaxis = "count";
+        subtract = -1;
         //setPreferredSize(new Dimension(500, 500));
     }
 
@@ -184,6 +185,7 @@ public class MultiAcqChartPanel extends JPanel {
         if (subtract > -1) {
             subresults = flowmap.get(subtract);
         }
+        p("Creating dataset for flows "+flows);
         for (int flow : flows) {
             EnumMap<ResultType, WellFlowDataResult> results = flowmap.get(flow);
             boolean done = false;
@@ -218,7 +220,10 @@ public class MultiAcqChartPanel extends JPanel {
                         double[] nframedata = dataresult.getData();
                         double[] ndata = new double[nframedata.length];
                         double[] sdata = null;
-                        if (subresult != null) sdata = subresult.getData();
+                        if (subresult != null) {
+                            p("SUBTRACTING FLOW "+subtract);
+                            sdata = subresult.getData();
+                        }
                         String serieskey = dataresult.getName() + " flow " + dataresult.getFlow();
                         if (base != null) {
                             serieskey += " " + base;
@@ -239,6 +244,7 @@ public class MultiAcqChartPanel extends JPanel {
                 //  else p("Not showing "+key.getName());
 
             }
+            else p("NO results for flow "+flow);
         }
 
 

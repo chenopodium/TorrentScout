@@ -55,21 +55,21 @@ public class CombineFunction extends AbstractHistoFunction implements PlotFuncti
 
     }
 
-     @Override
+    @Override
     public EvalType[] getPossibleTypes() {
         return fa.getPossibleTypes();
     }
 
     @Override
-     public void setEvalType(EvalType t) {
-         fa.setEvalType(t);
-         fb.setEvalType(t);
-     }
+    public void setEvalType(EvalType t) {
+        fa.setEvalType(t);
+        fb.setEvalType(t);
+    }
 
     @Override
-     public EvalType getEvalType() {
-         return fa.getEvalType();
-     }
+    public EvalType getEvalType() {
+        return fa.getEvalType();
+    }
 
     @Override
     public String toLongString() {
@@ -94,21 +94,21 @@ public class CombineFunction extends AbstractHistoFunction implements PlotFuncti
 //                    + "\nf, t, ts[f], va, vb, sum, diff\n";
 //        }
         if (this.getEvalType() == null || this.getEvalType() == EvalType.RMS) {
-        for (int f = Math.max(1, start); f < end; f++) {
-            double expect = compute(data.getTimeStamp(0, f));
-            double val = ts[f];
-            double diff = expect - val;
-            res += diff * diff;
+            for (int f = Math.max(1, start); f < end; f++) {
+                double expect = compute(data.getTimeStamp(0, f));
+                double val = ts[f];
+                double diff = expect - val;
+                res += diff * diff;
             }
 
-        res = Math.sqrt(res);
+            res = Math.sqrt(res);
         } else {
             for (int f = Math.max(1, start); f < end; f++) {
                 double expect = compute(data.getTimeStamp(0, f));
                 double val = ts[f];
                 double diff = val - expect;
                 res += diff;
-        }
+            }
             res = res / ((double) Math.max(1, data.getDT(start, end)));
         }
         return res;

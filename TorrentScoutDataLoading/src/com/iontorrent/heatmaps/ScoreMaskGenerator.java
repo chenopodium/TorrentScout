@@ -443,7 +443,7 @@ public class ScoreMaskGenerator implements SamHandler {
             else if (secs > 10) {
                 secs = (int)(secs/10)*10;
             }
-            GuiUtils.showNonModalMsg("Processing BAM file, this could take more than " + time + unit , true, secs);
+            if (secs > 20) GuiUtils.showNonModalMsg("Processing BAM file, this could take more than " + time + unit , true, secs);
         }
 
         SamUtils sam = loader.getSamUtils();
@@ -742,7 +742,7 @@ public class ScoreMaskGenerator implements SamHandler {
     }
 
     private static void p(String msg) {
-        System.out.println("ScoreMaskGenerator: " + msg);
+    //    System.out.println("ScoreMaskGenerator: " + msg);
         //Logger.getLogger( ScoreMaskGenerator.class.getName()).log(Level.INFO, msg, ex);
     }
 

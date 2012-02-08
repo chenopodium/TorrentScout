@@ -20,6 +20,7 @@
  */
 package com.iontorrent.torrentscout.explorer.process;
 
+import com.iontorrent.guiutils.widgets.CoordWidget;
 import com.iontorrent.expmodel.ExperimentContext;
 import com.iontorrent.guiutils.ColorGradient;
 import com.iontorrent.guiutils.GuiUtils;
@@ -28,7 +29,7 @@ import com.iontorrent.guiutils.heatmap.ColorModel;
 import com.iontorrent.guiutils.heatmap.GradientPanel;
 import com.iontorrent.rawdataaccess.wells.BitMask;
 import com.iontorrent.torrentscout.explorer.ExplorerContext;
-import com.iontorrent.torrentscout.explorer.Widget;
+import com.iontorrent.guiutils.widgets.Widget;
 import com.iontorrent.utils.LookupUtils;
 import com.iontorrent.utils.stats.Stats;
 import com.iontorrent.wellmodel.RasterData;
@@ -69,9 +70,10 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
     private BufferedImage[] bimages;
     private static int BX = 30;
     private static int BY = 30;
-    boolean showignmore;
-    boolean showbg;
-    boolean showuse;
+  //  boolean showignmore;
+ //   boolean showbg;
+  //  boolean showuse;
+    BitMask showmask;
     private int offx;
     private int offy;
 //    private transient final InstanceContent wellContextContent = LookupUtils.getPublisher(WellContext.class);
@@ -109,8 +111,8 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
 
     public SubregionView(ExplorerContext maincont) {
         super();
-              
-        gradient = new GradientPanel(null); 
+
+        gradient = new GradientPanel(null);
         gradient.setListener(this);
         this.nrwidgets = maincont.getPreferrednrwidgets();
         super.setNavigationImageEnabled(false);
@@ -151,7 +153,7 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
         fromCoord = new WellCoordinate(startc, startr);
         toCoord = new WellCoordinate(startc + RASTER_SIZE, startr + RASTER_SIZE);
         gradientColors = new Color[]{Color.black, Color.blue, Color.green, Color.yellow, Color.orange, Color.red, Color.white};
-        
+
         dominmax = new boolean[data.getFrames_per_flow()];
         getMinMax(data, 0);
         // super.setDoubleBuffered(true);
@@ -220,19 +222,19 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
     }
 
     protected BitMask getSnapMask() {
-        BitMask mask = null;
-        if (this.showignmore) {
-            mask = maincont.getIgnoreMask();
-        } else if (this.showbg) {
-            mask = maincont.getBgMask();
-        } else if (this.showuse) {
-            mask = maincont.getSignalMask();
-        }
-        return mask;
+//        BitMask mask = null;
+//        if (this.showignmore) {
+//            mask = maincont.getIgnoreMask();
+//        } else if (this.showbg) {
+//            mask = maincont.getBgMask();
+//        } else if (this.showuse) {
+//            mask = maincont.getSignalMask();
+//        }
+        return showmask;
     }
 
     private boolean snapWidgetToMask(CoordWidget w, BitMask mask) {
-        WellCoordinate c = w.getCoord();
+        WellCoordinate c = w.getAbsoluteCoord();
         int x = c.getX() - offx - data.getRelStartcoord().getCol();
         int y = c.getY() - offy - data.getRelStartcoord().getRow();
         int size = data.getRaster_size();
@@ -249,7 +251,7 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
                 if (mask.get(x, y)) {
                     c = new WellCoordinate(x + offx + data.getRelStartcoord().getCol(), y + offy + data.getRelStartcoord().getRow());
                     // p("Moving main widget to " + c);
-                    w.setCoord(c);
+                    w.setAbsoluteCoords(c);
                     maincont.coordChanged(c);
                     Point imagep = getMiddleImageCoord(c);
                     w.setX(imagep.x);
@@ -284,7 +286,7 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
         }
         p("Snapping widgets to mask " + mask);
         for (Widget w : widgets) {
-            snapWidgetToMask((CoordWidget) w, mask);
+            if (!w.isMainWidget())  snapWidgetToMask((CoordWidget) w, mask);
         }
     }
 
@@ -296,7 +298,10 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
 
     public void addOrRemoveWidgets(int nrwidgets) {
         // adding main widget
-
+        if (nrwidgets <1 ) {
+            p("Not adding or removing widgets");
+            return;
+        }
 
         for (Widget w : widgets) {
             if (((CoordWidget) w).isMainWidget()) {
@@ -386,7 +391,7 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
         }
         for (Widget w : widgets) {
             CoordWidget c = (CoordWidget) w;
-            Point imagep = getMiddleImageCoord(c.getCoord());
+            Point imagep = getMiddleImageCoord(c.getAbsoluteCoord());
             c.setX(imagep.x);
             c.setY(imagep.y);
         }
@@ -396,8 +401,9 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
         Point imagep = getMiddleImageCoord(abscoord);
         //   Coords nav=this.panelToImageCoords(imagep);
         //     p(coord.toString() + "-> image " + imagep);
+     //   p("Creating and adding widget "+nr);
         CoordWidget w = new CoordWidget(color, imagep.x, imagep.y, nr);
-        w.setCoord(abscoord);
+        w.setAbsoluteCoords(abscoord);
         widgets.add(w);
         return w;
     }
@@ -406,9 +412,22 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
         if (w == null) {
             return null;
         }
-        double ex = w.getX();
-        double ey = w.getY();
+        int ex = w.getX();
+        int ey = w.getY();
 
+       WellCoordinate c= getWellCoordinate(ex, ey);
+        w.setAbsoluteCoords(c);
+
+        maincont.coordChanged(c);
+        return c;
+    }
+
+    public Point getPointFromWell(WellCoordinate c) {
+        Point imagep = getMiddleImageCoord(abscoord);
+        return imagep;
+    }
+
+    public WellCoordinate getWellCoordinate(int ex, int ey) {
         ex = ex - BX;
         ey = maxy - ey;
 
@@ -418,9 +437,6 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
             return null;
         }
         WellCoordinate c = new WellCoordinate(x + offx, y + offy);
-        w.setCoord(c);
-
-        maincont.coordChanged(c);
         return c;
     }
 
@@ -436,7 +452,7 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
             return;
         }
 
-        WellCoordinate c = mainwidget.getCoord();
+        WellCoordinate c = mainwidget.getAbsoluteCoord();
         int x = c.getX() - data.getAbsStartCol();
         int y = c.getY() - data.getAbsStartRow();
 
@@ -475,7 +491,7 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
             return;
         }
 
-        WellCoordinate c = mainwidget.getCoord();
+        WellCoordinate c = mainwidget.getAbsoluteCoord();
         int x = c.getX() - offx - data.getRelStartcoord().getCol();
         int y = c.getY() - offy - data.getRelStartcoord().getRow();
         x = x + dx;
@@ -498,7 +514,7 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
         x = Math.min(size, x);
         c = new WellCoordinate(x + offx + data.getRelStartcoord().getCol(), y + offy + data.getRelStartcoord().getRow());
         //  p("Moving main widget to " + c);
-        mainwidget.setCoord(c);
+        mainwidget.setAbsoluteCoords(c);
         Point imagep = getMiddleImageCoord(c);
         mainwidget.setX(imagep.x);
         mainwidget.setY(imagep.y);
@@ -525,8 +541,8 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
         }
         float val = data.getValue(x, y, flow, frame);
 
-        String s = "Well "+(x + offx) + "/" + (y + offy) + ":  value=" + val;
-        
+        String s = "Well " + (x + offx) + "/" + (y + offy) + ":  value=" + val;
+
         //  if (log) s += " "+ getLog(val);
         return s;
     }
@@ -589,11 +605,10 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
         update(dominmax);
     }
 
-    public void redrawImages(boolean showignmore, boolean showbg, boolean showuse, boolean dominmax) {
+    public void redrawImages(BitMask showmask, boolean dominmax) {
         bimages = null;
-        this.showignmore = showignmore;
-        this.showbg = showbg;
-        this.showuse = showuse;
+        this.showmask = showmask;
+       
 
         update(dominmax);
     }
@@ -656,7 +671,9 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
     protected void paintComponent(Graphics g) {
         super.paintComponent(g); // Paints the background
 
-        if (colormodel == null || frame >= colormodel.length || colormodel[frame] == null) return;
+        if (colormodel == null || frame >= colormodel.length || colormodel[frame] == null) {
+            return;
+        }
         gradient.setColorModel(colormodel[frame]);
         gradient.repaint();
         widgets = maincont.getWidgets();
@@ -718,7 +735,6 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
         return bimage;
     }
 
-    
     public ColorModel getColorModel(int frame) {
         return colormodel[frame];
     }
@@ -748,7 +764,7 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
 
         // the area that was used to compute the density = this is the maximum possible value
 
-     //   int delta = Math.max(getMaxcount(frame) - getMincount(frame) + 1, 1);
+        //   int delta = Math.max(getMaxcount(frame) - getMincount(frame) + 1, 1);
 //        if (delta > 10000) {
 //            log = true;
 //            delta = getLog(delta);
@@ -757,10 +773,12 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
 //            log = false;
 //        }
         log = false;
-        if (colormodel == null) colormodel = new ColorModel[data.getFrames_per_flow()];
-        
+        if (colormodel == null) {
+            colormodel = new ColorModel[data.getFrames_per_flow()];
+        }
+
         colormodel[frame] = new ColorModel(gradientColors, getMincount(frame), getMaxcount(frame));
-        
+
         gradient.setColorModel(colormodel[frame]);
         maxy = pixperrow * rows + BY;
         maxx = pixpercol * cols + BX;
@@ -785,30 +803,30 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
                 if (log) {
                     count = getLog((int) count);
                 }
-               
+
                 Color color = colormodel[frame].getColor(count);
 
                 int y = maxy - starty - pixperrow;
                 g.setColor(color);
                 g.fillRect(x, y, pixpercol, pixperrow);
-                if (this.showignmore && ignoremask != null && ignoremask.get(c - startc, r - startr)) {
+                if (showmask != null && showmask.get(c - startc, r - startr)) {
                     color = Color.red.darker();
                     g.setColor(color);
                     g.fill3DRect(x, y, pixpercol, pixperrow, true);
                     g.setColor(Color.red.darker());
                 }
-                if (this.showbg && bgmask != null && bgmask.get(c - startc, r - startr)) {
-                    color = Color.BLUE;
-                    g.setColor(color);
-                    g.fill3DRect(x, y, pixpercol, pixperrow, true);
-                    g.setColor(Color.red.darker());
-                }
-                if (this.showuse && usemask != null && usemask.get(c - startc, r - startr)) {
-                    color = Color.green.darker();
-                    g.setColor(color);
-                    g.fill3DRect(x, y, pixpercol, pixperrow, true);
-                    g.setColor(Color.red.darker());
-                }
+//                if (this.showbg && bgmask != null && bgmask.get(c - startc, r - startr)) {
+//                    color = Color.BLUE;
+//                    g.setColor(color);
+//                    g.fill3DRect(x, y, pixpercol, pixperrow, true);
+//                    g.setColor(Color.red.darker());
+//                }
+//                if (this.showuse && usemask != null && usemask.get(c - startc, r - startr)) {
+//                    color = Color.green.darker();
+//                    g.setColor(color);
+//                    g.fill3DRect(x, y, pixpercol, pixperrow, true);
+//                    g.setColor(Color.red.darker());
+//                }
                 // if (c == coord.getCol() && r == coord.getRow()) g.setColor(Color.green.darker());
                 // else 
                 // g.setColor(Color.gray);
@@ -970,7 +988,7 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
             for (int f = 0; f < data.getFrames_per_flow(); f++) {
                 setMaxcount(max, f);
                 setMincount(min, f);
-                dominmax[f] = false;            
+                dominmax[f] = false;
             }
             p("Got mins: " + Arrays.toString(this.mincount));
             p("Got max: " + Arrays.toString(this.maxcount));

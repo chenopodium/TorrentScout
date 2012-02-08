@@ -20,6 +20,7 @@ import com.iontorrent.utils.StringTools;
 import com.iontorrent.utils.io.FileTools;
 import com.iontorrent.utils.io.FileUtils;
 import com.iontorrent.wellmodel.WellCoordinate;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,10 +30,10 @@ import java.util.logging.Logger;
  * @author Chantal Roth 
  * chantal.roth@lifetech.com
  */
-public class DatBlock {
+public class DatBlock implements Serializable{
 
     private static String lastError;
-    private static Exception lastException;
+    private static transient Exception lastException;
 
     private WellCoordinate start;
     private WellCoordinate end;
@@ -70,7 +71,7 @@ public class DatBlock {
         return d;
     }
      public String getDefaultResultsBlockDir(String dir) {
-        String d= dir+"block_default";
+        String d= dir+"block_def";
         d = FileTools.addSlashOrBackslash(d);
         if (!FileUtils.exists(d)) {
             d= dir+"block_X0_Y0";
@@ -121,7 +122,7 @@ public class DatBlock {
         WellCoordinate start = new WellCoordinate(x, y);
         WellCoordinate end = new WellCoordinate(x+w, y+h);
         DatBlock block = new DatBlock(start, end);
-        p("Got block:"+block.toString());
+       // p("Got block:"+block.toString());
         return block;
     }
     private static int getInt(String s){ 

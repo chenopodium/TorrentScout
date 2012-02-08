@@ -402,6 +402,7 @@ public class NavigableImagePanel extends JPanel implements MouseMotionListener {
         @Override
         public void mouseWheelMoved(MouseWheelEvent e) {
             Point p = e.getPoint();
+           // p("MouseWheel moved");
             boolean zoomIn = (e.getWheelRotation() < 0);
             if (isInNavigationImage(p)) {
                 if (zoomIn) {
@@ -454,6 +455,7 @@ public class NavigableImagePanel extends JPanel implements MouseMotionListener {
         setOpaque(false);
         addComponentListener(new ComponentAdapter() {
 
+            @Override
             public void componentResized(ComponentEvent e) {
                 if (scale > 0.0) {
                     if (isFullImageInPanel()) {
@@ -478,20 +480,21 @@ public class NavigableImagePanel extends JPanel implements MouseMotionListener {
                     if (isInNavigationImage(e.getPoint())) {
                         Point p = e.getPoint();
                         displayImageAt(p);
-                    } else {
-                        Point p = e.getPoint();
-                        //      p("MousePressed at " + p);
-                        cur_selection = new Selection();
-                        cur_selection.startPoint = panelToImageCoords(p);
-
-                        oldmousex = e.getX();
-                        oldmousey = e.getY();
-                        dragx = oldmousex;
-                        dragy = oldmousey;
-                        endx = dragx;
-                        endy = dragy;
-
                     }
+//                    } else {
+//                        Point p = e.getPoint();
+//                        //      p("MousePressed at " + p);
+//                        cur_selection = new Selection();
+//                        cur_selection.startPoint = panelToImageCoords(p);
+//
+//                        oldmousex = e.getX();
+//                        oldmousey = e.getY();
+//                        dragx = oldmousex;
+//                        dragy = oldmousey;
+//                        endx = dragx;
+//                        endy = dragy;
+//
+//                    }
                 }
 
             }
@@ -503,33 +506,33 @@ public class NavigableImagePanel extends JPanel implements MouseMotionListener {
                         Point p = e.getPoint();
                         displayImageAt(p);
                     } else {
-                        Point p = e.getPoint();
-                        //        p("MouseReleased at " + p);
-
-                        if (cur_selection == null) {
-                            return;
-                        }
-                        cur_selection.endPoint = panelToImageCoords(p);
-                        //       p("Got a selection now: " + cur_selection);
-
-                        if (mousex <= 0) {
-                            return;
-                        }
-                        endx = e.getX();
-                        endy = e.getY();
-                        int dx = Math.abs(endx - oldmousex);
-                        int dy = Math.abs(endy - oldmousey);
-                        if (isSelectionEnabled()) {
-                            Graphics g = getGraphics();
-                            drawXorRect(g, oldmousex, oldmousey, mousex - oldmousex, mousey - oldmousey);
-                            if (dx < 5 || dy < 5) {
-                                mousex = -1;
-                                return;
-                            }
-                            g.setPaintMode();
-                        }
-                        mousex = -1;
-                        repaint();
+//                        Point p = e.getPoint();
+//                        //        p("MouseReleased at " + p);
+//
+//                        if (cur_selection == null) {
+//                            return;
+//                        }
+//                        cur_selection.endPoint = panelToImageCoords(p);
+//                        //       p("Got a selection now: " + cur_selection);
+//
+//                        if (mousex <= 0) {
+//                            return;
+//                        }
+//                        endx = e.getX();
+//                        endy = e.getY();
+//                        int dx = Math.abs(endx - oldmousex);
+//                        int dy = Math.abs(endy - oldmousey);
+//                        if (isSelectionEnabled()) {
+//                            Graphics g = getGraphics();
+//                            drawXorRect(g, oldmousex, oldmousey, mousex - oldmousex, mousey - oldmousey);
+//                            if (dx < 5 || dy < 5) {
+//                                mousex = -1;
+//                                return;
+//                            }
+//                            g.setPaintMode();
+//                        }
+//                        mousex = -1;
+//                        repaint();
                     }
                 }
 
@@ -539,6 +542,7 @@ public class NavigableImagePanel extends JPanel implements MouseMotionListener {
         addMouseMotionListener(this);
 
         setZoomDevice(ZoomDevice.MOUSE_WHEEL);
+      //  ZoomDevice.
     }
 
     private void drawXorRect(Graphics g, int sx, int sy, int dx, int dy) {
@@ -756,6 +760,12 @@ public class NavigableImagePanel extends JPanel implements MouseMotionListener {
         repaint();
     }
 
+     public void displayImageAtImage(Point scrImagePoint) {
+        
+        originX = -(scrImagePoint.x - getWidth() / 2);
+        originY = -(scrImagePoint.y - getHeight() / 2);
+        repaint();
+    }
     //Tests whether a given point in the panel falls within the image boundaries.
     private boolean isInImage(Point p) {
         Coords coords = panelToImageCoords(p);
@@ -994,7 +1004,7 @@ public class NavigableImagePanel extends JPanel implements MouseMotionListener {
 
     //Moves te image (by dragging with the mouse) to a new mouse position p.
     private void moveImage(Point p) {
-        if (p == null) {
+        if (p == null || mousePosition == null) {
             return;
         }
         int xDelta = p.x - mousePosition.x;
@@ -1098,6 +1108,7 @@ public class NavigableImagePanel extends JPanel implements MouseMotionListener {
         cur_selection = new Selection();
         cur_selection.startPoint = start;
         cur_selection.endPoint = end;
+       // p("Got selection "+start+"/"+end);
         showSelection();
     }
 
@@ -1106,29 +1117,7 @@ public class NavigableImagePanel extends JPanel implements MouseMotionListener {
             return;
         }
         if (cur_selection != null && cur_selection.endPoint != null && this.scale > 0) {
-//            Coords mid = imageToPanelCoords(cur_selection.getMid());
-//            double zx = Math.abs((double) cur_selection.getDX() / (double) image.getWidth());
-//            double zy = Math.abs((double) cur_selection.getDY() / (double) image.getHeight());
-//            double z = Math.min(zy, zx);
-//            String msg = "dx: " + cur_selection.getDX() + ", dy: " + cur_selection.getDY() + ", image size: " + image.getWidth() + "/" + image.getHeight();
-//            msg += "\nzx=" + zx + ", zy=" + zy + ", z=" + z + ", mid: " + mid;
-            //    JOptionPane.showMessageDialog(null, msg);
-            // this.setZoom(z, new Point(mid.getIntX(), mid.getIntY()));
-            //     centerImageAround(cur_selection.getMid());
 
-
-//            Coords start = this.imageToPanelCoords(cur_selection.startPoint);
-//            Coords end = this.imageToPanelCoords(cur_selection.endPoint);
-//            
-//            this.originX = (int) start.x;
-//            this.originY = (int) start.y;
-//            Rectangle r = getImageClipBounds();
-//            int w = (int) r.getWidth();
-//            int h = (int) r.getHeight();
-//            int dx = w - cur_selection.getX2()+ cur_selection.getX1();
-//            int dy = h - cur_selection.getY2()+ cur_selection.getY1();
-//            if (dx > 0) originX -= dx/2;
-//            if (dy > 0) originY -= dy/2;
             this.repaint();
         }
     }

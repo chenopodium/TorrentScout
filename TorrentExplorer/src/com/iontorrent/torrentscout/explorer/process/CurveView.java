@@ -23,18 +23,19 @@
 package com.iontorrent.torrentscout.explorer.process;
 
 import com.iontorrent.torrentscout.explorer.ExplorerContext;
+import com.iontorrent.torrentscout.explorer.Export;
 import com.iontorrent.torrentscout.explorer.fit.AbstractHistoFunction;
 import com.iontorrent.torrentscout.explorer.fit.FitFunctionsFactory;
 import com.iontorrent.torrentscout.explorer.fit.FitFunctionsPanel;
 import com.iontorrent.torrentscout.explorer.fit.FunctionListener;
+import com.iontorrent.torrentscout.explorer.options.TorrentExplorerPanel;
 import com.iontorrent.utils.io.FileTools;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.util.prefs.Preferences;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import org.openide.windows.WindowManager;
+import org.openide.util.NbPreferences;
 
 /**
  *
@@ -141,6 +142,7 @@ private void doHintAction() {
 
         btnimage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/iontorrent/torrentscout/explorer/picture-save.png"))); // NOI18N
         btnimage.setText(org.openide.util.NbBundle.getMessage(CurveView.class, "CurveView.btnimage.text")); // NOI18N
+        btnimage.setToolTipText(org.openide.util.NbBundle.getMessage(CurveView.class, "CurveView.btnimage.toolTipText")); // NOI18N
         btnimage.setFocusable(false);
         btnimage.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnimage.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -209,8 +211,8 @@ private void doHintAction() {
         rasterViewCreate(true);     }//GEN-LAST:event_btnRefreshActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-
-        String file = FileTools.getFile("Save chart info into file", "*.csv", "", true);
+  
+        String file = Export.getFile("Save chart info into file", "*.csv", true);
         if (file == null) {
             return;
         }

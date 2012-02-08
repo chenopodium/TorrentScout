@@ -39,8 +39,8 @@ import org.openide.util.LookupListener;
 autostore = false)
 @TopComponent.Description(preferredID = "WholeChipViewTopComponent",
 iconBase = "com/iontorrent/maskview/chip.png",
-persistenceType = TopComponent.PERSISTENCE_ALWAYS)
-@TopComponent.Registration(mode = "left_editor_mode", openAtStartup = true)
+persistenceType = TopComponent.PERSISTENCE_NEVER)
+@TopComponent.Registration(mode = "left_editor_mode", openAtStartup = false)
 @ActionID(category = "Window", id = "com.iontorrent.chipview.WholeChipViewTopComponent")
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
 @TopComponent.OpenActionRegistration(displayName = "#CTL_WholeChipViewAction",

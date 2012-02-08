@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN"
+                            "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Actions">
+        <folder name="View">
+            <file name="com-iontorrent-actions-IonoAction.instance">
+                <!--com.iontorrent.actions.IonoAction-->
+                <attr name="displayName" stringvalue="Ionogram"/>
+                <attr
+                    methodvalue="org.openide.awt.Actions.alwaysEnabled" name="instanceCreate"/>
+                <attr name="delegate" newvalue="com.iontorrent.actions.IonoAction"/>
+                <attr name="iconBase" stringvalue="com/iontorrent/ionogram/insert-chart-bar.png"/>
+                <attr boolvalue="false" name="noIconInMenu"/>
+            </file>
+            <file name="com-iontorrent-actions-TableAction.instance">
+                <!--com.iontorrent.actions.TableAction-->
+                <attr name="displayName" stringvalue="Well Table"/>
+                <attr
+                    methodvalue="org.openide.awt.Actions.alwaysEnabled" name="instanceCreate"/>
+                <attr name="delegate" newvalue="com.iontorrent.actions.TableAction"/>
+                <attr name="iconBase" stringvalue="com/iontorrent/welltable/table-add.png"/>
+                <attr boolvalue="false" name="noIconInMenu"/>
+            </file>
+        </folder>
+        <folder name="Pick Region">
+            <file name="com-iontorrent-actions-PickHeatMapAction.instance">
+                <!--com.iontorrent.actions.PickHeatMapAction-->
+                <attr name="displayName" stringvalue="BF Heat Map (properties such as live, dud, keypass)"/>
+                <attr
+                    methodvalue="org.openide.awt.Actions.alwaysEnabled" name="instanceCreate"/>
+                <attr name="delegate" newvalue="com.iontorrent.actions.PickHeatMapAction"/>
+                <attr name="iconBase" stringvalue="com/iontorrent/maskview/chip.png"/>
+                <attr boolvalue="false" name="noIconInMenu"/>
+            </file>
+            <file name="com-iontorrent-actions-PickRawMapAction1.instance">
+                <!--com.iontorrent.actions.PickRawMapAction1-->
+                <attr name="displayName" stringvalue="Whole chip raw heat map"/>
+                <attr
+                    methodvalue="org.openide.awt.Actions.alwaysEnabled" name="instanceCreate"/>
+                <attr name="delegate" newvalue="com.iontorrent.actions.PickRawMapAction1"/>
+                <attr name="iconBase" stringvalue="com/iontorrent/actions/chip_16.png"/>
+                <attr boolvalue="false" name="noIconInMenu"/>
+            </file>
+            <file name="com-iontorrent-actions-PorotonAction.instance">
+                <!--com.iontorrent.actions.PorotonAction-->
+                <attr name="displayName" stringvalue="Pick a Proton Block"/>
+                <attr
+                    methodvalue="org.openide.awt.Actions.alwaysEnabled" name="instanceCreate"/>
+                <attr name="delegate" newvalue="com.iontorrent.actions.PorotonAction"/>
+                <attr name="iconBase" stringvalue="com/iontorrent/actions/chip_bb_16.png"/>
+                <attr boolvalue="false" name="noIconInMenu"/>
+            </file>
+        </folder>
+        <folder name="Window">
+            <file name="com-iontorrent-chipview-WholeChipViewTopComponent.instance">
+                <!--com.iontorrent.chipview.WholeChipViewTopComponent-->
+                <attr
+                    methodvalue="org.openide.windows.TopComponent.openAction" name="instanceCreate"/>
+                <attr name="component" newvalue="com.iontorrent.chipview.WholeChipViewTopComponent"/>
+                <attr name="preferredID" stringvalue="WholeChipViewTopComponent"/>
+                <attr
+                    bundlevalue="com.iontorrent.chipview.Bundle#CTL_WholeChipViewAction" name="displayName"/>
+                <attr name="iconBase" stringvalue="com/iontorrent/maskview/chip.png"/>
+            </file>
+            <file name="com-iontorrent-compview-TorrentScoutCompositeViewTopComponent.instance">
+                <!--com.iontorrent.compview.TorrentScoutCompositeViewTopComponent-->
+                <attr
+                    methodvalue="org.openide.windows.TopComponent.openAction" name="instanceCreate"/>
+                <attr name="component" newvalue="com.iontorrent.compview.TorrentScoutCompositeViewTopComponent"/>
+                <attr name="preferredID" stringvalue="TorrentScoutCompositeViewTopComponent"/>
+                <attr
+                    bundlevalue="com.iontorrent.compview.Bundle#CTL_TorrentScoutCompositeViewAction" name="displayName"/>
+                <attr name="iconBase" stringvalue="com/iontorrent/compview/chip_bb.png"/>
+            </file>
+            <file name="com-iontorrent-ionogram-TorrentScoutIonogramTopComponent.instance">
+                <!--com.iontorrent.ionogram.TorrentScoutIonogramTopComponent-->
+                <attr
+                    methodvalue="org.openide.windows.TopComponent.openAction" name="instanceCreate"/>
+                <attr name="component" newvalue="com.iontorrent.ionogram.TorrentScoutIonogramTopComponent"/>
+                <attr name="preferredID" stringvalue="TorrentScoutIonogramTopComponent"/>
+                <attr
+                    bundlevalue="com.iontorrent.ionogram.Bundle#CTL_TorrentScoutIonogramAction" name="displayName"/>
+                <attr name="iconBase" stringvalue="com/iontorrent/ionogram/insert-chart-bar.png"/>
+            </file>
+            <file name="com-iontorrent-maskview-TorrentScoutMaskViewTopComponent.instance">
+                <!--com.iontorrent.maskview.TorrentScoutMaskViewTopComponent-->
+                <attr
+                    methodvalue="org.openide.windows.TopComponent.openAction" name="instanceCreate"/>
+                <attr name="component" newvalue="com.iontorrent.maskview.TorrentScoutMaskViewTopComponent"/>
+                <attr name="preferredID" stringvalue="TorrentScoutMaskViewTopComponent"/>
+                <attr
+                    bundlevalue="com.iontorrent.maskview.Bundle#CTL_TorrentScoutMaskViewAction" name="displayName"/>
+                <attr name="iconBase" stringvalue="com/iontorrent/maskview/chip.png"/>
+            </file>
+            <file name="com-iontorrent-welltable-WellTableTopComponent.instance">
+                <!--com.iontorrent.welltable.WellTableTopComponent-->
+                <attr
+                    methodvalue="org.openide.windows.TopComponent.openAction" name="instanceCreate"/>
+                <attr name="component" newvalue="com.iontorrent.welltable.WellTableTopComponent"/>
+                <attr name="preferredID" stringvalue="WellTableTopComponent"/>
+                <attr
+                    bundlevalue="com.iontorrent.welltable.Bundle#CTL_WellTableAction" name="displayName"/>
+                <attr name="iconBase" stringvalue="com/iontorrent/welltable/table-add.png"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="View">
+            <file name="com-iontorrent-actions-IonoAction.shadow">
+                <!--com.iontorrent.actions.IonoAction-->
+                <attr name="originalFile" stringvalue="Actions/View/com-iontorrent-actions-IonoAction.instance"/>
+                <attr intvalue="800" name="position"/>
+            </file>
+            <file name="com-iontorrent-actions-TableAction.shadow">
+                <!--com.iontorrent.actions.TableAction-->
+                <attr name="originalFile" stringvalue="Actions/View/com-iontorrent-actions-TableAction.instance"/>
+                <attr intvalue="800" name="position"/>
+            </file>
+        </folder>
+        <folder name="Pick Region">
+            <file name="com-iontorrent-actions-PickHeatMapAction.shadow">
+                <!--com.iontorrent.actions.PickHeatMapAction-->
+                <attr name="originalFile" stringvalue="Actions/Pick Region/com-iontorrent-actions-PickHeatMapAction.instance"/>
+                <attr intvalue="200" name="position"/>
+            </file>
+            <file name="com-iontorrent-actions-PickRawMapAction1.shadow">
+                <!--com.iontorrent.actions.PickRawMapAction1-->
+                <attr name="originalFile" stringvalue="Actions/Pick Region/com-iontorrent-actions-PickRawMapAction1.instance"/>
+                <attr intvalue="2" name="position"/>
+            </file>
+            <file name="com-iontorrent-actions-PorotonAction.shadow">
+                <!--com.iontorrent.actions.PorotonAction-->
+                <attr name="originalFile" stringvalue="Actions/Pick Region/com-iontorrent-actions-PorotonAction.instance"/>
+                <attr intvalue="1" name="position"/>
+            </file>
+        </folder>
+        <folder name="Window">
+            <file name="com-iontorrent-chipview-WholeChipViewTopComponent.shadow">
+                <!--com.iontorrent.chipview.WholeChipViewTopComponent-->
+                <attr name="originalFile" stringvalue="Actions/Window/com-iontorrent-chipview-WholeChipViewTopComponent.instance"/>
+            </file>
+            <file name="com-iontorrent-compview-TorrentScoutCompositeViewTopComponent.shadow">
+                <!--com.iontorrent.compview.TorrentScoutCompositeViewTopComponent-->
+                <attr name="originalFile" stringvalue="Actions/Window/com-iontorrent-compview-TorrentScoutCompositeViewTopComponent.instance"/>
+            </file>
+            <file name="com-iontorrent-ionogram-TorrentScoutIonogramTopComponent.shadow">
+                <!--com.iontorrent.ionogram.TorrentScoutIonogramTopComponent-->
+                <attr name="originalFile" stringvalue="Actions/Window/com-iontorrent-ionogram-TorrentScoutIonogramTopComponent.instance"/>
+            </file>
+            <file name="com-iontorrent-maskview-TorrentScoutMaskViewTopComponent.shadow">
+                <!--com.iontorrent.maskview.TorrentScoutMaskViewTopComponent-->
+                <attr name="originalFile" stringvalue="Actions/Window/com-iontorrent-maskview-TorrentScoutMaskViewTopComponent.instance"/>
+            </file>
+            <file name="com-iontorrent-welltable-WellTableTopComponent.shadow">
+                <!--com.iontorrent.welltable.WellTableTopComponent-->
+                <attr name="originalFile" stringvalue="Actions/Window/com-iontorrent-welltable-WellTableTopComponent.instance"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Toolbars">
+        <folder name="View">
+            <file name="com-iontorrent-actions-IonoAction.shadow">
+                <!--com.iontorrent.actions.IonoAction-->
+                <attr name="originalFile" stringvalue="Actions/View/com-iontorrent-actions-IonoAction.instance"/>
+                <attr intvalue="800" name="position"/>
+            </file>
+            <file name="com-iontorrent-actions-TableAction.shadow">
+                <!--com.iontorrent.actions.TableAction-->
+                <attr name="originalFile" stringvalue="Actions/View/com-iontorrent-actions-TableAction.instance"/>
+                <attr intvalue="800" name="position"/>
+            </file>
+        </folder>
+        <folder name="Pick">
+            <file name="com-iontorrent-actions-PickHeatMapAction.shadow">
+                <!--com.iontorrent.actions.PickHeatMapAction-->
+                <attr name="originalFile" stringvalue="Actions/Pick Region/com-iontorrent-actions-PickHeatMapAction.instance"/>
+                <attr intvalue="200" name="position"/>
+            </file>
+            <file name="com-iontorrent-actions-PickRawMapAction1.shadow">
+                <!--com.iontorrent.actions.PickRawMapAction1-->
+                <attr name="originalFile" stringvalue="Actions/Pick Region/com-iontorrent-actions-PickRawMapAction1.instance"/>
+                <attr intvalue="2" name="position"/>
+            </file>
+            <file name="com-iontorrent-actions-PorotonAction.shadow">
+                <!--com.iontorrent.actions.PorotonAction-->
+                <attr name="originalFile" stringvalue="Actions/Pick Region/com-iontorrent-actions-PorotonAction.instance"/>
+                <attr intvalue="1" name="position"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Shortcuts">
+        <file name="C-B.shadow">
+            <!--com.iontorrent.actions.PickRawMapAction1-->
+            <attr name="originalFile" stringvalue="Actions/Pick Region/com-iontorrent-actions-PickRawMapAction1.instance"/>
+        </file>
+        <file name="A-P.shadow">
+            <!--com.iontorrent.actions.PorotonAction-->
+            <attr name="originalFile" stringvalue="Actions/Pick Region/com-iontorrent-actions-PorotonAction.instance"/>
+        </file>
+    </folder>
+    <folder name="Windows2">
+        <folder name="Components">
+            <file name="WholeChipViewTopComponent.settings">
+                <!--com.iontorrent.chipview.WholeChipViewTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+  <instance class="com.iontorrent.chipview.WholeChipViewTopComponent"/>
+</settings>
+]]></file>
+            <file name="TorrentScoutCompositeViewTopComponent.settings">
+                <!--com.iontorrent.compview.TorrentScoutCompositeViewTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+  <instance class="com.iontorrent.compview.TorrentScoutCompositeViewTopComponent"/>
+</settings>
+]]></file>
+            <file name="TorrentScoutIonogramTopComponent.settings">
+                <!--com.iontorrent.ionogram.TorrentScoutIonogramTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+  <instance class="com.iontorrent.ionogram.TorrentScoutIonogramTopComponent"/>
+</settings>
+]]></file>
+            <file name="TorrentScoutMaskViewTopComponent.settings">
+                <!--com.iontorrent.maskview.TorrentScoutMaskViewTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+  <instance class="com.iontorrent.maskview.TorrentScoutMaskViewTopComponent"/>
+</settings>
+]]></file>
+            <file name="WellTableTopComponent.settings">
+                <!--com.iontorrent.welltable.WellTableTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+  <instance class="com.iontorrent.welltable.WellTableTopComponent"/>
+</settings>
+]]></file>
+        </folder>
+        <folder name="Modes">
+            <folder name="left_editor_mode">
+                <file name="WholeChipViewTopComponent.wstcref">
+                    <!--com.iontorrent.chipview.WholeChipViewTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tc-ref PUBLIC "-//NetBeans//DTD Top Component in Mode Properties 2.0//EN" "http://www.netbeans.org/dtds/tc-ref2_0.dtd">
+<tc-ref version="2.0">
+  <tc-id id="WholeChipViewTopComponent"/>
+  <state opened="false"/>
+</tc-ref>
+]]></file>
+            </folder>
+            <folder name="top_left">
+                <file name="TorrentScoutCompositeViewTopComponent.wstcref">
+                    <!--com.iontorrent.compview.TorrentScoutCompositeViewTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tc-ref PUBLIC "-//NetBeans//DTD Top Component in Mode Properties 2.0//EN" "http://www.netbeans.org/dtds/tc-ref2_0.dtd">
+<tc-ref version="2.0">
+  <tc-id id="TorrentScoutCompositeViewTopComponent"/>
+  <state opened="false"/>
+</tc-ref>
+]]></file>
+                <file name="TorrentScoutMaskViewTopComponent.wstcref">
+                    <!--com.iontorrent.maskview.TorrentScoutMaskViewTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tc-ref PUBLIC "-//NetBeans//DTD Top Component in Mode Properties 2.0//EN" "http://www.netbeans.org/dtds/tc-ref2_0.dtd">
+<tc-ref version="2.0">
+  <tc-id id="TorrentScoutMaskViewTopComponent"/>
+  <state opened="false"/>
+</tc-ref>
+]]></file>
+            </folder>
+            <folder name="ionogram_mode">
+                <file name="TorrentScoutIonogramTopComponent.wstcref">
+                    <!--com.iontorrent.ionogram.TorrentScoutIonogramTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tc-ref PUBLIC "-//NetBeans//DTD Top Component in Mode Properties 2.0//EN" "http://www.netbeans.org/dtds/tc-ref2_0.dtd">
+<tc-ref version="2.0">
+  <tc-id id="TorrentScoutIonogramTopComponent"/>
+  <state opened="false"/>
+</tc-ref>
+]]></file>
+            </folder>
+            <folder name="table_mode">
+                <file name="WellTableTopComponent.wstcref">
+                    <!--com.iontorrent.welltable.WellTableTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tc-ref PUBLIC "-//NetBeans//DTD Top Component in Mode Properties 2.0//EN" "http://www.netbeans.org/dtds/tc-ref2_0.dtd">
+<tc-ref version="2.0">
+  <tc-id id="WellTableTopComponent"/>
+  <state opened="false"/>
+</tc-ref>
+]]></file>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="xml">
+        <folder name="entities">
+            <folder name="com_iontorrent_chipview">
+                <file name="WholeChipView" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <!--com.iontorrent.chipview.WholeChipViewTopComponent-->
+                    <attr name="hint.originalPublicID" stringvalue="-//com.iontorrent.chipview//WholeChipView//EN"/>
+                </file>
+            </folder>
+            <folder name="com_iontorrent_compview">
+                <file name="TorrentScoutCompositeView" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <!--com.iontorrent.compview.TorrentScoutCompositeViewTopComponent-->
+                    <attr name="hint.originalPublicID" stringvalue="-//com.iontorrent.compview//TorrentScoutCompositeView//EN"/>
+                </file>
+            </folder>
+            <folder name="com_iontorrent_ionogram">
+                <file name="TorrentScoutIonogram" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <!--com.iontorrent.ionogram.TorrentScoutIonogramTopComponent-->
+                    <attr name="hint.originalPublicID" stringvalue="-//com.iontorrent.ionogram//TorrentScoutIonogram//EN"/>
+                </file>
+            </folder>
+            <folder name="com_iontorrent_maskview">
+                <file name="TorrentScoutMaskView" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <!--com.iontorrent.maskview.TorrentScoutMaskViewTopComponent-->
+                    <attr name="hint.originalPublicID" stringvalue="-//com.iontorrent.maskview//TorrentScoutMaskView//EN"/>
+                </file>
+            </folder>
+            <folder name="com_iontorrent_welltable">
+                <file name="WellTable" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <!--com.iontorrent.welltable.WellTableTopComponent-->
+                    <attr name="hint.originalPublicID" stringvalue="-//com.iontorrent.welltable//WellTable//EN"/>
+                </file>
+            </folder>
+        </folder>
+        <folder name="memory">
+            <folder name="com">
+                <folder name="iontorrent">
+                    <folder name="chipview">
+                        <file name="WholeChipViewTopComponent">
+                            <!--com.iontorrent.chipview.WholeChipViewTopComponent-->
+                            <attr name="settings.providerPath" stringvalue="xml/lookups//com_iontorrent_chipview/WholeChipView.instance"/>
+                        </file>
+                    </folder>
+                    <folder name="compview">
+                        <file name="TorrentScoutCompositeViewTopComponent">
+                            <!--com.iontorrent.compview.TorrentScoutCompositeViewTopComponent-->
+                            <attr name="settings.providerPath" stringvalue="xml/lookups//com_iontorrent_compview/TorrentScoutCompositeView.instance"/>
+                        </file>
+                    </folder>
+                    <folder name="ionogram">
+                        <file name="TorrentScoutIonogramTopComponent">
+                            <!--com.iontorrent.ionogram.TorrentScoutIonogramTopComponent-->
+                            <attr name="settings.providerPath" stringvalue="xml/lookups//com_iontorrent_ionogram/TorrentScoutIonogram.instance"/>
+                        </file>
+                    </folder>
+                    <folder name="maskview">
+                        <file name="TorrentScoutMaskViewTopComponent">
+                            <!--com.iontorrent.maskview.TorrentScoutMaskViewTopComponent-->
+                            <attr name="settings.providerPath" stringvalue="xml/lookups//com_iontorrent_maskview/TorrentScoutMaskView.instance"/>
+                        </file>
+                    </folder>
+                    <folder name="welltable">
+                        <file name="WellTableTopComponent">
+                            <!--com.iontorrent.welltable.WellTableTopComponent-->
+                            <attr name="settings.providerPath" stringvalue="xml/lookups//com_iontorrent_welltable/WellTable.instance"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+        <folder name="lookups">
+            <folder name="com_iontorrent_chipview">
+                <file name="WholeChipView.instance">
+                    <!--com.iontorrent.chipview.WholeChipViewTopComponent-->
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.create" name="instanceCreate"/>
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.properties" name="settings.convertor"/>
+                    <attr name="settings.instanceClass" stringvalue="com.iontorrent.chipview.WholeChipViewTopComponent"/>
+                    <attr name="settings.instanceOf" stringvalue="com.iontorrent.chipview.WholeChipViewTopComponent"/>
+                    <attr boolvalue="true" name="xmlproperties.preventStoring"/>
+                </file>
+            </folder>
+            <folder name="com_iontorrent_compview">
+                <file name="TorrentScoutCompositeView.instance">
+                    <!--com.iontorrent.compview.TorrentScoutCompositeViewTopComponent-->
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.create" name="instanceCreate"/>
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.properties" name="settings.convertor"/>
+                    <attr name="settings.instanceClass" stringvalue="com.iontorrent.compview.TorrentScoutCompositeViewTopComponent"/>
+                    <attr name="settings.instanceOf" stringvalue="com.iontorrent.compview.TorrentScoutCompositeViewTopComponent"/>
+                    <attr boolvalue="true" name="xmlproperties.preventStoring"/>
+                </file>
+            </folder>
+            <folder name="com_iontorrent_ionogram">
+                <file name="TorrentScoutIonogram.instance">
+                    <!--com.iontorrent.ionogram.TorrentScoutIonogramTopComponent-->
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.create" name="instanceCreate"/>
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.properties" name="settings.convertor"/>
+                    <attr name="settings.instanceClass" stringvalue="com.iontorrent.ionogram.TorrentScoutIonogramTopComponent"/>
+                    <attr name="settings.instanceOf" stringvalue="com.iontorrent.ionogram.TorrentScoutIonogramTopComponent"/>
+                    <attr boolvalue="true" name="xmlproperties.preventStoring"/>
+                </file>
+            </folder>
+            <folder name="com_iontorrent_maskview">
+                <file name="TorrentScoutMaskView.instance">
+                    <!--com.iontorrent.maskview.TorrentScoutMaskViewTopComponent-->
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.create" name="instanceCreate"/>
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.properties" name="settings.convertor"/>
+                    <attr name="settings.instanceClass" stringvalue="com.iontorrent.maskview.TorrentScoutMaskViewTopComponent"/>
+                    <attr name="settings.instanceOf" stringvalue="com.iontorrent.maskview.TorrentScoutMaskViewTopComponent"/>
+                    <attr boolvalue="true" name="xmlproperties.preventStoring"/>
+                </file>
+            </folder>
+            <folder name="com_iontorrent_welltable">
+                <file name="WellTable.instance">
+                    <!--com.iontorrent.welltable.WellTableTopComponent-->
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.create" name="instanceCreate"/>
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.properties" name="settings.convertor"/>
+                    <attr name="settings.instanceClass" stringvalue="com.iontorrent.welltable.WellTableTopComponent"/>
+                    <attr name="settings.instanceOf" stringvalue="com.iontorrent.welltable.WellTableTopComponent"/>
+                    <attr boolvalue="true" name="xmlproperties.preventStoring"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="OptionsDialog">
+        <folder name="TorrentScoutOptions">
+            <file name="com-iontorrent-ionogram-options-IonogramOptionsOptionsPanelController.instance">
+                <!--com.iontorrent.ionogram.options.IonogramOptionsOptionsPanelController-->
+                <attr
+                    methodvalue="org.netbeans.spi.options.AdvancedOption.createSubCategory" name="instanceCreate"/>
+                <attr name="controller" newvalue="com.iontorrent.ionogram.options.IonogramOptionsOptionsPanelController"/>
+                <attr
+                    bundlevalue="com.iontorrent.ionogram.options.Bundle#OptionsCategory_Name_IonogramOptions" name="displayName"/>
+                <attr intvalue="3" name="position"/>
+                <attr
+                    bundlevalue="com.iontorrent.ionogram.options.Bundle#OptionsCategory_Keywords_IonogramOptions" name="keywords"/>
+                <attr name="keywordsCategory" stringvalue="TorrentScout/IonogramOptions"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>

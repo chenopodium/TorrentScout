@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN"
+                            "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Actions">
+        <folder name="File">
+            <file name="com-iontorrent-scout-actions-BrowseAction.instance">
+                <!--com.iontorrent.scout.actions.BrowseAction-->
+                <attr name="displayName" stringvalue="Browse DB and pick an experiment/result"/>
+                <attr
+                    methodvalue="org.openide.awt.Actions.alwaysEnabled" name="instanceCreate"/>
+                <attr name="delegate" newvalue="com.iontorrent.scout.actions.BrowseAction"/>
+                <attr name="iconBase" stringvalue="com/iontorrent/scout/experimentviewer/database-connect.png"/>
+                <attr boolvalue="false" name="noIconInMenu"/>
+            </file>
+            <file name="com-iontorrent-scout-actions-ConfigureAction.instance">
+                <!--com.iontorrent.scout.actions.ConfigureAction-->
+                <attr name="displayName" stringvalue="Configure the databases, raw and results directories"/>
+                <attr
+                    methodvalue="org.openide.awt.Actions.alwaysEnabled" name="instanceCreate"/>
+                <attr name="delegate" newvalue="com.iontorrent.scout.actions.ConfigureAction"/>
+                <attr name="iconBase" stringvalue="com/iontorrent/scout/offline/system-run-3.png"/>
+                <attr boolvalue="false" name="noIconInMenu"/>
+            </file>
+            <file name="com-iontorrent-scout-actions-OpenAction.instance">
+                <!--com.iontorrent.scout.actions.OpenAction-->
+                <attr name="displayName" stringvalue="Open Experiment (pick folders)"/>
+                <attr
+                    methodvalue="org.openide.awt.Actions.alwaysEnabled" name="instanceCreate"/>
+                <attr name="delegate" newvalue="com.iontorrent.scout.actions.OpenAction"/>
+                <attr name="iconBase" stringvalue="com/iontorrent/scout/offline/document-open-2.png"/>
+                <attr boolvalue="false" name="noIconInMenu"/>
+            </file>
+            <file name="com-iontorrent-scout-actions-CheckFolderAction.instance">
+                <!--com.iontorrent.scout.actions.CheckFolderAction-->
+                <attr name="displayName" stringvalue="Show info"/>
+                <attr
+                    methodvalue="org.openide.awt.Actions.alwaysEnabled" name="instanceCreate"/>
+                <attr name="delegate" newvalue="com.iontorrent.scout.actions.CheckFolderAction"/>
+                <attr name="iconBase" stringvalue="com/iontorrent/scout/actions/folder-go.png"/>
+                <attr boolvalue="false" name="noIconInMenu"/>
+            </file>
+        </folder>
+        <folder name="Window">
+            <file name="com-iontorrent-scout-experimentviewer-ExperimentViewerTopComponent.instance">
+                <!--com.iontorrent.scout.experimentviewer.ExperimentViewerTopComponent-->
+                <attr
+                    methodvalue="org.openide.windows.TopComponent.openAction" name="instanceCreate"/>
+                <attr name="component" newvalue="com.iontorrent.scout.experimentviewer.ExperimentViewerTopComponent"/>
+                <attr name="preferredID" stringvalue="ExperimentViewerTopComponent"/>
+                <attr
+                    bundlevalue="com.iontorrent.scout.experimentviewer.Bundle#CTL_ExperimentViewerAction" name="displayName"/>
+                <attr name="iconBase" stringvalue="com/iontorrent/scout/experimentviewer/exptree/view-list-tree-2.png"/>
+            </file>
+            <file name="com-iontorrent-scout-offline-OfflineTopComponent.instance">
+                <!--com.iontorrent.scout.offline.OfflineTopComponent-->
+                <attr
+                    methodvalue="org.openide.windows.TopComponent.openAction" name="instanceCreate"/>
+                <attr name="component" newvalue="com.iontorrent.scout.offline.OfflineTopComponent"/>
+                <attr name="preferredID" stringvalue="OfflineTopComponent"/>
+                <attr
+                    bundlevalue="com.iontorrent.scout.offline.Bundle#CTL_OfflineAction" name="displayName"/>
+                <attr name="iconBase" stringvalue="com/iontorrent/scout/offline/server-delete.png"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="File">
+            <file name="com-iontorrent-scout-actions-BrowseAction.shadow">
+                <!--com.iontorrent.scout.actions.BrowseAction-->
+                <attr name="originalFile" stringvalue="Actions/File/com-iontorrent-scout-actions-BrowseAction.instance"/>
+                <attr intvalue="2" name="position"/>
+            </file>
+            <file name="com-iontorrent-scout-actions-ConfigureAction.shadow">
+                <!--com.iontorrent.scout.actions.ConfigureAction-->
+                <attr name="originalFile" stringvalue="Actions/File/com-iontorrent-scout-actions-ConfigureAction.instance"/>
+                <attr intvalue="2" name="position"/>
+            </file>
+            <file name="com-iontorrent-scout-actions-OpenAction.shadow">
+                <!--com.iontorrent.scout.actions.OpenAction-->
+                <attr name="originalFile" stringvalue="Actions/File/com-iontorrent-scout-actions-OpenAction.instance"/>
+                <attr intvalue="3" name="position"/>
+            </file>
+            <file name="com-iontorrent-scout-actions-CheckFolderAction.shadow">
+                <!--com.iontorrent.scout.actions.CheckFolderAction-->
+                <attr name="originalFile" stringvalue="Actions/File/com-iontorrent-scout-actions-CheckFolderAction.instance"/>
+                <attr intvalue="5" name="position"/>
+            </file>
+        </folder>
+        <folder name="Window">
+            <file name="com-iontorrent-scout-experimentviewer-ExperimentViewerTopComponent.shadow">
+                <!--com.iontorrent.scout.experimentviewer.ExperimentViewerTopComponent-->
+                <attr name="originalFile" stringvalue="Actions/Window/com-iontorrent-scout-experimentviewer-ExperimentViewerTopComponent.instance"/>
+            </file>
+            <file name="com-iontorrent-scout-offline-OfflineTopComponent.shadow">
+                <!--com.iontorrent.scout.offline.OfflineTopComponent-->
+                <attr name="originalFile" stringvalue="Actions/Window/com-iontorrent-scout-offline-OfflineTopComponent.instance"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Toolbars">
+        <folder name="File">
+            <file name="com-iontorrent-scout-actions-BrowseAction.shadow">
+                <!--com.iontorrent.scout.actions.BrowseAction-->
+                <attr name="originalFile" stringvalue="Actions/File/com-iontorrent-scout-actions-BrowseAction.instance"/>
+                <attr intvalue="2" name="position"/>
+            </file>
+            <file name="com-iontorrent-scout-actions-ConfigureAction.shadow">
+                <!--com.iontorrent.scout.actions.ConfigureAction-->
+                <attr name="originalFile" stringvalue="Actions/File/com-iontorrent-scout-actions-ConfigureAction.instance"/>
+                <attr intvalue="2" name="position"/>
+            </file>
+            <file name="com-iontorrent-scout-actions-OpenAction.shadow">
+                <!--com.iontorrent.scout.actions.OpenAction-->
+                <attr name="originalFile" stringvalue="Actions/File/com-iontorrent-scout-actions-OpenAction.instance"/>
+                <attr intvalue="3" name="position"/>
+            </file>
+            <file name="com-iontorrent-scout-actions-CheckFolderAction.shadow">
+                <!--com.iontorrent.scout.actions.CheckFolderAction-->
+                <attr name="originalFile" stringvalue="Actions/File/com-iontorrent-scout-actions-CheckFolderAction.instance"/>
+                <attr intvalue="5" name="position"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Shortcuts">
+        <file name="C-D.shadow">
+            <!--com.iontorrent.scout.actions.BrowseAction-->
+            <attr name="originalFile" stringvalue="Actions/File/com-iontorrent-scout-actions-BrowseAction.instance"/>
+        </file>
+        <file name="C-C.shadow">
+            <!--com.iontorrent.scout.actions.ConfigureAction-->
+            <attr name="originalFile" stringvalue="Actions/File/com-iontorrent-scout-actions-ConfigureAction.instance"/>
+        </file>
+        <file name="C-O.shadow">
+            <!--com.iontorrent.scout.actions.OpenAction-->
+            <attr name="originalFile" stringvalue="Actions/File/com-iontorrent-scout-actions-OpenAction.instance"/>
+        </file>
+        <file name="A-O.shadow">
+            <!--com.iontorrent.scout.actions.OpenAction-->
+            <attr name="originalFile" stringvalue="Actions/File/com-iontorrent-scout-actions-OpenAction.instance"/>
+        </file>
+        <file name="A-I.shadow">
+            <!--com.iontorrent.scout.actions.CheckFolderAction-->
+            <attr name="originalFile" stringvalue="Actions/File/com-iontorrent-scout-actions-CheckFolderAction.instance"/>
+        </file>
+    </folder>
+    <folder name="Windows2">
+        <folder name="Components">
+            <file name="ExperimentViewerTopComponent.settings">
+                <!--com.iontorrent.scout.experimentviewer.ExperimentViewerTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+  <instance class="com.iontorrent.scout.experimentviewer.ExperimentViewerTopComponent"/>
+</settings>
+]]></file>
+            <file name="OfflineTopComponent.settings">
+                <!--com.iontorrent.scout.offline.OfflineTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+  <instance class="com.iontorrent.scout.offline.OfflineTopComponent"/>
+</settings>
+]]></file>
+        </folder>
+        <folder name="Modes">
+            <folder name="top_left">
+                <file name="ExperimentViewerTopComponent.wstcref">
+                    <!--com.iontorrent.scout.experimentviewer.ExperimentViewerTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tc-ref PUBLIC "-//NetBeans//DTD Top Component in Mode Properties 2.0//EN" "http://www.netbeans.org/dtds/tc-ref2_0.dtd">
+<tc-ref version="2.0">
+  <tc-id id="ExperimentViewerTopComponent"/>
+  <state opened="true"/>
+</tc-ref>
+]]></file>
+                <file name="OfflineTopComponent.wstcref">
+                    <!--com.iontorrent.scout.offline.OfflineTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tc-ref PUBLIC "-//NetBeans//DTD Top Component in Mode Properties 2.0//EN" "http://www.netbeans.org/dtds/tc-ref2_0.dtd">
+<tc-ref version="2.0">
+  <tc-id id="OfflineTopComponent"/>
+  <state opened="true"/>
+</tc-ref>
+]]></file>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="xml">
+        <folder name="entities">
+            <folder name="com_iontorrent_scout_experimentviewer">
+                <file name="ExperimentViewer" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <!--com.iontorrent.scout.experimentviewer.ExperimentViewerTopComponent-->
+                    <attr name="hint.originalPublicID" stringvalue="-//com.iontorrent.scout.experimentviewer//ExperimentViewer//EN"/>
+                </file>
+            </folder>
+            <folder name="com_iontorrent_scout_offline">
+                <file name="Offline" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <!--com.iontorrent.scout.offline.OfflineTopComponent-->
+                    <attr name="hint.originalPublicID" stringvalue="-//com.iontorrent.scout.offline//Offline//EN"/>
+                </file>
+            </folder>
+        </folder>
+        <folder name="memory">
+            <folder name="com">
+                <folder name="iontorrent">
+                    <folder name="scout">
+                        <folder name="experimentviewer">
+                            <file name="ExperimentViewerTopComponent">
+                                <!--com.iontorrent.scout.experimentviewer.ExperimentViewerTopComponent-->
+                                <attr name="settings.providerPath" stringvalue="xml/lookups//com_iontorrent_scout_experimentviewer/ExperimentViewer.instance"/>
+                            </file>
+                        </folder>
+                        <folder name="offline">
+                            <file name="OfflineTopComponent">
+                                <!--com.iontorrent.scout.offline.OfflineTopComponent-->
+                                <attr name="settings.providerPath" stringvalue="xml/lookups//com_iontorrent_scout_offline/Offline.instance"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+        <folder name="lookups">
+            <folder name="com_iontorrent_scout_experimentviewer">
+                <file name="ExperimentViewer.instance">
+                    <!--com.iontorrent.scout.experimentviewer.ExperimentViewerTopComponent-->
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.create" name="instanceCreate"/>
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.properties" name="settings.convertor"/>
+                    <attr name="settings.instanceClass" stringvalue="com.iontorrent.scout.experimentviewer.ExperimentViewerTopComponent"/>
+                    <attr name="settings.instanceOf" stringvalue="com.iontorrent.scout.experimentviewer.ExperimentViewerTopComponent"/>
+                    <attr boolvalue="true" name="xmlproperties.preventStoring"/>
+                </file>
+            </folder>
+            <folder name="com_iontorrent_scout_offline">
+                <file name="Offline.instance">
+                    <!--com.iontorrent.scout.offline.OfflineTopComponent-->
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.create" name="instanceCreate"/>
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.properties" name="settings.convertor"/>
+                    <attr name="settings.instanceClass" stringvalue="com.iontorrent.scout.offline.OfflineTopComponent"/>
+                    <attr name="settings.instanceOf" stringvalue="com.iontorrent.scout.offline.OfflineTopComponent"/>
+                    <attr boolvalue="true" name="xmlproperties.preventStoring"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

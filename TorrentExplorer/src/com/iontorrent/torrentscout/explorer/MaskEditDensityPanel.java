@@ -64,7 +64,7 @@ public class MaskEditDensityPanel extends MaskDensityPanel {
     @Override
     protected void afterImageCreated() {
       if (imagePanel != null && mask != null) {
-          p("SETTING AREA OFFSETS TO:"+mask.getRelCoord());
+          //p("SETTING AREA OFFSETS to the relative coords of the mask:"+mask.getRelCoord());
             this.imagePanel.setAreaOffsetX(mask.getRelCoord().getCol());
             this.imagePanel.setAreaOffsetY(mask.getRelCoord().getRow());
         }  

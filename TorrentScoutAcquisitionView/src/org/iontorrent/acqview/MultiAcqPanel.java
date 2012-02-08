@@ -71,6 +71,7 @@ import org.jfree.chart.JFreeChart;
   
     public MultiAcqPanel(RawType filetype) {
         super(false);
+        subtract = -1;
         this.filetype = filetype;
         setLayout(new BorderLayout());
         chart = new MultiAcqChartPanel();
@@ -131,7 +132,7 @@ import org.jfree.chart.JFreeChart;
         }
     }
     public void addResult(WellFlowDataResult result, int flow) {
-      //  p("Adding result "+Arrays.toString(result.getData())+":"+result.getName()+"  for flow "+flow);
+        if (flow == 0) p("Adding result "+Arrays.toString(result.getData())+":"+result.getName()+"  for flow "+flow);
        
         results = getFlowResults(flow);      
         results.put(result.getResultType(), result);
@@ -188,6 +189,7 @@ import org.jfree.chart.JFreeChart;
         if (nndata != null) {           
             addResult(nndata, nndata.getFlow());           
         }       
+        p("SUBTRACT IS: "+subtract);
         chart.subtract = subtract;
         chart.update(region, subtitle, context, flowmap, flows);
         add("Center", chart);

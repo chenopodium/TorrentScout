@@ -16,6 +16,7 @@
  */
 package com.iontorrent.torrentscout.explorer;
 
+import com.iontorrent.guiutils.widgets.Widget;
 import com.iontorrent.expmodel.ExpContextChangedListener;
 import com.iontorrent.rawdataaccess.pgmacquisition.RawType;
 import com.iontorrent.rawdataaccess.wells.BitMask;

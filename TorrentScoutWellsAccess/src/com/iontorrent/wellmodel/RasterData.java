@@ -314,6 +314,7 @@ public class RasterData {
 
     public boolean isPinned(int c, int r, int min, int max) {
         boolean allsame = true;
+        int middlesame = 0;
         float[] values = getRasterdata()[c][r][0];
         for (int f = 0; f < values.length; f++) {
             if (values[f] < min || values[f] > max) {
@@ -321,7 +322,17 @@ public class RasterData {
             }
             if (values[f] != values[0]) {
                 allsame = false;
+                middlesame = 0;
             }
+            else {
+                if (!allsame) {
+                    middlesame++;
+                }
+            }
+        }
+        if (middlesame > 10) {
+            // more than 10 times same value
+            return true;
         }
         return allsame;
     }

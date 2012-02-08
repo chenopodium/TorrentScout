@@ -515,6 +515,13 @@ Alternatively use "zip -yr ${app.name}.app" to create a simple zipped distributi
         </ant>
     </target>
     
+       
+     <target name="deploy-test-jnlp" depends="build, -jdk-init" description="Copy TEST war to rnd1.">
+        <ant antfile="${harness.dir}/jnlp.xml" target="deploy-test">
+            <reference refid="cluster.path.id"/>
+            <property name="jnlp.generate.versions" value="${jnlp.generate.versions}"/>
+        </ant>
+    </target>
     
      <target name="deploy-local-jnlp" depends="build, -jdk-init" description="Copy war to my desktop local installation.">
         <ant antfile="${harness.dir}/jnlp.xml" target="deploy-local">
@@ -523,6 +530,79 @@ Alternatively use "zip -yr ${app.name}.app" to create a simple zipped distributi
         </ant>
     </target>
     
+     <target name="deploy-carlsbad-jnlp" depends="build, -jdk-init" description="Copy PROD war to CARLSBAD server.">
+        <ant antfile="${harness.dir}/jnlp.xml" target="deploy-carlsbad">
+            <reference refid="cluster.path.id"/>
+            <property name="jnlp.generate.versions" value="${jnlp.generate.versions}"/>
+        </ant>
+    </target>
+    
+    <target name="deploy-tomcat-jnlp" depends="build, -jdk-init" description="Copy PRODUCTION war to tomcat server (tomcat.itw).">
+        <ant antfile="${harness.dir}/jnlp.xml" target="deploy-tomcat">
+            <reference refid="cluster.path.id"/>
+            <property name="jnlp.generate.versions" value="${jnlp.generate.versions}"/>
+        </ant>
+    </target>
+    
+     <target name="deploy-ts-jnlp" depends="build, -jdk-init" description="Copy PRODUCTION war to TORRENT servers">
+        <ant antfile="${harness.dir}/jnlp.xml" target="deploy-ts">
+            <reference refid="cluster.path.id"/>
+            <property name="jnlp.generate.versions" value="${jnlp.generate.versions}"/>
+        </ant>
+    </target>
+    
+     <target name="deploy-ts-test-jnlp" depends="build, -jdk-init" description="Copy TEST war to TORRENT servers">
+        <ant antfile="${harness.dir}/jnlp.xml" target="deploy-ts-test">
+            <reference refid="cluster.path.id"/>
+            <property name="jnlp.generate.versions" value="${jnlp.generate.versions}"/>
+        </ant>
+    </target>
+    
+     <target name="deploy-ioneast-ts-jnlp" depends="build, -jdk-init" description="Copy PRODUCTION war to TORRENT SERVER.">
+        <ant antfile="${harness.dir}/jnlp.xml" target="deploy-ioneast-ts">
+            <reference refid="cluster.path.id"/>
+            <property name="jnlp.generate.versions" value="${jnlp.generate.versions}"/>
+        </ant>
+    </target>
+    
+     <target name="deploy-blackbird-jnlp" depends="build, -jdk-init" description="Copy BLACKBIRD war to TORRENT SERVER.">
+        <ant antfile="${harness.dir}/jnlp.xml" target="deploy-blackbird">
+            <reference refid="cluster.path.id"/>
+            <property name="jnlp.generate.versions" value="${jnlp.generate.versions}"/>
+        </ant>
+    </target>
+    
+    <target name="deploy-community-jnlp" depends="build, -jdk-init" description="Community release!">
+        <ant antfile="${harness.dir}/jnlp.xml" target="deploy-community">
+            <reference refid="cluster.path.id"/>
+            <property name="jnlp.generate.versions" value="${jnlp.generate.versions}"/>
+        </ant>
+    </target>
+	 <target name="deploy-test-community-jnlp" depends="build, -jdk-init" description="Community TEST release!">
+        <ant antfile="${harness.dir}/jnlp.xml" target="deploy-test-community">
+            <reference refid="cluster.path.id"/>
+            <property name="jnlp.generate.versions" value="${jnlp.generate.versions}"/>
+        </ant>
+    </target>
+      <target name="deploy-aruba-ts-jnlp" depends="build, -jdk-init" description="Copy PRODUCTION war to TORRENT SERVER.">
+        <ant antfile="${harness.dir}/jnlp.xml" target="deploy-aruba-ts">
+            <reference refid="cluster.path.id"/>
+            <property name="jnlp.generate.versions" value="${jnlp.generate.versions}"/>
+        </ant>
+    </target>
+    
+      <target name="deploy-carlsbad-ts-jnlp" depends="build, -jdk-init" description="Copy PRODUCTION war to TORRENT SERVER.">
+        <ant antfile="${harness.dir}/jnlp.xml" target="deploy-carlsbad-ts">
+            <reference refid="cluster.path.id"/>
+            <property name="jnlp.generate.versions" value="${jnlp.generate.versions}"/>
+        </ant>
+    </target>
+     <target name="deploy-ionwest-ts-jnlp" depends="build, -jdk-init" description="Copy PRODUCTION war to TORRENT SERVER.">
+        <ant antfile="${harness.dir}/jnlp.xml" target="deploy-ionwest-ts">
+            <reference refid="cluster.path.id"/>
+            <property name="jnlp.generate.versions" value="${jnlp.generate.versions}"/>
+        </ant>
+    </target>
     <target name="run-jnlp" depends="build,-jdk-init" description="Runs this suite as a JNLP application.">
         <ant antfile="${harness.dir}/jnlp.xml" target="run">
             <reference refid="cluster.path.id"/>

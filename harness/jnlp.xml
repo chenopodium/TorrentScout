@@ -195,7 +195,25 @@ made subject to such option by the copyright holder.
     >        
     </target>
 
-	       
+	
+	<target name="deploy-community">
+	<!-- now add copy to tomcat.itw -->
+	 <scp todir="croth:Dreimal3@67.131.251.20:/var/lib/tomcat5/webapps" trust="true">
+			<fileset dir="${dist.dir}">
+				<include name="*.war"/>	    	
+			</fileset>
+	   </scp>			
+	</target>
+	
+	<target name="deploy-test-community">
+	<!-- now add copy to tomcat.itw -->
+	 <scp todir="croth:Dreimal3@67.131.251.20:/var/lib/tomcat5/webapps" trust="true">
+			<fileset dir="${dist.dir}">
+				<include name="*test.war"/>	    	
+			</fileset>
+	   </scp>			
+	</target>
+        
    
     <target name="build-jnlp-local" depends="build-jnlp-nowar">
         <property name="build.jnlp.local.dir" location="${dist.dir}/jnlp/local"/>

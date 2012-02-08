@@ -70,7 +70,7 @@ public class SamUtils {
     String result_dir;
     String plugin_dir;
 
-    public SamUtils(File asamfile, File abamfile,  String cache_dir, String result_dir, String plugin_dir) {
+    public SamUtils(File abamfile,  String cache_dir, String result_dir, String plugin_dir) {
         // this.samfile = asamfile;
         this.bamfile = abamfile;
         this.result_dir = result_dir;

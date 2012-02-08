@@ -16,6 +16,7 @@
  */
 package com.iontorrent.torrentscout.explorer;
 
+import com.iontorrent.guiutils.widgets.Widget;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -47,9 +48,10 @@ public class FrameWidget extends Widget {
     public void paint(Graphics g, int x, int y, double scale) {
         g.setColor(getColor());
         Graphics2D gg = (Graphics2D) g;
-        
+        int w = 3;
+        if (selected) w = 4;
         g.drawLine(x, getY0(), x, getY1());
-        gg.fill3DRect(x-3, y-3, 6, 6, true);
+        gg.fill3DRect(x-w, y-w, 2*w, 2*w, true);
     }
 
     @Override

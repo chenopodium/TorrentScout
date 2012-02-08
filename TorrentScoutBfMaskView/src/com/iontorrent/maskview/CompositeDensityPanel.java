@@ -74,9 +74,9 @@ public class CompositeDensityPanel extends GeneralDensityPanel implements WellMo
     int max;
 
     public CompositeDensityPanel(CompositeExperiment exp, ExperimentLoader loader) {
-        super(null);
+        super(exp.getRootContext());
         this.loader = loader;
-
+        this.setNrWidgets(-1);
         this.compexp = exp;
         setBorder(50);
     }
@@ -146,6 +146,13 @@ public class CompositeDensityPanel extends GeneralDensityPanel implements WellMo
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
+        // show bottom left
+        if (imagePanel != null) {
+            p("composite.setScoreMask: Moving view to selection");
+            
+            this.imagePanel.moveViewTo(0,0);
+        }
+        this.repaint();
     }
 
     @Override
@@ -282,11 +289,11 @@ public class CompositeDensityPanel extends GeneralDensityPanel implements WellMo
 
     protected void publishExpContext(ExperimentContext exp, DatBlock block) {
         if (exp != null) {
-            int ans = JOptionPane.showConfirmDialog(WindowManager.getDefault().getMainWindow(), "<html>Would you like to load block <b>"+block.toShortString()+"</b>?"
-                    + "<br>Note you will <b>lose any currently edited masks</b></html>", "Load block", JOptionPane.OK_CANCEL_OPTION);
-            if (ans != JOptionPane.OK_OPTION) return;
+//            int ans = JOptionPane.showConfirmDialog(WindowManager.getDefault().getMainWindow(), "<html>Would you like to load block <b>"+block.toShortString()+"</b>?"
+//                    + "<br>Note you will <b>lose any currently edited masks</b></html>", "Load block", JOptionPane.OK_CANCEL_OPTION);
+//            if (ans != JOptionPane.OK_OPTION) return;
             
-            GuiUtils.showNonModalMsg("Sending ExperimentContext for selected block: " + exp.getResultsDirectory());
+            GuiUtils.showNonModalMsg("Loading Block "+block+" with dir " + exp.getRawDir());
             p("Got a ExperimentContext: " + exp);
             GlobalContext.getContext().setExperimentContext(exp, false);
             LookupUtils.publish(expContent, exp);

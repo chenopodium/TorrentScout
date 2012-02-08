@@ -72,8 +72,8 @@ import org.openide.util.lookup.InstanceContent;
 autostore = false)
 @TopComponent.Description(preferredID = "WellTableTopComponent",
 iconBase = "com/iontorrent/welltable/table-add.png",
-persistenceType = TopComponent.PERSISTENCE_ALWAYS)
-@TopComponent.Registration(mode = "table_mode", openAtStartup = true)
+persistenceType = TopComponent.PERSISTENCE_NEVER)
+@TopComponent.Registration(mode = "table_mode", openAtStartup = false)
 @ActionID(category = "Window", id = "com.iontorrent.welltable.WellTableTopComponent")
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
 @TopComponent.OpenActionRegistration(displayName = "#CTL_WellTableAction",
@@ -336,7 +336,7 @@ public final class WellTableTopComponent extends TopComponent implements TaskLis
         cur_context.setCoordinate(coord);
         p("Sending coordinate of context: " + coord);
         DOACTIONS = false;
-        GuiUtils.showNonModalMsg("WellTable: Loading data for coord "+cur_context.getAbsoluteCoordinate());
+      //  GuiUtils.showNonModalMsg("WellTable: Loading data for coord "+cur_context.getAbsoluteCoordinate());
         if (coord != null) LookupUtils.publish(coordContent, coord);
         DOACTIONS = true;
     }
@@ -633,7 +633,7 @@ public final class WellTableTopComponent extends TopComponent implements TaskLis
 
     private void btnLoadScoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadScoresActionPerformed
         if (this.btnLoadScores.isSelected()) {
-            GuiUtils.showNonModalMsg("Loading scores for data in table...");
+            GuiUtils.showNonModalMsg("WellTable", "Loading scores for data in table...");
             this.updateTable(cur_context);
         }
     }//GEN-LAST:event_btnLoadScoresActionPerformed
@@ -664,7 +664,7 @@ public final class WellTableTopComponent extends TopComponent implements TaskLis
             context.setSelection(sel);
             LookupUtils.publish(wellSelectionContent, sel);
             context.setCoordinate(coord);
-            GuiUtils.showNonModalMsg("WellTable: Loading data for coord "+context.getAbsoluteCoordinate());
+          //  GuiUtils.showNonModalMsg("WellTable: Loading data for coord "+context.getAbsoluteCoordinate());
             LookupUtils.publish(wellCoordContent, coord);
 
 

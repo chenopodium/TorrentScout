@@ -39,14 +39,14 @@ public class CompositeExperiment {
 
     private static String lastError;
     private static Exception lastException;
-    private ExperimentContext exp;
+    private ExperimentContext rootexp;
     private ExperimentContext exptemplate;
     private ArrayList<DatBlock> blocks;
     private DatBlock curblock;
     public static final String THUMB = "thumbnail";
 
     public CompositeExperiment(ExperimentContext exp) {
-        this.exp = exp;
+        this.rootexp = exp;
         exptemplate = exp.deepClone();
         exptemplate.clear();
     }
@@ -75,7 +75,7 @@ public class CompositeExperiment {
     }
 
     public ExperimentContext getRootContext() {
-        return exp;
+        return rootexp;
     }
 
     public ExperimentContext getContext(DatBlock block, boolean offerHelp) {
@@ -88,6 +88,8 @@ public class CompositeExperiment {
         be.setRawDir(this.getRawDir(block));
         be.setNrcols(block.getWidth());
         be.setNrrows(block.getHeight());
+        be.setSffFilename("rawlib.sff");
+        be.setBamFilename("rawlib.bam");
         be.setResultsName(exptemplate.getResultsName()+"_block_"+block.toShortString());
         be.setResultsDirectory(this.getResultsDirectory(block));
         if (!FileUtils.exists(be.getResultsDirectory())) {
@@ -100,8 +102,9 @@ public class CompositeExperiment {
         be.setColOffset(offsetx);
         be.setRowOffset(offsety);
         be.setBlock(true);
-        //   p("Got exp context with block :"+block);
-        p("block " + block + " has raw dir: " + be.getRawDir());
+        be.setDatblock(block);
+        p("Got exp context with block :"+block);
+        p("block exp is: "+be);
         showBlockHelp(offerHelp);
         return be;
     }
@@ -118,20 +121,21 @@ public class CompositeExperiment {
 
             msg += "</ul></html>";
             //  JOptionPane.showMessageDialog(null, msg);
-            JFrame f = new JFrame();
-
-            final JDialog newdialog = new JDialog(f, "Viewing data from a BB block", false);
-            newdialog.setLocation(500, 300);
-            JLabel comp = new JLabel(msg);
-            newdialog.getContentPane().add(comp);
-            newdialog.pack();
-            newdialog.setAlwaysOnTop(true);
-            newdialog.setVisible(true);
-            KeyListener l = new MyEscapeListener(newdialog);
-            newdialog.addKeyListener(l);
-            comp.addKeyListener(l);
-            f.addKeyListener(l);
-            comp.setToolTipText("Click escape, space or tab to close this window (or click on the x)");
+            
+//            JFrame f = new JFrame();
+//
+//            final JDialog newdialog = new JDialog(f, "Viewing data from a BB block", false);
+//            newdialog.setLocation(500, 300);
+//            JLabel comp = new JLabel(msg);
+//            newdialog.getContentPane().add(comp);
+//            newdialog.pack();
+//            newdialog.setAlwaysOnTop(true);
+//            newdialog.setVisible(true);
+//            KeyListener l = new MyEscapeListener(newdialog);
+//            newdialog.addKeyListener(l);
+//            comp.addKeyListener(l);
+//            f.addKeyListener(l);
+//            comp.setToolTipText("Click escape, space or tab to close this window (or click on the x)");
         }
     }
 
@@ -168,19 +172,19 @@ public class CompositeExperiment {
 
     public ExperimentContext getThumbnailsContext(boolean help) {
         ExperimentContext be = exptemplate.deepClone();
-        be.setRawDir(exp.getRawDir() + THUMB);
+        be.setRawDir(rootexp.getRawDir() + THUMB);
         be.setThumbnails(true);
         if (!FileUtils.exists(be.getRawDir())) {
             err(THUMB + " raw dir " + be.getRawDir() + " not found");
             //return null;
         }
 
-        be.setResultsDirectory(exp.getResultsDirectory() + "block_" + THUMB);
+        be.setResultsDirectory(rootexp.getResultsDirectory() + "block_" + THUMB);
         if (!FileUtils.exists(be.getResultsDirectory())) {
             p("Thumbnails results dir " + be.getResultsDirectory() + " not found, using RAW dir");
             be.setResultsDirectory(be.getRawDir());
         }
-        be.setCacheDir(exp.getCacheDir() + "cache_" + THUMB);
+        be.setCacheDir(rootexp.getCacheDir() + "cache_" + THUMB);
         int offsetx = 0;
         int offsety = 0;
         be.setColOffset(offsetx);
@@ -216,7 +220,7 @@ public class CompositeExperiment {
 
     private boolean parseBlocks() {
 
-        ExpLogParser par = new ExpLogParser(exp.getRawDir());
+        ExpLogParser par = new ExpLogParser(rootexp.getRawDir());
         if (!par.parse()) {
             warn("Could not parse blocks");
             return false;
@@ -250,7 +254,7 @@ public class CompositeExperiment {
     }
 
     public String getResultsDirectory(DatBlock b) {
-        String dir = exp.getResultsDirectory();
+        String dir = rootexp.getResultsDirectory();
         if (b == null) {
             return dir;
         }
@@ -265,7 +269,7 @@ public class CompositeExperiment {
     }
 
     public String getCacheDir(DatBlock b) {
-        String dir = exp.getCacheDir();
+        String dir = rootexp.getCacheDir();
         if (b == null) {
             return dir;
         }
@@ -284,7 +288,7 @@ public class CompositeExperiment {
     }
 
     public String getRawDir(DatBlock b) {
-        String dir = exp.getRawDir();
+        String dir = rootexp.getRawDir();
         if (b == null) {
             return dir;
         }
@@ -362,28 +366,28 @@ public class CompositeExperiment {
      * @return the nrcols
      */
     public int getNrcols() {
-        return exp.getNrcols();
+        return rootexp.getNrcols();
     }
 
     /**
      * @param nrcols the nrcols to set
      */
     public void setNrcols(int nrcols) {
-        exp.setNrcols(nrcols);
+        rootexp.setNrcols(nrcols);
     }
 
     /**
      * @return the nrrows
      */
     public int getNrrows() {
-        return exp.getNrrows();
+        return rootexp.getNrrows();
     }
 
     /**
      * @param nrrows the nrrows to set
      */
     public void setNrrows(int nrrows) {
-        this.exp.setNrrows(nrrows);
+        this.rootexp.setNrrows(nrrows);
     }
 
     public ExperimentContext getContext(int i) {

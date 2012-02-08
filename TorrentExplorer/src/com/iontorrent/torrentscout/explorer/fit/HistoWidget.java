@@ -16,7 +16,7 @@
  */
 package com.iontorrent.torrentscout.explorer.fit;
 
-import com.iontorrent.torrentscout.explorer.Widget;
+import com.iontorrent.guiutils.widgets.Widget;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -54,7 +54,8 @@ public class HistoWidget extends Widget {
         
         gg.fill3DRect(x - 2, (y - h / 2), 6, 6, true);
         
-        gg.setStroke(new BasicStroke(1));
+        if (selected) gg.setStroke(new BasicStroke(2));
+        else gg.setStroke(new BasicStroke(1));
         // craw cisssor
         g.drawLine(x - cx, cy0, x + cx, cy1);
         g.drawLine(x - cx, cy1, x + cx, cy0);

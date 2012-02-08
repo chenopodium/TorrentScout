@@ -49,6 +49,10 @@ public abstract class Task extends SwingWorker<Void, Void> implements ProgressLi
          this.proglistener = proglistener;
          if (proplist != null) this.addPropertyChangeListener(proplist);
     }
+     public Task(TaskListener tasklistener, ProgressListener proglistener) {
+         this.tasklistener = tasklistener;
+         this.proglistener = proglistener;         
+    }
    
     public Task(TaskListener tasklistener, ProgressHandle handle, PropertyChangeListener proplist) {
          this.tasklistener = tasklistener;
@@ -81,15 +85,12 @@ public abstract class Task extends SwingWorker<Void, Void> implements ProgressLi
     public void stop() {
         this.cancel(true);
     }
-    public Task(TaskListener tasklistener, ProgressListener proglistener) {
-        this(tasklistener, proglistener, null);
-        
-    }
+   
     public TaskListener getTaskListener() {
         return tasklistener;
     }
     public ProgressListener getProgListener() {
-        return proglistener;
+        return getProglistener();
     }
 
     /*
@@ -107,7 +108,7 @@ public abstract class Task extends SwingWorker<Void, Void> implements ProgressLi
         }
         closeProgressFrame();
         if (tasklistener != null) tasklistener.taskDone(this);
-        if (proglistener != null) proglistener.stop();
+        if (getProglistener() != null) getProglistener().stop();
     }
     public JFrame getProgressFrame() {
         return frame;
@@ -120,7 +121,7 @@ public abstract class Task extends SwingWorker<Void, Void> implements ProgressLi
     }
      public void setText(String text) {
        
-        if (proglistener != null) proglistener.setMessage(text);
+        if (getProglistener() != null) getProglistener().setMessage(text);
         if (handle != null) handle.setDisplayName(text);
     }
     @Override
@@ -128,7 +129,7 @@ public abstract class Task extends SwingWorker<Void, Void> implements ProgressLi
         if (prog > 99) prog = 99;
         if (prog <= 0) prog = 1;
         super.setProgress(prog);
-        if (proglistener != null) proglistener.setProgressValue(prog);
+        if (getProglistener() != null) getProglistener().setProgressValue(prog);
         if (handle != null) handle.progress(prog);
     }
     /** ================== LOGGING ===================== */
@@ -151,5 +152,19 @@ public abstract class Task extends SwingWorker<Void, Void> implements ProgressLi
      @Override
     public void setMessage(String msg) {
         setText(msg);
+    }
+
+    /**
+     * @return the proglistener
+     */
+    public ProgressListener getProglistener() {
+        return proglistener;
+    }
+
+    /**
+     * @param proglistener the proglistener to set
+     */
+    public void setProglistener(ProgressListener proglistener) {
+        this.proglistener = proglistener;
     }
 }

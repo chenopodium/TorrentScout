@@ -66,6 +66,7 @@ public class ChipDensityPanel extends GeneralDensityPanel implements WellModel {
        // this.expcontext = exp;
         //this.setSendEventOnClick(false);
         setBorder(30);
+        this.setNrWidgets(3);
     }
 
    

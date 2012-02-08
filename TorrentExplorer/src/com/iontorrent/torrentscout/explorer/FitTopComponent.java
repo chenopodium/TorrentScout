@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.prefs.Preferences;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -49,7 +50,7 @@ import org.openide.util.NbPreferences;
 autostore = false)
 @TopComponent.Description(preferredID = "FitTopComponent",
 iconBase = "com/iontorrent/torrentscout/explorer/chart.png",
-persistenceType = TopComponent.PERSISTENCE_ALWAYS)
+persistenceType = TopComponent.PERSISTENCE_NEVER)
 @TopComponent.Registration(mode = "left_editor_mode", openAtStartup = false)
 @ActionID(category = "Window", id = "com.iontorrent.torrentscout.explorer.FitTopComponent")
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
@@ -84,9 +85,6 @@ public final class FitTopComponent extends TopComponent {
         maincont.setSpan(span);
     }
 
-    
-    
-    
     public void addHistoPanel() {
         if (histoview != null) {
             remove(histoview);
@@ -194,6 +192,14 @@ public final class FitTopComponent extends TopComponent {
     public void componentOpened() {
         // rasterViewUpdate(true);
         addGui();
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                if (histoview != null) histoview.update(false, false);
+            }
+        });
+
     }
 
     @Override

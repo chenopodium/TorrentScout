@@ -12,7 +12,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  Iff not, see <http://www.gnu.org/licenses/>.
  */
 
 /*
@@ -25,8 +25,11 @@ package com.iontorrent.torrentscout.explorer.fit;
 import com.iontorrent.guiutils.GuiUtils;
 import com.iontorrent.torrentscout.explorer.ContextChangeAdapter;
 import com.iontorrent.torrentscout.explorer.ExplorerContext;
-import com.iontorrent.torrentscout.explorer.Widget;
-import com.iontorrent.torrentscout.explorer.process.CoordWidget;
+import com.iontorrent.guiutils.widgets.Widget;
+import com.iontorrent.guiutils.widgets.CoordWidget;
+import com.iontorrent.torrentscout.explorer.Export;
+import com.iontorrent.torrentscout.explorer.options.TorrentExplorerPanel;
+import com.iontorrent.utils.ErrorHandler;
 import com.iontorrent.utils.io.FileTools;
 import com.iontorrent.utils.stats.HistoStatistics;
 import com.iontorrent.utils.stats.StatPoint;
@@ -49,11 +52,13 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.prefs.Preferences;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+import org.openide.util.NbPreferences;
 
 /**
  *
@@ -62,6 +67,8 @@ import javax.swing.SwingUtilities;
 public class HistoPanel extends javax.swing.JPanel implements SelectionListener {
 
     ExplorerContext maincont;
+    private boolean drawScissors;
+    
     private int w;
     private int h;
     private int BORDER = 30;
@@ -86,6 +93,11 @@ public class HistoPanel extends javax.swing.JPanel implements SelectionListener 
     Color col = Color.red.darker();
     private int leftpos;
     private int rightpos;
+    
+    private int leftvalue;
+    private int rightvalue;
+    
+    
     private double leftx;
     private double rightx;
     private int buckets;
@@ -104,6 +116,7 @@ public class HistoPanel extends javax.swing.JPanel implements SelectionListener 
     DecimalFormat form = small;
     double minx;
     double maxx;
+    double[] bincoord;
 //int bins
 
     /** Creates new form HistoPanel */
@@ -111,8 +124,12 @@ public class HistoPanel extends javax.swing.JPanel implements SelectionListener 
         this(maincont, stat, histodata, null, nrbuckets, normalize, second);
     }
 
+    public HistoStatistics getHisto() {
+        return this.histo;
+    }
     public HistoPanel(final ExplorerContext maincont, StatPoint stat, double[][] histodata, final SelectionListener list, int nrbuckets, final boolean normalize, boolean second) {
         initComponents();
+        drawScissors = true;
         this.second = second;
         this.normalize = normalize;
         this.setDoubleBuffered(false);
@@ -132,8 +149,8 @@ public class HistoPanel extends javax.swing.JPanel implements SelectionListener 
         leftpos = 100;
         rightpos = 300;
         hwidgets = new ArrayList<Widget>();
-        wleft = new HistoWidget(Color.gray, leftpos, BORDER, 1);
-        wright = new HistoWidget(Color.gray, rightpos, BORDER, 2);
+        wleft = new HistoWidget(Color.gray, getLeftpos(), BORDER, 1);
+        wright = new HistoWidget(Color.gray, getRightpos(), BORDER, 2);
         hwidgets.add(wleft);
         hwidgets.add(wright);
 
@@ -154,7 +171,7 @@ public class HistoPanel extends javax.swing.JPanel implements SelectionListener 
                     for (Widget w : maincont.getWidgets()) {
                         CoordWidget cw = (CoordWidget) (w);
                         if (cw.isMainWidget()) {
-                            cw.setCoord(abs);
+                            cw.setAbsoluteCoords(abs);
                             maincont.widgetChanged(w);
                             repaint();
                         }
@@ -166,7 +183,7 @@ public class HistoPanel extends javax.swing.JPanel implements SelectionListener 
             @Override
             public void mousePressed(MouseEvent evt) {
                 double ex = evt.getX();
-                curwidget = (HistoWidget) Widget.getClosest(ex, 0, hwidgets, 50);
+                curwidget = (HistoWidget) Widget.getClosest(ex, 0, hwidgets, 50, true);
                 hasdragged = false;
             }
 
@@ -178,12 +195,12 @@ public class HistoPanel extends javax.swing.JPanel implements SelectionListener 
                         int bin = getBin((int) ex);
                         curwidget.setBin(bin);
                         curwidget.setX((int) (ex));
-                        leftpos = Math.min(wleft.getX(), wright.getX());
-                        rightpos = Math.max(wleft.getX(), wright.getX());
+                        setLeftpos(Math.min(wleft.getX(), wright.getX()));
+                        setRightpos(Math.max(wleft.getX(), wright.getX()));
                         //         p("mouseReleased widget " + curwidget + ", then setting to null");
                         if (list != null) {
-                            list.leftChanged(leftpos);
-                            list.rightChanged(rightpos);
+                            list.leftChanged(getLeftpos());
+                            list.rightChanged(getRightpos());
                         }
                         curwidget = null;
                         repaint();
@@ -228,8 +245,8 @@ public class HistoPanel extends javax.swing.JPanel implements SelectionListener 
                         // curwidget.setY((int) ey);
                         int bin = getBin((int) ex);
                         curwidget.setBin(bin);
-                        leftpos = Math.min(wleft.getX(), wright.getX());
-                        rightpos = Math.max(wleft.getX(), wright.getX());
+                        setLeftpos(Math.min(wleft.getX(), wright.getX()));
+                        setRightpos(Math.max(wleft.getX(), wright.getX()));
                         repaint();
                         //paintImmediately(0,0,1000,1000);
                         // paintAll(getGraphics());
@@ -281,10 +298,11 @@ public class HistoPanel extends javax.swing.JPanel implements SelectionListener 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        //    p("Painting histopanel");
+        
         Graphics2D gg = (Graphics2D) g;
         width = getWidth();
         height = getHeight();
+        p("Painting histopanel "+width+"/"+height);
         gg.clearRect(0, 0, width, height);
         //  gg.setColor(this.getParent().getBackground());
         //    gg.fillRect(0, 0, width, height);
@@ -304,10 +322,26 @@ public class HistoPanel extends javax.swing.JPanel implements SelectionListener 
         // p("pix per percentage: " + pixpercount);
         this.pixpertbin = (double) w / (double) buckets;
         // p("Pix per bin=" + pixpertbin);
+         if (leftvalue > 0) {
+            this.setLeftX_r(leftvalue);
+            leftvalue = 0;
+        }
+        if (rightvalue > 0) {
+            this.setRightX_r(rightvalue);
+            rightvalue = 0;
+        }
         drawCoords(gg);
         drawChart(gg);
         drawSep(gg);
 
+    }
+    public void getPixPerBin() {
+         width = getWidth();
+         w = width - 2 * BORDER;
+         if (w < 0) {
+             p("No width yet: "+width);
+         }
+         this.pixpertbin = (double) w / (double) buckets;
     }
 
     public void update() {
@@ -383,8 +417,10 @@ public class HistoPanel extends javax.swing.JPanel implements SelectionListener 
 //        g.drawString("right", rightpos - 10, y0 - h + 20);
 
 
-        wleft.paint(g, leftpos, height - BORDER, 1.0);
-        wright.paint(g, rightpos, height - BORDER, 1.0);
+        if (drawScissors) {
+            wleft.paint(g, getLeftpos(), height - BORDER, 1.0);
+            wright.paint(g, getRightpos(), height - BORDER, 1.0);
+        }
 
         // draw main cursor
         //   maincont.getWidcoords()
@@ -396,7 +432,7 @@ public class HistoPanel extends javax.swing.JPanel implements SelectionListener 
 
         for (Widget w : widgets) {
             CoordWidget cw = (CoordWidget) (w);
-            WellCoordinate coord = cw.getCoord();
+            WellCoordinate coord = cw.getAbsoluteCoord();
 
 
             if (coord != null) {
@@ -424,27 +460,46 @@ public class HistoPanel extends javax.swing.JPanel implements SelectionListener 
 
     }
 
-    private WellCoordinate findCoordForBin(int bin) {
+    public WellCoordinate findCoordForBin(int bin) {
         if (histo == null) return null;
         double mid = histo.getBucketXValue(bin);
 
-        double c = histo.getCount(bin);
-        if (c == 0) {
-            GuiUtils.showNonModalMsg("Found no wells in bucket for value " + (mid+histo.getBucketDelta()/2));
+        double count = histo.getCount(bin);
+        if (count <= 0.0) {
+            GuiUtils.showNonModalMsg("Found nothing in bucket for bin "+bin+" value " + (mid+histo.getBucketDelta()/2));
         }
 
+        double delta = count/10.0;
+        
+        if (this.bincoord == null|| bin >= bincoord.length) bincoord = new double[(int) histo.getNrBuckets()];
+        double bincount = bincoord[bin]+delta;
+        
+        if (bincount+delta >= count) bincount = delta;
+        
+        bincoord[bin] = bincount;
+        
+        p("Finding random coord "+bincount+" for bin "+bin+", there are "+count+" possible values");
         double a = mid;
         double b = mid + histo.getBucketDelta();
+        double found = 0;
         for (int x = 0; x < histodata.length; x++) {
             for (int y = 0; y < histodata[0].length; y++) {
                 double value = histodata[x][y];
                 if (value >= a && value <= b) {
-                    p("Found coord: " + x + "/" + y + " with an approx. value of " + bin);
-                    WellCoordinate coord = new WellCoordinate(x + data.getAbsStartCol(), y + data.getAbsStartRow());
-                    return coord;
+                    // check with bincount
+                    found+=delta;
+                    
+                    if (found >=bincount) {
+                        p("Found coord: " + x + "/" + y + " with an approx. value of " + bin);
+                        WellCoordinate coord = new WellCoordinate(x + data.getAbsStartCol(), y + data.getAbsStartRow());
+                        return coord;
+                    }
+                    
                 }
             }
         }
+        // we should NOT be here!
+        p("For some reason, could not find "+bincount+"th coordinate for bin "+bin+"even though there should be "+count);
         return null;
     }
 
@@ -477,12 +532,25 @@ public class HistoPanel extends javax.swing.JPanel implements SelectionListener 
         //      p("maxy: "+maxy+", COORDY="+COORDY);
 
         int count = (int) histo.getNrSamples();
-        double mean = histo.getMean();
         //double avg = histo.getAverage();
 
 
+        int binleft = this.getBin(getLeftpos());
+        int binright = this.getBin(getRightpos())+1;
+            
+        double betweenLeftRight = histo.computeCumulativeProbabilityForBuckets(Math.min(binleft, binright), Math.max(binleft, binright));
+        // compute values between scissors
+        
         g.drawString("" + count + " data points, mode="
                 + form.format(histo.getXValueForMaxY()) + ", between frames " + maincont.getStartframe() + "-" + maincont.getEndframe() + ", right red frame=" + maincont.getCropright(), this.BORDER, 20);
+        
+        g.setColor(Color.white);
+        if (normalize) {            
+            g.drawString("Integral between scissors: "+per.format(betweenLeftRight), this.BORDER, this.BORDER+20);
+        }
+        else g.drawString("Between scissors: "+small.format(betweenLeftRight), this.BORDER, BORDER+20);
+        
+         g.setColor(Color.gray);
         for (double y = 0; y < maxy; y += COORDY) {
             int yy = this.getY(y);
             if (normalize) {
@@ -544,16 +612,18 @@ public class HistoPanel extends javax.swing.JPanel implements SelectionListener 
 
     }
 
-    private int getXForXval(double x) {
+    public int getXForXval(double x) {
         double b = histo.computeFloatingBucket(x);
+        //p("Bucket for xvalue "+x+" is="+b);
         return getXForBucket(b);
     }
 
-    private int getXForBucket(double b) {
+    public int getXForBucket(double b) {
+        if (pixpertbin <0.5) getPixPerBin();
         return (int) (x0 + pixpertbin * b);
     }
 
-    private int getY(double percent) {
+    public int getY(double percent) {
         return (int) (y0 - pixpercount * percent);
     }
 
@@ -581,17 +651,52 @@ public class HistoPanel extends javax.swing.JPanel implements SelectionListener 
     // End of variables declaration//GEN-END:variables
 
     public double getLeftX() {
-        int bin = getBin(leftpos);
+        int bin = getBin(getLeftpos());
         double value = histo.getBucketXValue(bin);
-        p("Got bin: " + bin + ", and LEFT bucket value: " + value + " for leftpos " + leftpos);
+        p("Got bin: " + bin + ", and LEFT bucket value: " + value + " for leftpos " + getLeftpos());
         leftx = value;
         return leftx;
     }
 
+    public void setLeftX(double value) {
+        this.leftvalue = (int) value;
+    }
+    public void setLeftX_r(double value) {
+       
+        int pos  = getXForXval(value);
+         p("Setting left to value "+value+"="+ pos);
+         if (pos <= 0) {
+            int b = histo.computeBucket(value);
+            p("Pos for value "+value+" is 0. Bucket for value is "+b  +   ", nr buckets="+
+                    histo.getNrBuckets()+", valuex at bucket is "+histo.getBucketXValue(b)+", bin="+getBin((int)value)+"pixperbin="+this.pixpertbin+", x="+getXForBucket(b));
+            pos = getXForBucket(b);
+        }
+         pos = Math.max(BORDER, pos);
+        setLeftpos(pos);
+        wleft.setX(getLeftpos());
+        
+    }
+    public void setRightX(double value) {
+        this.rightvalue = (int)value;
+    }
+     public void setRightX_r(double value) {
+        int pos = getXForXval(value);
+        p("Setting right to value "+value+"="+ pos);
+        if (pos == 0) {
+            int b = histo.computeBucket(value);
+            p("Pos for value "+value+" is 0. Bucket for value is "+b  +   ", nr buckets="+
+                    histo.getNrBuckets()+", valuex at bucket is "+histo.getBucketXValue(b)+", bin="+getBin((int)value)+"pixperbin="+this.pixpertbin+", x="+getXForBucket(b));
+            pos = getXForBucket(b);
+        }
+        if (pos <= getLeftpos()) pos = this.getWidth()-BORDER;
+        setRightpos(pos);
+        wright.setX(getRightpos());
+        
+    }
     public double getRightX() {
-        int bin = getBin(rightpos);
+        int bin = getBin(getRightpos());
         double value = histo.getBucketXValue(bin);
-        p("Got bin: " + bin + ", and RIGHT bucket value: " + value + "  for rightpos " + rightpos);
+        p("Got bin: " + bin + ", and RIGHT bucket value: " + value + "  for rightpos " + getRightpos());
         rightx = value;
         return rightx;
     }
@@ -613,7 +718,9 @@ public class HistoPanel extends javax.swing.JPanel implements SelectionListener 
             GuiUtils.showNonModalMsg("Got no image to export yet...");
             return false;
         }
-        String file = FileTools.getFile("Save image to a file", "*.*", null, true);
+       
+        String file = Export.getFile("Save image to a file", "*.png", true);
+        
         return exportImage(file);
     }
 
@@ -626,25 +733,35 @@ public class HistoPanel extends javax.swing.JPanel implements SelectionListener 
         File f = new File(file);
         String ext = file.substring(file.length() - 3);
         RenderedImage image = myCreateImage();
+        if (image == null) {
+            p("Got no image");
+            return false;
+        }
         try {
             return ImageIO.write(image, ext, f);
-        } catch (IOException ex) {
-            // p("Could not write image to file " + f, ex);
+        } catch (Exception ex) {
+            p(ErrorHandler.getString(ex));
         }
         return false;
     }
 
     public RenderedImage myCreateImage() {
-        int width = getWidth();
-        int height = getHeight();
+        if (this.getWidth() < 800) {
+            this.setSize(800, 400);
+        }
+        p("Mycreateimage, size is:"+getSize());
+        int w = Math.max(800, getWidth());
+        int h = Math.max(400,getHeight());
 
+        
         // setSize(Math.max(w, getWidth()), Math.max(h, getHeight()));
         // Create a buffered image in which to draw
-        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        BufferedImage bufferedImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
 
         // Create a graphics contents on the buffered image
         Graphics2D g2d = bufferedImage.createGraphics();
 
+        
         // Draw graphics
         paintComponent(g2d);
 
@@ -666,5 +783,47 @@ public class HistoPanel extends javax.swing.JPanel implements SelectionListener 
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(csv), null);
         JOptionPane.showMessageDialog(this, new JScrollPane(pane), "You can copy this to Excel", JOptionPane.INFORMATION_MESSAGE);
         return true;
+    }
+
+    /**
+     * @return the drawScissors
+     */
+    public boolean isDrawScissors() {
+        return drawScissors;
+    }
+
+    /**
+     * @param drawScissors the drawScissors to set
+     */
+    public void setDrawScissors(boolean drawScissors) {
+        this.drawScissors = drawScissors;
+    }
+
+    /**
+     * @return the leftpos
+     */
+    public int getLeftpos() {
+        return leftpos;
+    }
+
+    /**
+     * @param leftpos the leftpos to set
+     */
+    public void setLeftpos(int leftpos) {
+        this.leftpos = leftpos;
+    }
+
+    /**
+     * @return the rightpos
+     */
+    public int getRightpos() {
+        return rightpos;
+    }
+
+    /**
+     * @param rightpos the rightpos to set
+     */
+    public void setRightpos(int rightpos) {
+        this.rightpos = rightpos;
     }
 }

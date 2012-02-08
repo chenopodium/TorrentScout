@@ -68,8 +68,8 @@ import org.openide.util.lookup.InstanceContent;
 autostore = false)
 @TopComponent.Description(preferredID = "TorrentScoutScoresViewTopComponent",
 iconBase = "com/iontorrent/scoreview/chip.png",
-persistenceType = TopComponent.PERSISTENCE_ALWAYS)
-@TopComponent.Registration(mode = "right_editor_mode", openAtStartup = true)
+persistenceType = TopComponent.PERSISTENCE_NEVER)
+@TopComponent.Registration(mode = "right_editor_mode", openAtStartup = false)
 @ActionID(category = "Window", id = "com.iontorrent.scoreview.TorrentScoutScoresViewTopComponent")
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
 @TopComponent.OpenActionRegistration(displayName = "#CTL_TorrentScoutScoresViewAction",
@@ -201,12 +201,10 @@ public final class TorrentScoutScoresViewTopComponent extends TopComponent imple
             while (it.hasNext()) {
                 data = it.next();
             }
-            if (data == oldContext && data.getResultsDirectory().equalsIgnoreCase(oldContext.getResultsDirectory())) {
-                // do nothing
-            } else {
-                oldContext = data;
-                update(oldContext);
-            }
+
+            oldContext = data;
+            update(oldContext);
+
         }
     }
 
@@ -285,7 +283,7 @@ public final class TorrentScoutScoresViewTopComponent extends TopComponent imple
 //        }
         cachetask = null;
         updateScoresPanel();
-        
+
 
     }
 
@@ -350,7 +348,7 @@ public final class TorrentScoutScoresViewTopComponent extends TopComponent imple
     }
 
     private void updateDensityPanel() {
-        GuiUtils.showNonModalMsg("ScoreHeatMap: reading heat map for " + currentflag + "....", false, 5);
+        // GuiUtils.showNonModalMsg("ScoreHeatMap: reading heat map for " + currentflag + "....", false, 5);
         mask.readData(currentflag);
         densityPanel.setScoreMask(mask, currentflag, (Integer) spinBucket.getValue());
 

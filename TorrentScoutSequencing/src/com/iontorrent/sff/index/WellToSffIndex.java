@@ -350,8 +350,8 @@ public class WellToSffIndex {
                     this.num_rows = nrrows;
                     this.num_cols = nrcols;
                     long tmp[][] = new long[nrrows][nrcols];
-                    for (int r = 0; r < num_rows; r++) {
-                        for (int c = 0; c < num_cols; c++) {
+                    for (int r = 0; r < offset.length; r++) {
+                        for (int c = 0; c < offset[0].length; c++) {
                             tmp[r][c] = offset[r][c];
                         }
                     }
@@ -432,7 +432,7 @@ public class WellToSffIndex {
     /** ================== LOGGING ===================== */
     private void err(String msg, Exception ex) {
         this.ex = ex;
-        System.out.println("SffIndex: " + msg);
+     //   System.out.println("SffIndex: " + msg);
         Logger.getLogger(WellToSffIndex.class.getName()).log(Level.SEVERE, msg, ex);
     }
 
@@ -442,13 +442,13 @@ public class WellToSffIndex {
     }
 
     private void warn(String msg) {
-        System.out.println("SffIndex: " + msg);
+   //     System.out.println("SffIndex: " + msg);
         Logger.getLogger(WellToSffIndex.class.getName()).log(Level.WARNING, msg);
     }
 
     private void p(String msg) {
         //   System.out.println("SffIndex: " + msg);
-        Logger.getLogger(WellToSffIndex.class.getName()).log(Level.INFO, msg);
+   //     Logger.getLogger(WellToSffIndex.class.getName()).log(Level.INFO, msg);
     }
 
     public String getSffFile() {

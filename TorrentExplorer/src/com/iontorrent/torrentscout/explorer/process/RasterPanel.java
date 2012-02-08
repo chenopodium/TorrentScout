@@ -23,7 +23,10 @@ package com.iontorrent.torrentscout.explorer.process;
 import com.iontorrent.guiutils.GuiUtils;
 import com.iontorrent.guiutils.heatmap.GradientPanel;
 
+import com.iontorrent.rawdataaccess.wells.BitMask;
 import com.iontorrent.torrentscout.explorer.ExplorerContext;
+import com.iontorrent.torrentscout.explorer.Export;
+import com.iontorrent.torrentscout.explorer.options.TorrentExplorerPanel;
 import com.iontorrent.utils.io.FileTools;
 import com.iontorrent.wellmodel.WellCoordinate;
 import java.awt.BorderLayout;
@@ -37,9 +40,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.prefs.Preferences;
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import org.openide.util.NbPreferences;
 
 /**
  *
@@ -95,7 +100,8 @@ public class RasterPanel extends JPanel{
     }
      public boolean export() {
         
-        String file = FileTools.getFile("Save image to a file", "*.*", null, true);
+        String file = Export.getFile("Save image to a file", "*.png", true);
+        
         return export(file);
     }
 
@@ -114,6 +120,11 @@ public class RasterPanel extends JPanel{
             err("Could not write image to file " + f, ex);
         }
         return false;
+    }
+    
+     public Point getPointFromWell(WellCoordinate c) {
+         if (view != null) return view.getPointFromWell(c);
+         else return null;
     }
      public RenderedImage myCreateImage(int w, int h) {
         int width =Math.max(w,getWidth());
@@ -146,9 +157,9 @@ public class RasterPanel extends JPanel{
              view.checkWidgets(snap);
          }
     }
-    public void redrawImages(boolean showignore, boolean showbg, boolean showuse) {
+    public void redrawImages(BitMask show) {
          if (view != null) {
-             view.redrawImages(showignore, showbg, showuse, false);
+             view.redrawImages(show, false);
          }
          repaint();
     }

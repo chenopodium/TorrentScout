@@ -113,8 +113,8 @@ public class FitFunctionsPanel extends javax.swing.JPanel {
             if (curfunc != null) {
                 curfunc.setEvalType(type);
                 p("Setting eval type of "+curfunc.getName()+" to type "+type);
+            }
         }
-    }
     }
     private void p(String s) {
         System.out.println("FitFunctionspanel: "+s);

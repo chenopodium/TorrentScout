@@ -142,17 +142,9 @@ public class MaskCalcPanel extends javax.swing.JPanel implements ActionListener 
             if (i == 0) {
                 // op: m1 op m2 = m3 ok
                 ops = new JComboBox();
-                ops.addItem(new AddOp());
-                ops.addItem(new SubtractOp());
-                ops.addItem(new AndOp());
-                ops.addItem(new XorOp());
-                ops.addItem(new CopyOp());
-                ops.addItem(new ShiftOp(0, 0));
-                
-                ops.addItem(new ShiftOp(0, 4));
-                ops.addItem(new ShiftOp(4, 0));
-                ops.addItem(new ShiftOp(-4, 0));
-                ops.addItem(new ShiftOp(0, -4));
+                for (AbstractOperation op: OperationFactory.getOps()) {
+                    ops.addItem(op);
+                }
                 add(ops);
                 ops.addActionListener(new ActionListener() {
 
@@ -162,7 +154,7 @@ public class MaskCalcPanel extends javax.swing.JPanel implements ActionListener 
                         int nr = op.getNrArgs();
                         if (nr == 1) {
                             boxes[1].setEnabled(false);
-                        } else if (nr == 2) {
+                        } else {
                             boxes[1].setEnabled(true);
                         }
                     }

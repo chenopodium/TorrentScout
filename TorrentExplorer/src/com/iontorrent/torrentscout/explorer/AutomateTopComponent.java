@@ -30,6 +30,7 @@ import com.iontorrent.rawdataaccess.wells.BitMask;
 import com.iontorrent.threads.Task;
 import com.iontorrent.threads.TaskListener;
 import com.iontorrent.torrentscout.explorer.automate.MultiFlowPanel;
+import com.iontorrent.torrentscout.explorer.options.TorrentExplorerPanel;
 import com.iontorrent.utils.ErrorHandler;
 import com.iontorrent.utils.LookupUtils;
 import com.iontorrent.utils.ProgressListener;
@@ -41,12 +42,10 @@ import com.iontorrent.wellmodel.WellFlowDataResult;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.prefs.Preferences;
 import javax.swing.Action;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -72,7 +71,7 @@ import org.openide.util.NbPreferences;
 autostore = false)
 @TopComponent.Description(preferredID = "AutomateTopComponent",
 iconBase = "com/iontorrent/torrentscout/explorer/system-run-3.png",
-persistenceType = TopComponent.PERSISTENCE_ALWAYS)
+persistenceType = TopComponent.PERSISTENCE_NEVER)
 @TopComponent.Registration(mode = "right_editor_mode", openAtStartup = false)
 @ActionID(category = "Window", id = "com.iontorrent.torrentscout.explorer.AutomateTopComponent")
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
@@ -95,7 +94,7 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
     RasterData maindata;
     //  ArrayList<WellFlowDataResult> results;
     WellFlowDataResult subtract;
-   // int magnify;
+    // int magnify;
     String baselist;
     private JTabbedPane tab;
     WellFlowDataResult multiflow;
@@ -119,13 +118,12 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
 
         bar.add(this.flowPanel, null, 0);
         bar.add(this.typePanel, null, 0);
-      //  magnify = 100;
+        //  magnify = 100;
 
         addGui();
     }
 
-    
-     private void doHintAction() {
+    private void doHintAction() {
         String msg = "<html>You can do the following things here:<ul>";
         msg += "<li>it will automatically do the masked neighbor subtraction and compute a median signal for any number of flows</li>";
         msg += "<li>put in the flow numbers or ranges in the text box</li>";
@@ -133,12 +131,12 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
         msg += "<li>pick the mask of your good wells in the drop down box</li>";
         msg += "<li>if you like it can also subtract the result of any flow from the other results (subtract flow)</li>";
         msg += "<li>You can also export the data to file with the save icon</li>";
-        
-        
+
+
         msg += "</ul></html>";
         JOptionPane.showMessageDialog(this, msg);
     }
-     
+
     @Override
     public void componentOpened() {
         getLatestExperimentContext();
@@ -162,12 +160,12 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
     }
 
     private void update(ExperimentContext result) {
-         if (result == null) {
+        if (result == null) {
             result = GlobalContext.getContext().getExperimentContext();
         }
         if (result != null) {
             this.expContext = result;
-            p("Automate: got latest exp: "+expContext.getRawDir());
+            p("Automate: got latest exp: " + expContext.getRawDir());
             maincont = ExplorerContext.getCurContext(result);
             getUserPreferences();
             addGui();
@@ -322,7 +320,7 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
         }
         if (ignore == null) {
             JOptionPane.showMessageDialog(this, "I see no ignore/pinned mask - you can select it in the Process component\n.Make sure you have selected a region");
-            
+
         }
         if (ignore == forsignal) {
             JOptionPane.showMessageDialog(this, "The ignore mask = signal mask - please select the appropriate signal mask");
@@ -341,12 +339,13 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
         if (forsignal != null) {
             double perc = forsignal.computePercentage();
             if (perc < 1) {
-                int ans = JOptionPane.showConfirmDialog(this, "<html>The signal mask only has "+perc+"% wells, do you want to still use it?"
-                        +"<br><b>Did you already select a region?</b>"
-                        +"<br>You might want to use the MaskEditor (and <b>refresh</b> the masks possibly) to check them</html>", "Few wells", JOptionPane.OK_CANCEL_OPTION);
-                    if (ans == JOptionPane.CANCEL_OPTION) return;
-            }
-            else if (perc < 10) {
+                int ans = JOptionPane.showConfirmDialog(this, "<html>The signal mask only has " + perc + "% wells, do you want to still use it?"
+                        + "<br><b>Did you already select a region?</b>"
+                        + "<br>You might want to use the MaskEditor (and <b>refresh</b> the masks possibly) to check them</html>", "Few wells", JOptionPane.OK_CANCEL_OPTION);
+                if (ans == JOptionPane.CANCEL_OPTION) {
+                    return;
+                }
+            } else if (perc < 10) {
                 JOptionPane.showMessageDialog(this, "Small percentage of flagged wells " + perc + "%  for mask " + forsignal);
             }
         }
@@ -433,7 +432,7 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
     public RasterData loadData(int flow, ProgressListener list) {
 
         RasterData data = null;
-        p(" =============================== load Data ===========");
+        p(" =============================== load Data for flow " + flow + "===========");
         if (list != null) {
             list.setMessage("Loading flow " + flow + ", type: " + maincont.getFiletype() + ", coord: " + maincont.getAbsDataAreaCoord());
         }
@@ -443,6 +442,8 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
             data = manager.getRasterDataForArea(data, maincont.getRasterSize(), maincont.getRelativeDataAreaCoord(), flow, maincont.getFiletype(), null, 0, -1);
             if (data != null) {
                 maindata = data;
+            } else {
+                p("Got NO data for flow " + flow);
             }
         } catch (Exception e) {
             p("Got an error when loading: " + ErrorHandler.getString(e));
@@ -469,7 +470,7 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
                 chartres.add(nndata);
             }
 
- 
+
         }
         cmulti.setResults(chartres);
         cmulti.update("Multiflow " + (maindata.getAbsStartCol()) + "/"
@@ -481,7 +482,9 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
 
     private void updateChart(int flow, WellFlowDataResult nndata) {
         // update(String region, ExperimentContext expContext, WellFlowDataResult nndata, ArrayList<Integer> flows) {    
-        // p("Updating chart for flow " + flow);
+        if (flow == 0) {
+            p("Updating chart for flow " + flow);
+        }
         if (cview != null) {
             panel.remove(cview);
         }
@@ -530,6 +533,7 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
         }
         taskdone[index] = true;
         if (res != null) {
+            p("Got result for flow " + flow);
             if (subtract != null) {
                 p("SUBTRACTING " + subtract);
                 res = (WellFlowDataResult) res.deepClone();
@@ -555,7 +559,7 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
             p("ALL tasks are done, will now create multichart in correct flow order: " + flownr);
             if (subtract != null) {
                 p("SUBTRACTING " + subtract);
-                 res = (WellFlowDataResult) res.deepClone();
+                res = (WellFlowDataResult) res.deepClone();
                 res.subtract(subtract);
             }
             updateMultiChart();
@@ -618,7 +622,11 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
     }
 
     public WellFlowDataResult automateFlow(int flow, ProgressListener list) {
+
         RasterData data = loadData(flow, list);
+        if (flow == 0) {
+            p("Loaded data for flow " + flow + ":" + data);
+        }
         WellFlowDataResult result = null;
         if (data != null) {
             RasterData nndata = null;
@@ -643,9 +651,9 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
             }
 
         } else {
-           
-            String msg = "I got no data for flow " + flow+ ", " + maincont.getFiletype() + " in <b>" + maincont.getExp().getRawDir() + " at " + maincont.getAbsDataAreaCoord();
-           GuiUtils.showNonModalMsg(msg);
+
+            String msg = "I got no data for flow " + flow + ", " + maincont.getFiletype() + " in <b>" + maincont.getExp().getRawDir() + " at " + maincont.getAbsDataAreaCoord();
+            GuiUtils.showNonModalMsg(msg);
         }
         return result;
     }
@@ -717,7 +725,6 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
         });
         bar.add(btnNN);
 
-        boxsub.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(boxsub, org.openide.util.NbBundle.getMessage(AutomateTopComponent.class, "AutomateTopComponent.boxsub.text")); // NOI18N
         boxsub.setFocusable(false);
         boxsub.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
@@ -844,17 +851,21 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
     }//GEN-LAST:event_boxskipActionPerformed
 
     private void btnimageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnimageActionPerformed
+        String file = Export.getFile("Save image to a file", "*.png", true);
+        if (file == null) {
+            return;
+        }
         if (tab.getSelectedIndex() == 0) {
-            cview.export();
+
+            cview.export(file);
         } else {
-            cmulti.export();
+            cmulti.export(file);
         }
     }//GEN-LAST:event_btnimageActionPerformed
 
     private void hintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hintActionPerformed
         doHintAction();
     }//GEN-LAST:event_hintActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToolBar bar;
     private javax.swing.JComboBox boxsignal;
@@ -874,7 +885,7 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
 
     public boolean doSaveChartAction() {
 
-        String file = FileTools.getFile("Save first chart info into file", "*.csv", "", true);
+        String file = Export.getFile("Save first chart info into file", "*.csv", true);
         if (file == null) {
             return true;
         }
@@ -891,7 +902,7 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
 
     public boolean doSaveMutltiChartAction() {
 
-        String file = FileTools.getFile("Save MULTI flow chart info into file", "*.csv", "", true);
+        String file = Export.getFile("Save MULTI flow chart info into file", "*.csv", true);
         if (file == null) {
             return true;
         }

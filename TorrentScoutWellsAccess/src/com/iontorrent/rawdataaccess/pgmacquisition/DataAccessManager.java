@@ -141,7 +141,7 @@ public class DataAccessManager {
 
     public RasterData getRasterDataForArea(RasterData oldData, int rastersize, WellCoordinate relcoords, int flow, 
             RawType filetype, ProgressListener list, int startframe, int endframe) throws Exception {
-
+        exp.makeRelative(relcoords);
         RawDataFacade io = RawDataFacade.getFacade(context.getRawDirectory(), context.getCacheDirectory(), filetype);
         PGMAcquisitionGlobalHeader h = io.getHeader(flow);
         if (h == null) {
@@ -157,7 +157,7 @@ public class DataAccessManager {
         }
         else p("Old data not the same");
         
-         p("Reading raster data for flow "+flow+", span "+rastersize+", coord "+relcoords+", cache: "+context.getCacheDirectory()+", filetype:"+filetype);
+         p("Reading raster data for flow "+flow+", span "+rastersize+", REL coord "+relcoords+", cache: "+context.getCacheDirectory()+", filetype:"+filetype);
        
         int cx = relcoords.getX();
         int cy = relcoords.getY();

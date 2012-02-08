@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN"
+                            "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Actions">
+        <folder name="View">
+            <file name="com-iontorrent-actions-ChartAction.instance">
+                <!--org.iontorrent.acqview.ChartAction-->
+                <attr name="displayName" stringvalue="Raw Trace (view raw and bg subtraced timeseries of 1 or more flows)"/>
+                <attr
+                    methodvalue="org.openide.awt.Actions.alwaysEnabled" name="instanceCreate"/>
+                <attr name="delegate" newvalue="org.iontorrent.acqview.ChartAction"/>
+                <attr name="iconBase" stringvalue="org/iontorrent/acqview/office-chart-line.png"/>
+                <attr boolvalue="false" name="noIconInMenu"/>
+            </file>
+        </folder>
+        <folder name="Window">
+            <file name="org-iontorrent-acqview-TorrentScoutAcqViewTopComponent.instance">
+                <!--org.iontorrent.acqview.TorrentScoutAcqViewTopComponent-->
+                <attr
+                    methodvalue="org.openide.windows.TopComponent.openAction" name="instanceCreate"/>
+                <attr name="component" newvalue="org.iontorrent.acqview.TorrentScoutAcqViewTopComponent"/>
+                <attr name="preferredID" stringvalue="TorrentScoutAcqViewTopComponent"/>
+                <attr
+                    bundlevalue="org.iontorrent.acqview.Bundle#CTL_TorrentScoutAcqViewAction" name="displayName"/>
+                <attr name="iconBase" stringvalue="org/iontorrent/acqview/office-chart-line.png"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="View">
+            <file name="com-iontorrent-actions-ChartAction.shadow">
+                <!--org.iontorrent.acqview.ChartAction-->
+                <attr name="originalFile" stringvalue="Actions/View/com-iontorrent-actions-ChartAction.instance"/>
+                <attr intvalue="800" name="position"/>
+            </file>
+        </folder>
+        <folder name="Window">
+            <file name="org-iontorrent-acqview-TorrentScoutAcqViewTopComponent.shadow">
+                <!--org.iontorrent.acqview.TorrentScoutAcqViewTopComponent-->
+                <attr name="originalFile" stringvalue="Actions/Window/org-iontorrent-acqview-TorrentScoutAcqViewTopComponent.instance"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Toolbars">
+        <folder name="View">
+            <file name="com-iontorrent-actions-ChartAction.shadow">
+                <!--org.iontorrent.acqview.ChartAction-->
+                <attr name="originalFile" stringvalue="Actions/View/com-iontorrent-actions-ChartAction.instance"/>
+                <attr intvalue="800" name="position"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Windows2">
+        <folder name="Components">
+            <file name="TorrentScoutAcqViewTopComponent.settings">
+                <!--org.iontorrent.acqview.TorrentScoutAcqViewTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+  <instance class="org.iontorrent.acqview.TorrentScoutAcqViewTopComponent"/>
+</settings>
+]]></file>
+        </folder>
+        <folder name="Modes">
+            <folder name="right_editor_mode">
+                <file name="TorrentScoutAcqViewTopComponent.wstcref">
+                    <!--org.iontorrent.acqview.TorrentScoutAcqViewTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tc-ref PUBLIC "-//NetBeans//DTD Top Component in Mode Properties 2.0//EN" "http://www.netbeans.org/dtds/tc-ref2_0.dtd">
+<tc-ref version="2.0">
+  <tc-id id="TorrentScoutAcqViewTopComponent"/>
+  <state opened="false"/>
+</tc-ref>
+]]></file>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="xml">
+        <folder name="entities">
+            <folder name="org_iontorrent_acqview">
+                <file name="TorrentScoutAcqView" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <!--org.iontorrent.acqview.TorrentScoutAcqViewTopComponent-->
+                    <attr name="hint.originalPublicID" stringvalue="-//org.iontorrent.acqview//TorrentScoutAcqView//EN"/>
+                </file>
+            </folder>
+        </folder>
+        <folder name="memory">
+            <folder name="org">
+                <folder name="iontorrent">
+                    <folder name="acqview">
+                        <file name="TorrentScoutAcqViewTopComponent">
+                            <!--org.iontorrent.acqview.TorrentScoutAcqViewTopComponent-->
+                            <attr name="settings.providerPath" stringvalue="xml/lookups//org_iontorrent_acqview/TorrentScoutAcqView.instance"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+        <folder name="lookups">
+            <folder name="org_iontorrent_acqview">
+                <file name="TorrentScoutAcqView.instance">
+                    <!--org.iontorrent.acqview.TorrentScoutAcqViewTopComponent-->
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.create" name="instanceCreate"/>
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.properties" name="settings.convertor"/>
+                    <attr name="settings.instanceClass" stringvalue="org.iontorrent.acqview.TorrentScoutAcqViewTopComponent"/>
+                    <attr name="settings.instanceOf" stringvalue="org.iontorrent.acqview.TorrentScoutAcqViewTopComponent"/>
+                    <attr boolvalue="true" name="xmlproperties.preventStoring"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="OptionsDialog">
+        <folder name="TorrentScoutOptions">
+            <file name="org-iontorrent-acqview-options-RawOptionsOptionsPanelController.instance">
+                <!--org.iontorrent.acqview.options.RawOptionsOptionsPanelController-->
+                <attr
+                    methodvalue="org.netbeans.spi.options.AdvancedOption.createSubCategory" name="instanceCreate"/>
+                <attr name="controller" newvalue="org.iontorrent.acqview.options.RawOptionsOptionsPanelController"/>
+                <attr
+                    bundlevalue="org.iontorrent.acqview.options.Bundle#AdvancedOption_DisplayName_RawOptions" name="displayName"/>
+                <attr
+                    bundlevalue="org.iontorrent.acqview.options.Bundle#AdvancedOption_Keywords_RawOptions" name="keywords"/>
+                <attr name="keywordsCategory" stringvalue="TorrentScoutOptions/RawOptions"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>

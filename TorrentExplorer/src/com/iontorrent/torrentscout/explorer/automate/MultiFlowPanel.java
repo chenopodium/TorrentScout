@@ -24,6 +24,7 @@ import com.iontorrent.expmodel.ExperimentContext;
 import com.iontorrent.guiutils.GuiUtils;
 import com.iontorrent.rawdataaccess.pgmacquisition.RawType;
 
+import com.iontorrent.torrentscout.explorer.Export;
 import com.iontorrent.utils.io.FileTools;
 import com.iontorrent.wellmodel.WellContext;
 import com.iontorrent.wellmodel.WellCoordinate;
@@ -154,7 +155,7 @@ public class MultiFlowPanel extends JPanel {
             GuiUtils.showNonModalMsg("Got no image to export yet...");
             return false;
         }
-        String file = FileTools.getFile("Save image to a file", "*.*", null, true);
+        String file = Export.getFile("Save image to a file", "*.*", true);
         return export(file);
     }
 

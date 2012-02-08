@@ -31,6 +31,7 @@ import com.iontorrent.rawdataaccess.pgmacquisition.DataAccessManager;
 import com.iontorrent.rawdataaccess.pgmacquisition.RawDataFacade;
 import com.iontorrent.rawdataaccess.pgmacquisition.RawType;
 import com.iontorrent.results.scores.ScoreMask;
+import com.iontorrent.scout.experimentviewer.ExperimentViewerTopComponent;
 import com.iontorrent.sequenceloading.SequenceLoader;
 import com.iontorrent.utils.LookupUtils;
 import com.iontorrent.utils.StringTools;
@@ -96,10 +97,10 @@ public final class OfflineTopComponent extends TopComponent {
     private transient final Lookup.Result<ExperimentContext> dataClassResults =
             LookupUtils.getSubscriber(ExperimentContext.class, new ExpContextListener());
     private transient final InstanceContent compContent = LookupUtils.getPublisher(CompositeExperiment.class);
-
     boolean rawChanged;
     boolean cacheChanged;
     boolean resChanged;
+
     public OfflineTopComponent() {
         initComponents();
         setName(NbBundle.getMessage(OfflineTopComponent.class, "CTL_OfflineTopComponent"));
@@ -123,7 +124,7 @@ public final class OfflineTopComponent extends TopComponent {
         }
     }
 
-      private void doHintAction() {
+    private void doHintAction() {
         String msg = "<html>You can do the following things here:<ul>";
         msg += "<li>open an experiment and specify the raw and results folders yourself</li>";
         msg += "<li>if this experiment has raw data, specify where the raw (.dat) files are stored</li>";
@@ -131,7 +132,7 @@ public final class OfflineTopComponent extends TopComponent {
         msg += "</ul></html>";
         JOptionPane.showMessageDialog(this, msg);
     }
-    
+
     public boolean checkAll() {
         if (exp.getCacheDir() == null) {
             btnView.setEnabled(false);
@@ -160,7 +161,7 @@ public final class OfflineTopComponent extends TopComponent {
             boxFiles.setText("Found no required files");
         }
 
-        p("Got files: " + nrFiles + ", indices: " + hasIndices + ", nrdat: " + nrdat);
+    //    p("Got files: " + nrFiles + ", indices: " + hasIndices + ", nrdat: " + nrdat);
         btnView.setEnabled(true);
         if (nrFiles < 1) {
             //btnView.setEnabled(false);
@@ -207,7 +208,7 @@ public final class OfflineTopComponent extends TopComponent {
                 extractDataFromFile(exp, content, "=");
                 foundLog = true;
             }
-            if (FileUtils.exists(exp.getRawDir()+"acq_0000.dat")) {
+            if (FileUtils.exists(exp.getRawDir() + "acq_0000.dat")) {
                 DataAccessManager man = DataAccessManager.getManager(exp.getWellContext());
                 man.updateContext(exp);
             }
@@ -220,11 +221,11 @@ public final class OfflineTopComponent extends TopComponent {
                 foundLog = true;
             }
         }
-       // if (foundLog) {
-            if (exp != null) {
-                exp.expandCacheDir(cache);
-            }
-     //   }
+        // if (foundLog) {
+        if (exp != null) {
+            exp.expandCacheDir(cache);
+        }
+        //   }
         p("after parsing log files: expname=" + exp.getResultsName() + ", cache=" + exp.getCacheDir());
     }
 
@@ -277,8 +278,9 @@ public final class OfflineTopComponent extends TopComponent {
         }
         return true;
     }
+
     public void doNewAction() {
-        exp= null;
+        exp = null;
         updateExpGui();
     }
 
@@ -323,19 +325,19 @@ public final class OfflineTopComponent extends TopComponent {
 
     public int getNrCached() {
         // check raw directory
-        if (exp == null || exp.getRawDir()==null || exp.getRawDir().length()<1) {
+        if (exp == null || exp.getRawDir() == null || exp.getRawDir().length() < 1) {
             return 0;
         }
         if (exp.doesExplogHaveBlocks()) {
-           boxDat.setText("found black bird blocks");
-           setOk(boxDat, 2, 2);
-           return 220;
+            boxDat.setText("found Proton blocks");
+            setOk(boxDat, 2, 2);
+            return 220;
         }
         RawType rtype = RawType.ACQ;
         // count nr of flows so far
         RawDataFacade io = RawDataFacade.getFacade(exp.getRawDir(), exp.getCacheDir(), rtype);
-        
-        
+
+
         if (io.isRegionFormat(0)) {
             boxDat.setText("found fast .dat file format");
             setOk(boxDat, 2, 2);
@@ -345,7 +347,9 @@ public final class OfflineTopComponent extends TopComponent {
             setOk(boxDat, 2, 2);
             return 220;
         }
-        if (exp.getCacheDir() == null || exp.getCacheDir().length()<1) return 0;
+        if (exp.getCacheDir() == null || exp.getCacheDir().length() < 1) {
+            return 0;
+        }
         int nrcached = io.getNrFlowsInCache();
 
         if (nrcached <= 0) {
@@ -377,7 +381,7 @@ public final class OfflineTopComponent extends TopComponent {
 
     public void publish() {
         p("====================== PUBLISH =============");
-        p("First clear all old experimental data!");
+      //  p("First clear all old experimental data!");
         clearOldData(exp);
         context.setExperimentContext(exp, false);
 
@@ -392,7 +396,7 @@ public final class OfflineTopComponent extends TopComponent {
         Preferences pref = NbPreferences.forModule(OfflineTopComponent.class);
         if (pref != null) {
             try {
-                p("Storing preferences");
+            //    p("Storing preferences");
                 pref.put("offline_cache_dir", exp.getCacheDir());
                 pref.put("offline_res_dir", exp.getResultsDirectory());
                 pref.put("offline_raw_dir", exp.getRawDir());
@@ -402,43 +406,29 @@ public final class OfflineTopComponent extends TopComponent {
             }
         }
         if (exp.doesExplogHaveBlocks()) {
-            if (!exp.isChipBB()) exp.setChipType("900");
-            GuiUtils.showNonModalMsg("Got a blackbird experiment, parsing blocks");
+            if (!exp.isChipBB()) {
+                exp.setChipType("900");
+            }
+           // GuiUtils.showNonModalMsg("Got a blackbird experiment, parsing blocks");
             p("Composite: parsing blocks");
-            GuiUtils.showNonModalMsg("Got a black bird experiment");
+          //  GuiUtils.showNonModalMsg("Got a Proton experiment");
             CompositeExperiment comp = new CompositeExperiment(exp);
             comp.maybParseBlocks();
-            p("Got blocks: " + comp.getBlocks());
+          //  p("Got blocks: " + comp.getBlocks());
             p("Publishing CompositeExperiment");
             LookupUtils.publish(compContent, comp);
-            // check for thumbnails            
-            TopComponent tc = (TopComponent) WindowManager.getDefault().findTopComponent("TorrentScoutCompositeViewTopComponent");
-            GuiUtils.showNonModalMsg("Loading whole image view for " + exp.getResultsDirectory());
-            if (tc != null) {
-                tc.requestActive();
-                tc.requestVisible();
-                tc.requestAttention(true);
-            }
-//            ExperimentContext thumb = comp.getThumbnailsContext();
-//            if (thumb != null) {
-//                LookupUtils.publish(expContent, exp);
-//                p("Publishing thumbnails exp" + exp.getResultsDirectory());
-//                WellContext wellcontext = exp.getWellContext();
-//                if (wellcontext != null) {
-//                    LookupUtils.publish(wellContextContent, wellcontext);
-//                } 
-//            }
-        }
-        else {
+           
+        } else {
             LookupUtils.publish(expContent, exp);
             p("========== Publishing " + exp.getResultsDirectory());
             WellContext wellcontext = exp.getWellContext();
             if (wellcontext != null) {
-                p("========== Publishing wellcontext");
+      //          p("========== Publishing wellcontext");
                 LookupUtils.publish(wellContextContent, wellcontext);
-            } 
+            }
+            
         }
-
+        ExperimentViewerTopComponent.afterExperimentOpened(exp);
     }
 
     public void startWizard() {
@@ -561,7 +551,7 @@ public final class OfflineTopComponent extends TopComponent {
             return ok;
         }
         if (mask.hasAllBamImages()) {
-            p("Got bam images heat maps");
+      //      p("Got bam images heat maps");
             ok++;
         }
 //        if (mask.hasAllWellImages()) {
@@ -570,7 +560,7 @@ public final class OfflineTopComponent extends TopComponent {
         if (mask.hasAllSffImages()) {
             ok++;
         }
-        p("Got indices: " + ok);
+     //   p("Got indices: " + ok);
         // -1 .. 4
         return ok;
     }
@@ -932,15 +922,15 @@ public final class OfflineTopComponent extends TopComponent {
 
     private void txtRawActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRawActionPerformed
         // TODO add your handling code here:
-        
+
         updateExp();
         this.updateExpGui();
     }//GEN-LAST:event_txtRawActionPerformed
 
     private void txtRawFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtRawFocusLost
         // TODO add your handling code here:
-        if (rawChanged){ 
-            updateExp();        
+        if (rawChanged) {
+            updateExp();
             this.updateExpGui();
         }
     }//GEN-LAST:event_txtRawFocusLost
@@ -953,12 +943,12 @@ public final class OfflineTopComponent extends TopComponent {
 
     private void txtResultsFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtResultsFocusLost
         // TODO add your handling code here:
-         if(resChanged){ 
-             
-             updateExp();
-             this.updateExpGui();
-         }
-        
+        if (resChanged) {
+
+            updateExp();
+            this.updateExpGui();
+        }
+
     }//GEN-LAST:event_txtResultsFocusLost
 
     private void btnRawActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRawActionPerformed
@@ -999,8 +989,8 @@ public final class OfflineTopComponent extends TopComponent {
         if (!checkCache()) {
             return;
         }
-        
-        if (exp.getCacheDir()==null || exp.getCacheDir().trim().length()<1) {
+
+        if (exp.getCacheDir() == null || exp.getCacheDir().trim().length() < 1) {
             JOptionPane.showMessageDialog(this, "Please specify a cache folder to store temporary data");
             return;
         }
@@ -1009,13 +999,8 @@ public final class OfflineTopComponent extends TopComponent {
             return;
         }
         publish();
-        TopComponent tc = (TopComponent) WindowManager.getDefault().findTopComponent("TorrentScoutMaskViewTopComponent");
-        if (tc != null) {
-            tc.requestActive();
-            tc.requestVisible();
-        }
        
-        GuiUtils.showNonModalMsg("OfflineViewer: Loading data for " + exp.getResultsDirectory());
+        //GuiUtils.showNonModalMsg("Open Experiment: Loading data for " + exp.getResultsDirectory(), "Open Experiment");
         LookupUtils.publish(loadContent, new LoadDataContext());
     }//GEN-LAST:event_btnViewActionPerformed
 
@@ -1029,9 +1014,9 @@ public final class OfflineTopComponent extends TopComponent {
 }//GEN-LAST:event_txtCacheActionPerformed
 
     private void txtCacheFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCacheFocusLost
-       if(cacheChanged){ 
-        updateExp();
-       }
+        if (cacheChanged) {
+            updateExp();
+        }
 }//GEN-LAST:event_txtCacheFocusLost
 
     private void btnCacheActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCacheActionPerformed
@@ -1049,11 +1034,11 @@ public final class OfflineTopComponent extends TopComponent {
 }//GEN-LAST:event_btnCacheActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       this.txtResults.setText(this.txtRaw.getText());
+        this.txtResults.setText(this.txtRaw.getText());
         updateExp();
         this.updateExpGui();
         checkCache();
-       
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void hintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hintActionPerformed
@@ -1073,9 +1058,8 @@ public final class OfflineTopComponent extends TopComponent {
     }//GEN-LAST:event_txtRawKeyTyped
 
     private void txtResultsKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtResultsKeyTyped
-      resChanged = true;
+        resChanged = true;
     }//GEN-LAST:event_txtResultsKeyTyped
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox boxDat;
     private javax.swing.JCheckBox boxFiles;
@@ -1114,6 +1098,7 @@ public final class OfflineTopComponent extends TopComponent {
         this.exp = exp;
         updateExpGui();
     }
+
     public void updateExpGui() {
         p("==== update exp gui =======");
         checkExp();
@@ -1140,20 +1125,20 @@ public final class OfflineTopComponent extends TopComponent {
         exp = new ExperimentContext();
         exp.setRawDir(txtRaw.getText());
         exp.setCacheDir(this.txtCache.getText());
-        if (txtRaw.getText()!=null && txtRaw.getText().length()>3) {
+        if (txtRaw.getText() != null && txtRaw.getText().length() > 3) {
             String r = txtResults.getText();
-            if (r == null || r.length()<3) {
+            if (r == null || r.length() < 3) {
                 txtResults.setText(txtRaw.getText());
             }
             String c = txtCache.getText();
-            if (c == null || c.length()<3) {
+            if (c == null || c.length() < 3) {
                 txtCache.setText(txtRaw.getText());
             }
         }
         //exp.setCacheDir(txtCache.getText());
         exp.setResultsDirectory(txtResults.getText());
         // offset is always 0!
-       
+
 
         //exp.setCacheDir(txtCache.getText());
         exp.createWellContext();
@@ -1225,4 +1210,3 @@ public final class OfflineTopComponent extends TopComponent {
         Logger.getLogger(OfflineTopComponent.class.getName()).log(Level.INFO, msg);
     }
 }
-

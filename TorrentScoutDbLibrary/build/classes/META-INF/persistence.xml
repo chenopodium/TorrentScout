@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+  <persistence-unit name="TorrentScoutDbLibraryPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>com.iontorrent.dbaccess.RundbTemplate</class>
+    <class>com.iontorrent.dbaccess.RundbAnalysismetrics</class>
+    <class>com.iontorrent.dbaccess.RundbLibmetrics</class>
+    <class>com.iontorrent.dbaccess.RundbReportstorage</class>
+    <class>com.iontorrent.dbaccess.RundbExperiment</class>
+    <class>com.iontorrent.dbaccess.RundbQualitymetrics</class>
+    <class>com.iontorrent.dbaccess.RundbResults</class>
+    <class>com.iontorrent.dbaccess.RundbTfmetrics</class>
+    <class>com.iontorrent.dbaccess.RundbRig</class>
+    <class>com.iontorrent.dbaccess.RundbReferencegenome</class>
+    <class>com.iontorrent.dbaccess.RundbChip</class>
+    <class>com.iontorrent.dbaccess.RundbLocation</class>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/iondb"/>
+      <property name="javax.persistence.jdbc.password" value="ion"/>
+      <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+      <property name="javax.persistence.jdbc.user" value="ion"/>
+    </properties>
+  </persistence-unit>
+</persistence>

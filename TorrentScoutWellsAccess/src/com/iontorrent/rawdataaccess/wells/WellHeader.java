@@ -198,7 +198,7 @@ public class WellHeader {
     }
 
     private void p(String msg) {
-        Logger.getLogger(WellHeader.class.getName()).log(Level.INFO, msg);
+      //  Logger.getLogger(WellHeader.class.getName()).log(Level.INFO, msg);
 
     }
 

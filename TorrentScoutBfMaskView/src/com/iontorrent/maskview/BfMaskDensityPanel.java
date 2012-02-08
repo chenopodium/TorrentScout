@@ -56,6 +56,7 @@ public class BfMaskDensityPanel extends GeneralDensityPanel implements WellModel
     
     public BfMaskDensityPanel(ExperimentContext exp) {
         super(exp);
+        this.setNrWidgets(3);
     }
 
     @Override

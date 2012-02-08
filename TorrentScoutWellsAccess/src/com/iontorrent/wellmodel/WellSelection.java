@@ -22,6 +22,7 @@ package com.iontorrent.wellmodel;
 
 import com.iontorrent.rawdataaccess.wells.BfMask;
 import com.iontorrent.rawdataaccess.wells.BfMaskDataPoint;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,13 +31,13 @@ import java.util.logging.Logger;
  * The selected rectangle in a display of wells
  * @author Chantal Roth
  */
-public class WellSelection {
+public class WellSelection implements Serializable {
 
     private WellCoordinate coord1;
     private WellCoordinate coord2;
-    private ArrayList<WellCoordinate> allWells;
-    private ArrayList<WellCoordinate> filteredWells;
-    private ArrayList<WellFilter> filters;
+    private transient ArrayList<WellCoordinate> allWells;
+    private transient ArrayList<WellCoordinate> filteredWells;
+    private transient ArrayList<WellFilter> filters;
     public static final int MAX_WELLS = 10000;
 
     private int offx;
@@ -57,6 +58,8 @@ public class WellSelection {
     public WellSelection(WellCoordinate coord1, WellCoordinate coord2, ArrayList<WellCoordinate> coords) {
         this.coord1 = coord1;
         this.coord2 = coord2;
+        // check coords
+        
         this.allWells = coords;
       
     }
@@ -265,5 +268,9 @@ public class WellSelection {
      */
     public void setOffy(int offy) {
         this.offy = offy;
+    }
+
+    public WellCoordinate getMiddle() {
+        return new WellCoordinate((this.coord1.getCol()+coord2.getCol())/2, (this.coord1.getRow()+coord2.getRow())/2); 
     }
 }

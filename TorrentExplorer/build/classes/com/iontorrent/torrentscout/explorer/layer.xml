@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Menu">
+        <folder name="Window">
+            <file name="ShowPaletteAction.shadow_hidden"/>
+            <file name="com-iontorrent-torrentscout-explorer-AutomateTopComponent.shadow">
+                <!--com.iontorrent.torrentscout.explorer.AutomateTopComponent-->
+                <attr name="originalFile" stringvalue="Actions/Window/com-iontorrent-torrentscout-explorer-AutomateTopComponent.instance"/>
+            </file>
+            <file name="com-iontorrent-torrentscout-explorer-FitTopComponent.shadow">
+                <!--com.iontorrent.torrentscout.explorer.FitTopComponent-->
+                <attr name="originalFile" stringvalue="Actions/Window/com-iontorrent-torrentscout-explorer-FitTopComponent.instance"/>
+            </file>
+            <file name="com-iontorrent-torrentscout-explorer-MaskEditorTopComponent.shadow">
+                <!--com.iontorrent.torrentscout.explorer.MaskEditorTopComponent-->
+                <attr name="originalFile" stringvalue="Actions/Window/com-iontorrent-torrentscout-explorer-MaskEditorTopComponent.instance"/>
+            </file>
+            <file name="com-iontorrent-torrentscout-explorer-ProcessTopComponent.shadow">
+                <!--com.iontorrent.torrentscout.explorer.ProcessTopComponent-->
+                <attr name="originalFile" stringvalue="Actions/Window/com-iontorrent-torrentscout-explorer-ProcessTopComponent.instance"/>
+            </file>
+            <file name="org-netbeans-core-ide-ServicesTabAction.shadow_hidden"/>
+            <file name="org-netbeans-modules-favorites-View.shadow_hidden"/>
+            <file name="org-netbeans-modules-project-ui-logical-tab-action.shadow_hidden"/>
+            <file name="org-netbeans-modules-project-ui-physical-tab-action.shadow_hidden"/>
+            <file name="org-netbeans-modules-tasklist-ui-TaskListAction.shadow_hidden"/>
+        </folder>
+    </folder>
+    <folder name="Windows2">
+        <folder name="Components">
+            <file name="AutomateTopComponent.settings">
+                <!--com.iontorrent.torrentscout.explorer.AutomateTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+  <instance class="com.iontorrent.torrentscout.explorer.AutomateTopComponent"/>
+</settings>
+]]>
+            </file>
+            <file name="FitTopComponent.settings">
+                <!--com.iontorrent.torrentscout.explorer.FitTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+  <instance class="com.iontorrent.torrentscout.explorer.FitTopComponent"/>
+</settings>
+]]>
+            </file>
+            <file name="MaskEditorTopComponent.settings">
+                <!--com.iontorrent.torrentscout.explorer.MaskEditorTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+  <instance class="com.iontorrent.torrentscout.explorer.MaskEditorTopComponent"/>
+</settings>
+]]>
+            </file>
+            <file name="ProcessTopComponent.settings">
+                <!--com.iontorrent.torrentscout.explorer.ProcessTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+  <instance class="com.iontorrent.torrentscout.explorer.ProcessTopComponent"/>
+</settings>
+]]>
+            </file>
+        </folder>
+        <folder name="Modes">
+		
+            <folder name="right_editor_mode">
+                <file name="AutomateTopComponent.wstcref">
+                    <!--com.iontorrent.torrentscout.explorer.AutomateTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tc-ref PUBLIC "-//NetBeans//DTD Top Component in Mode Properties 2.0//EN" "http://www.netbeans.org/dtds/tc-ref2_0.dtd">
+<tc-ref version="2.0">
+  <tc-id id="AutomateTopComponent"/>
+  <state opened="false"/>
+</tc-ref>
+]]>
+                </file>
+                <file name="MaskEditorTopComponent.wstcref">
+                    <!--com.iontorrent.torrentscout.explorer.MaskEditorTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tc-ref PUBLIC "-//NetBeans//DTD Top Component in Mode Properties 2.0//EN" "http://www.netbeans.org/dtds/tc-ref2_0.dtd">
+<tc-ref version="2.0">
+  <tc-id id="MaskEditorTopComponent"/>
+  <state opened="false"/>
+</tc-ref>
+]]>
+                </file>
+            </folder>
+            <folder name="left_editor_mode">
+                <file name="FitTopComponent.wstcref">
+                    <!--com.iontorrent.torrentscout.explorer.FitTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tc-ref PUBLIC "-//NetBeans//DTD Top Component in Mode Properties 2.0//EN" "http://www.netbeans.org/dtds/tc-ref2_0.dtd">
+<tc-ref version="2.0">
+  <tc-id id="FitTopComponent"/>
+  <state opened="false"/>
+</tc-ref>
+]]>
+                </file>
+            </folder>
+            <folder name="table_mode">
+                <file name="ProcessTopComponent.wstcref">
+                    <!--com.iontorrent.torrentscout.explorer.ProcessTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tc-ref PUBLIC "-//NetBeans//DTD Top Component in Mode Properties 2.0//EN" "http://www.netbeans.org/dtds/tc-ref2_0.dtd">
+<tc-ref version="2.0">
+  <tc-id id="ProcessTopComponent"/>
+  <state opened="false"/>
+</tc-ref>
+]]>
+                </file>
+            </folder>
+        
+        </folder>
+<!--        <folder name="Groups">
+            <file name="SignalGroup.xml" url="groups/SignalGroup.xml"/>
+            <folder name="SignalGroup">
+                <file name="FitTopComponent.xml" url="groups/FitTopComponent.xml"/>
+                <file name="AutomateTopComponent.xml" url="groups/AutomateTopComponent.xml"/>
+                <file name="ProcessTopComponent.xml" url="groups/ProcessTopComponent.xml"/>
+                <file name="MaskEditorTopComponent.xml" url="groups/MaskEditorTopComponent.xml"/>
+            </folder>
+        </folder>-->
+    </folder>
+    <folder name="Actions">
+        <folder name="Window">
+            <file name="com-iontorrent-torrentscout-explorer-AutomateTopComponent.instance">
+                <!--com.iontorrent.torrentscout.explorer.AutomateTopComponent-->
+                <attr methodvalue="org.openide.windows.TopComponent.openAction" name="instanceCreate"/>
+                <attr name="component" newvalue="com.iontorrent.torrentscout.explorer.AutomateTopComponent"/>
+                <attr name="preferredID" stringvalue="AutomateTopComponent"/>
+                <attr bundlevalue="com.iontorrent.torrentscout.explorer.Bundle#CTL_AutomateAction" name="displayName"/>
+                <attr name="iconBase" stringvalue="com/iontorrent/torrentscout/explorer/system-run-3.png"/>
+            </file>
+            <file name="com-iontorrent-torrentscout-explorer-FitTopComponent.instance">
+                <!--com.iontorrent.torrentscout.explorer.FitTopComponent-->
+                <attr methodvalue="org.openide.windows.TopComponent.openAction" name="instanceCreate"/>
+                <attr name="component" newvalue="com.iontorrent.torrentscout.explorer.FitTopComponent"/>
+                <attr name="preferredID" stringvalue="FitTopComponent"/>
+                <attr bundlevalue="com.iontorrent.torrentscout.explorer.Bundle#CTL_FitAction" name="displayName"/>
+                <attr name="iconBase" stringvalue="com/iontorrent/torrentscout/explorer/chart.png"/>
+            </file>
+            <file name="com-iontorrent-torrentscout-explorer-MaskEditorTopComponent.instance">
+                <!--com.iontorrent.torrentscout.explorer.MaskEditorTopComponent-->
+                <attr methodvalue="org.openide.windows.TopComponent.openAction" name="instanceCreate"/>
+                <attr name="component" newvalue="com.iontorrent.torrentscout.explorer.MaskEditorTopComponent"/>
+                <attr name="preferredID" stringvalue="MaskEditorTopComponent"/>
+                <attr bundlevalue="com.iontorrent.torrentscout.explorer.Bundle#CTL_MaskEditorAction" name="displayName"/>
+                <attr name="iconBase" stringvalue="com/iontorrent/torrentscout/explorer/mask.png"/>
+            </file>
+            <file name="com-iontorrent-torrentscout-explorer-ProcessTopComponent.instance">
+                <!--com.iontorrent.torrentscout.explorer.ProcessTopComponent-->
+                <attr methodvalue="org.openide.windows.TopComponent.openAction" name="instanceCreate"/>
+                <attr name="component" newvalue="com.iontorrent.torrentscout.explorer.ProcessTopComponent"/>
+                <attr name="preferredID" stringvalue="ProcessTopComponent"/>
+                <attr bundlevalue="com.iontorrent.torrentscout.explorer.Bundle#CTL_ProcessAction" name="displayName"/>
+                <attr name="iconBase" stringvalue="com/iontorrent/torrentscout/explorer/chart-curve-edit.png"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="xml">
+        <folder name="entities">
+            <folder name="com_iontorrent_torrentscout_explorer">
+                <file name="Automate" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <!--com.iontorrent.torrentscout.explorer.AutomateTopComponent-->
+                    <attr name="hint.originalPublicID" stringvalue="-//com.iontorrent.torrentscout.explorer//Automate//EN"/>
+                </file>
+                <file name="Fit" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <!--com.iontorrent.torrentscout.explorer.FitTopComponent-->
+                    <attr name="hint.originalPublicID" stringvalue="-//com.iontorrent.torrentscout.explorer//Fit//EN"/>
+                </file>
+                <file name="MaskEditor" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <!--com.iontorrent.torrentscout.explorer.MaskEditorTopComponent-->
+                    <attr name="hint.originalPublicID" stringvalue="-//com.iontorrent.torrentscout.explorer//MaskEditor//EN"/>
+                </file>
+                <file name="Process" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <!--com.iontorrent.torrentscout.explorer.ProcessTopComponent-->
+                    <attr name="hint.originalPublicID" stringvalue="-//com.iontorrent.torrentscout.explorer//Process//EN"/>
+                </file>
+            </folder>
+        </folder>
+        <folder name="memory">
+            <folder name="com">
+                <folder name="iontorrent">
+                    <folder name="torrentscout">
+                        <folder name="explorer">
+                            <file name="AutomateTopComponent">
+                                <!--com.iontorrent.torrentscout.explorer.AutomateTopComponent-->
+                                <attr name="settings.providerPath" stringvalue="xml/lookups//com_iontorrent_torrentscout_explorer/Automate.instance"/>
+                            </file>
+                            <file name="FitTopComponent">
+                                <!--com.iontorrent.torrentscout.explorer.FitTopComponent-->
+                                <attr name="settings.providerPath" stringvalue="xml/lookups//com_iontorrent_torrentscout_explorer/Fit.instance"/>
+                            </file>
+                            <file name="MaskEditorTopComponent">
+                                <!--com.iontorrent.torrentscout.explorer.MaskEditorTopComponent-->
+                                <attr name="settings.providerPath" stringvalue="xml/lookups//com_iontorrent_torrentscout_explorer/MaskEditor.instance"/>
+                            </file>
+                            <file name="ProcessTopComponent">
+                                <!--com.iontorrent.torrentscout.explorer.ProcessTopComponent-->
+                                <attr name="settings.providerPath" stringvalue="xml/lookups//com_iontorrent_torrentscout_explorer/Process.instance"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+        <folder name="lookups">
+            <folder name="com_iontorrent_torrentscout_explorer">
+                <file name="Automate.instance">
+                    <!--com.iontorrent.torrentscout.explorer.AutomateTopComponent-->
+                    <attr methodvalue="org.netbeans.api.settings.Factory.create" name="instanceCreate"/>
+                    <attr methodvalue="org.netbeans.api.settings.Factory.properties" name="settings.convertor"/>
+                    <attr name="settings.instanceClass" stringvalue="com.iontorrent.torrentscout.explorer.AutomateTopComponent"/>
+                    <attr name="settings.instanceOf" stringvalue="com.iontorrent.torrentscout.explorer.AutomateTopComponent"/>
+                    <attr boolvalue="true" name="xmlproperties.preventStoring"/>
+                </file>
+                <file name="Fit.instance">
+                    <!--com.iontorrent.torrentscout.explorer.FitTopComponent-->
+                    <attr methodvalue="org.netbeans.api.settings.Factory.create" name="instanceCreate"/>
+                    <attr methodvalue="org.netbeans.api.settings.Factory.properties" name="settings.convertor"/>
+                    <attr name="settings.instanceClass" stringvalue="com.iontorrent.torrentscout.explorer.FitTopComponent"/>
+                    <attr name="settings.instanceOf" stringvalue="com.iontorrent.torrentscout.explorer.FitTopComponent"/>
+                    <attr boolvalue="true" name="xmlproperties.preventStoring"/>
+                </file>
+                <file name="MaskEditor.instance">
+                    <!--com.iontorrent.torrentscout.explorer.MaskEditorTopComponent-->
+                    <attr methodvalue="org.netbeans.api.settings.Factory.create" name="instanceCreate"/>
+                    <attr methodvalue="org.netbeans.api.settings.Factory.properties" name="settings.convertor"/>
+                    <attr name="settings.instanceClass" stringvalue="com.iontorrent.torrentscout.explorer.MaskEditorTopComponent"/>
+                    <attr name="settings.instanceOf" stringvalue="com.iontorrent.torrentscout.explorer.MaskEditorTopComponent"/>
+                    <attr boolvalue="true" name="xmlproperties.preventStoring"/>
+                </file>
+                <file name="Process.instance">
+                    <!--com.iontorrent.torrentscout.explorer.ProcessTopComponent-->
+                    <attr methodvalue="org.netbeans.api.settings.Factory.create" name="instanceCreate"/>
+                    <attr methodvalue="org.netbeans.api.settings.Factory.properties" name="settings.convertor"/>
+                    <attr name="settings.instanceClass" stringvalue="com.iontorrent.torrentscout.explorer.ProcessTopComponent"/>
+                    <attr name="settings.instanceOf" stringvalue="com.iontorrent.torrentscout.explorer.ProcessTopComponent"/>
+                    <attr boolvalue="true" name="xmlproperties.preventStoring"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="OptionsDialog">
+        <folder name="TorrentScoutOptions">
+            <file name="com-iontorrent-torrentscout-explorer-options-TorrentExplorerOptionsPanelController.instance">
+                <!--com.iontorrent.torrentscout.explorer.options.TorrentExplorerOptionsPanelController-->
+                <attr methodvalue="org.netbeans.spi.options.AdvancedOption.createSubCategory" name="instanceCreate"/>
+                <attr name="controller" newvalue="com.iontorrent.torrentscout.explorer.options.TorrentExplorerOptionsPanelController"/>
+                <attr bundlevalue="com.iontorrent.torrentscout.explorer.options.Bundle#AdvancedOption_DisplayName_TorrentExplorer" name="displayName"/>
+                <attr bundlevalue="com.iontorrent.torrentscout.explorer.options.Bundle#AdvancedOption_Keywords_TorrentExplorer" name="keywords"/>
+                <attr name="keywordsCategory" stringvalue="TorrentScoutOptions/TorrentExplorer"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>

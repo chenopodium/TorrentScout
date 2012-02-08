@@ -55,6 +55,7 @@ public abstract class MaskDensityPanel extends GeneralDensityPanel implements We
 
     public MaskDensityPanel(ExperimentContext exp) {
         super(exp);
+        this.setNrWidgets(1);
 
     }
 
@@ -149,9 +150,9 @@ public abstract class MaskDensityPanel extends GeneralDensityPanel implements We
             wellcontext.setSelection(sel);
 
             LookupUtils.publish(wellSelectionContent, sel);
-//            if (sel.getCoord1().toString().equals(sel.getCoord2().toString())) {
-//                this.publishCoord(sel.getCoord1());
-//            }
+            if (sel.getCoord1().toString().equals(sel.getCoord2().toString())) {
+                this.publishCoord(sel.getCoord1());
+            }
 
         } else {
             p("Publish selection: got no selection");
@@ -174,12 +175,12 @@ public abstract class MaskDensityPanel extends GeneralDensityPanel implements We
     @Override
     protected void publishCoord(WellCoordinate coord) {
         if (coord != null) {
-            p("Got a coordinate: " + coord+", but will NOT publish it");
-//            if (wellcontext.getCoordinate() != null) {
-//                wellCoordContent.remove(wellcontext.getSelection());
-//            }
-//            wellcontext.setCoordinate(coord);
-//            LookupUtils.publish(wellCoordContent, coord);
+         //   p("Got a coordinate: " + coord+", but will NOT publish it");
+            if (wellcontext.getCoordinate() != null) {
+                wellCoordContent.remove(wellcontext.getSelection());
+            }
+            wellcontext.setCoordinate(coord);
+            LookupUtils.publish(wellCoordContent, coord);
 
         }
     }

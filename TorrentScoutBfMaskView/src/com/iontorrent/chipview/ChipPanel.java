@@ -190,7 +190,7 @@ public class ChipPanel extends javax.swing.JPanel implements FlowListener, Filet
         panMain.repaint();
         den.repaint();
         repaint();
-        paintAll(getGraphics());
+     //   paintAll(getGraphics());
       
      //  den.paintImmediately(0,0,1000,1000);
         //den.paintAll(getGraphics());

@@ -60,8 +60,8 @@ import org.openide.util.LookupListener;
 autostore = false)
 @TopComponent.Description(preferredID = "TorrentScoutAlignmentTopComponent",
 iconBase = "com/iontorrent/seqview/msa.gif",
-persistenceType = TopComponent.PERSISTENCE_ALWAYS)
-@TopComponent.Registration(mode = "right_editor_mode", openAtStartup = true)
+persistenceType = TopComponent.PERSISTENCE_NEVER)
+@TopComponent.Registration(mode = "right_editor_mode", openAtStartup = false)
 @ActionID(category = "Window", id = "com.iontorrent.seqview.TorrentScoutAlignmentTopComponent")
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
 @TopComponent.OpenActionRegistration(displayName = "#CTL_TorrentScoutAlignmentAction",

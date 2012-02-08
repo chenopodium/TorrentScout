@@ -15,6 +15,14 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>com.iontorrent.dataloading</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>com.iontorrent.guiutils</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -66,11 +74,27 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>org.openide.actions</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>6.21.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>org.openide.awt</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
                         <specification-version>7.29.1</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.dialogs</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>7.18.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -86,7 +110,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>7.20.1</specification-version>
+                        <specification-version>7.18.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -94,7 +118,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>7.20.1</specification-version>
+                        <specification-version>7.18.1</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -118,7 +142,7 @@
                     <build-prerequisite/>
                     <compile-dependency/>
                     <run-dependency>
-                        <specification-version>6.37.1</specification-version>
+                        <specification-version>6.39</specification-version>
                     </run-dependency>
                 </dependency>
             </module-dependencies>

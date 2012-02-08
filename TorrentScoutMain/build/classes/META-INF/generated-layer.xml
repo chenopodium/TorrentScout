@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN"
+                            "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Actions">
+        <folder name="Help">
+            <file name="com-iontorrent-main-FeedbackAction.instance">
+                <!--com.iontorrent.main.FeedbackAction-->
+                <attr
+                    bundlevalue="com.iontorrent.main.Bundle#CTL_FeedbackAction" name="displayName"/>
+                <attr
+                    methodvalue="org.openide.awt.Actions.alwaysEnabled" name="instanceCreate"/>
+                <attr name="delegate" newvalue="com.iontorrent.main.FeedbackAction"/>
+                <attr name="iconBase" stringvalue="com/iontorrent/main/mail-new16.png"/>
+                <attr boolvalue="false" name="noIconInMenu"/>
+            </file>
+            <file name="com-iontorrent-main-MainAction.instance">
+                <!--com.iontorrent.main.startup.MainAction-->
+                <attr
+                    bundlevalue="com.iontorrent.main.startup.Bundle#CTL_MainAction" name="displayName"/>
+                <attr
+                    methodvalue="org.openide.awt.Actions.alwaysEnabled" name="instanceCreate"/>
+                <attr name="delegate" newvalue="com.iontorrent.main.startup.MainAction"/>
+                <attr name="iconBase" stringvalue="com/iontorrent/main/startup/help-hint.png"/>
+                <attr boolvalue="false" name="noIconInMenu"/>
+            </file>
+        </folder>
+        <folder name="Window">
+            <file name="com-iontorrent-main-startup-TorrentScoutMainPageTopComponent.instance">
+                <!--com.iontorrent.main.startup.TorrentScoutMainPageTopComponent-->
+                <attr
+                    methodvalue="org.openide.windows.TopComponent.openAction" name="instanceCreate"/>
+                <attr name="component" newvalue="com.iontorrent.main.startup.TorrentScoutMainPageTopComponent"/>
+                <attr name="preferredID" stringvalue="TorrentScoutMainPageTopComponent"/>
+                <attr
+                    bundlevalue="com.iontorrent.main.startup.Bundle#CTL_TorrentScoutMainPageAction" name="displayName"/>
+                <attr name="iconBase" stringvalue="com/iontorrent/main/startup/chip_16.png"/>
+            </file>
+            <file name="com-iontorrent-main-startup-TorrentScoutStartupTopComponent.instance">
+                <!--com.iontorrent.main.startup.TorrentScoutStartupTopComponent-->
+                <attr
+                    methodvalue="org.openide.windows.TopComponent.openAction" name="instanceCreate"/>
+                <attr name="component" newvalue="com.iontorrent.main.startup.TorrentScoutStartupTopComponent"/>
+                <attr name="preferredID" stringvalue="TorrentScoutStartupTopComponent"/>
+                <attr
+                    bundlevalue="com.iontorrent.main.startup.Bundle#CTL_TorrentScoutStartupAction" name="displayName"/>
+                <attr name="iconBase" stringvalue="com/iontorrent/main/startup/application-form.png"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="Help">
+            <file name="com-iontorrent-main-FeedbackAction.shadow">
+                <!--com.iontorrent.main.FeedbackAction-->
+                <attr name="originalFile" stringvalue="Actions/Help/com-iontorrent-main-FeedbackAction.instance"/>
+                <attr intvalue="1600" name="position"/>
+            </file>
+        </folder>
+        <folder name="File">
+            <file name="com-iontorrent-main-MainAction.shadow">
+                <!--com.iontorrent.main.startup.MainAction-->
+                <attr name="originalFile" stringvalue="Actions/Help/com-iontorrent-main-MainAction.instance"/>
+                <attr intvalue="1" name="position"/>
+            </file>
+        </folder>
+        <folder name="Window">
+            <file name="com-iontorrent-main-startup-TorrentScoutMainPageTopComponent.shadow">
+                <!--com.iontorrent.main.startup.TorrentScoutMainPageTopComponent-->
+                <attr name="originalFile" stringvalue="Actions/Window/com-iontorrent-main-startup-TorrentScoutMainPageTopComponent.instance"/>
+            </file>
+            <file name="com-iontorrent-main-startup-TorrentScoutStartupTopComponent.shadow">
+                <!--com.iontorrent.main.startup.TorrentScoutStartupTopComponent-->
+                <attr name="originalFile" stringvalue="Actions/Window/com-iontorrent-main-startup-TorrentScoutStartupTopComponent.instance"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Toolbars">
+        <folder name="Help">
+            <file name="com-iontorrent-main-FeedbackAction.shadow">
+                <!--com.iontorrent.main.FeedbackAction-->
+                <attr name="originalFile" stringvalue="Actions/Help/com-iontorrent-main-FeedbackAction.instance"/>
+                <attr intvalue="500" name="position"/>
+            </file>
+        </folder>
+        <folder name="File">
+            <file name="com-iontorrent-main-MainAction.shadow">
+                <!--com.iontorrent.main.startup.MainAction-->
+                <attr name="originalFile" stringvalue="Actions/Help/com-iontorrent-main-MainAction.instance"/>
+                <attr intvalue="1" name="position"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Shortcuts">
+        <file name="O-H.shadow">
+            <!--com.iontorrent.main.FeedbackAction-->
+            <attr name="originalFile" stringvalue="Actions/Help/com-iontorrent-main-FeedbackAction.instance"/>
+        </file>
+        <file name="D-B.shadow">
+            <!--com.iontorrent.main.FeedbackAction-->
+            <attr name="originalFile" stringvalue="Actions/Help/com-iontorrent-main-FeedbackAction.instance"/>
+        </file>
+        <file name="D-M.shadow">
+            <!--com.iontorrent.main.FeedbackAction-->
+            <attr name="originalFile" stringvalue="Actions/Help/com-iontorrent-main-FeedbackAction.instance"/>
+        </file>
+        <file name="C-N.shadow">
+            <!--com.iontorrent.main.startup.MainAction-->
+            <attr name="originalFile" stringvalue="Actions/Help/com-iontorrent-main-MainAction.instance"/>
+        </file>
+        <file name="D-N.shadow">
+            <!--com.iontorrent.main.startup.MainAction-->
+            <attr name="originalFile" stringvalue="Actions/Help/com-iontorrent-main-MainAction.instance"/>
+        </file>
+        <file name="F1.shadow">
+            <!--com.iontorrent.main.startup.MainAction-->
+            <attr name="originalFile" stringvalue="Actions/Help/com-iontorrent-main-MainAction.instance"/>
+        </file>
+    </folder>
+    <folder name="Windows2">
+        <folder name="Components">
+            <file name="TorrentScoutMainPageTopComponent.settings">
+                <!--com.iontorrent.main.startup.TorrentScoutMainPageTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+  <instance class="com.iontorrent.main.startup.TorrentScoutMainPageTopComponent"/>
+</settings>
+]]></file>
+            <file name="TorrentScoutStartupTopComponent.settings">
+                <!--com.iontorrent.main.startup.TorrentScoutStartupTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+  <instance class="com.iontorrent.main.startup.TorrentScoutStartupTopComponent"/>
+</settings>
+]]></file>
+        </folder>
+        <folder name="Modes">
+            <folder name="editor">
+                <file name="TorrentScoutMainPageTopComponent.wstcref">
+                    <!--com.iontorrent.main.startup.TorrentScoutMainPageTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tc-ref PUBLIC "-//NetBeans//DTD Top Component in Mode Properties 2.0//EN" "http://www.netbeans.org/dtds/tc-ref2_0.dtd">
+<tc-ref version="2.0">
+  <tc-id id="TorrentScoutMainPageTopComponent"/>
+  <state opened="true"/>
+</tc-ref>
+]]></file>
+            </folder>
+            <folder name="leftSlidingSide">
+                <file name="TorrentScoutStartupTopComponent.wstcref">
+                    <!--com.iontorrent.main.startup.TorrentScoutStartupTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tc-ref PUBLIC "-//NetBeans//DTD Top Component in Mode Properties 2.0//EN" "http://www.netbeans.org/dtds/tc-ref2_0.dtd">
+<tc-ref version="2.0">
+  <tc-id id="TorrentScoutStartupTopComponent"/>
+  <state opened="true"/>
+</tc-ref>
+]]></file>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="xml">
+        <folder name="entities">
+            <folder name="com_iontorrent_main_startup">
+                <file name="TorrentScoutMainPage" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <!--com.iontorrent.main.startup.TorrentScoutMainPageTopComponent-->
+                    <attr name="hint.originalPublicID" stringvalue="-//com.iontorrent.main.startup//TorrentScoutMainPage//EN"/>
+                </file>
+                <file name="TorrentScoutStartup" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <!--com.iontorrent.main.startup.TorrentScoutStartupTopComponent-->
+                    <attr name="hint.originalPublicID" stringvalue="-//com.iontorrent.main.startup//TorrentScoutStartup//EN"/>
+                </file>
+            </folder>
+        </folder>
+        <folder name="memory">
+            <folder name="com">
+                <folder name="iontorrent">
+                    <folder name="main">
+                        <folder name="startup">
+                            <file name="TorrentScoutMainPageTopComponent">
+                                <!--com.iontorrent.main.startup.TorrentScoutMainPageTopComponent-->
+                                <attr name="settings.providerPath" stringvalue="xml/lookups//com_iontorrent_main_startup/TorrentScoutMainPage.instance"/>
+                            </file>
+                            <file name="TorrentScoutStartupTopComponent">
+                                <!--com.iontorrent.main.startup.TorrentScoutStartupTopComponent-->
+                                <attr name="settings.providerPath" stringvalue="xml/lookups//com_iontorrent_main_startup/TorrentScoutStartup.instance"/>
+                            </file>
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+        <folder name="lookups">
+            <folder name="com_iontorrent_main_startup">
+                <file name="TorrentScoutMainPage.instance">
+                    <!--com.iontorrent.main.startup.TorrentScoutMainPageTopComponent-->
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.create" name="instanceCreate"/>
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.properties" name="settings.convertor"/>
+                    <attr name="settings.instanceClass" stringvalue="com.iontorrent.main.startup.TorrentScoutMainPageTopComponent"/>
+                    <attr name="settings.instanceOf" stringvalue="com.iontorrent.main.startup.TorrentScoutMainPageTopComponent"/>
+                    <attr boolvalue="true" name="xmlproperties.preventStoring"/>
+                </file>
+                <file name="TorrentScoutStartup.instance">
+                    <!--com.iontorrent.main.startup.TorrentScoutStartupTopComponent-->
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.create" name="instanceCreate"/>
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.properties" name="settings.convertor"/>
+                    <attr name="settings.instanceClass" stringvalue="com.iontorrent.main.startup.TorrentScoutStartupTopComponent"/>
+                    <attr name="settings.instanceOf" stringvalue="com.iontorrent.main.startup.TorrentScoutStartupTopComponent"/>
+                    <attr boolvalue="true" name="xmlproperties.preventStoring"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="OptionsDialog">
+        <folder name="TorrentScoutOptions">
+            <file name="com-iontorrent-main-options-LookAndFeelOptionsPanelController.instance">
+                <!--com.iontorrent.main.options.LookAndFeelOptionsPanelController-->
+                <attr
+                    methodvalue="org.netbeans.spi.options.AdvancedOption.createSubCategory" name="instanceCreate"/>
+                <attr name="controller" newvalue="com.iontorrent.main.options.LookAndFeelOptionsPanelController"/>
+                <attr
+                    bundlevalue="com.iontorrent.main.options.Bundle#AdvancedOption_DisplayName_LookAndFeel" name="displayName"/>
+                <attr intvalue="1" name="position"/>
+                <attr
+                    bundlevalue="com.iontorrent.main.options.Bundle#AdvancedOption_Keywords_LookAndFeel" name="keywords"/>
+                <attr name="keywordsCategory" stringvalue="TorrentScoutOptions/LookAndFeel"/>
+            </file>
+            <!--com.iontorrent.main-->
+            <attr intvalue="0" name="position"/>
+            <file name="com-iontorrent-main-options-TorrentScoutSettingsOptionsPanelController.instance">
+                <!--com.iontorrent.main.options.TorrentScoutSettingsOptionsPanelController-->
+                <attr
+                    methodvalue="org.netbeans.spi.options.AdvancedOption.createSubCategory" name="instanceCreate"/>
+                <attr name="controller" newvalue="com.iontorrent.main.options.TorrentScoutSettingsOptionsPanelController"/>
+                <attr
+                    bundlevalue="com.iontorrent.main.options.Bundle#AdvancedOption_DisplayName_TorrentScoutSettings" name="displayName"/>
+                <attr intvalue="0" name="position"/>
+                <attr
+                    bundlevalue="com.iontorrent.main.options.Bundle#AdvancedOption_Keywords_TorrentScoutSettings" name="keywords"/>
+                <attr name="keywordsCategory" stringvalue="TorrentScoutOptions/TorrentScoutSettings"/>
+            </file>
+        </folder>
+        <file name="TorrentScoutOptions.instance">
+            <!--com.iontorrent.main-->
+            <attr
+                methodvalue="org.netbeans.spi.options.OptionsCategory.createCategory" name="instanceCreate"/>
+            <attr name="advancedOptionsFolder" stringvalue="OptionsDialog/TorrentScoutOptions"/>
+            <attr name="categoryName" stringvalue="TorrentScout"/>
+            <attr intvalue="10" name="position"/>
+            <attr name="iconBase" stringvalue="com/iontorrent/main/chip.png"/>
+            <attr name="keywords" stringvalue="settings, chip, torrent scout"/>
+            <attr name="keywordsCategory" stringvalue="TorrentScout"/>
+        </file>
+    </folder>
+</filesystem>

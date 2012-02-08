@@ -1,19 +1,19 @@
 /*
-*	Copyright (C) 2011 Life Technologies Inc.
-*
-*   This program is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 2 of the License, or
-*   (at your option) any later version.
-*
-*   This program is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ *	Copyright (C) 2011 Life Technologies Inc.
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 2 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -72,8 +72,8 @@ import org.openide.util.lookup.InstanceContent;
 autostore = false)
 @TopComponent.Description(preferredID = "TorrentScoutMaskViewTopComponent",
 iconBase = "com/iontorrent/maskview/chip.png",
-persistenceType = TopComponent.PERSISTENCE_ALWAYS)
-@TopComponent.Registration(mode = "top_left", openAtStartup = true)
+persistenceType = TopComponent.PERSISTENCE_NEVER)
+@TopComponent.Registration(mode = "top_left", openAtStartup = false)
 @ActionID(category = "Window", id = "com.iontorrent.maskview.TorrentScoutMaskViewTopComponent")
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
 @TopComponent.OpenActionRegistration(displayName = "#CTL_TorrentScoutMaskViewAction",
@@ -91,6 +91,7 @@ public final class TorrentScoutMaskViewTopComponent extends TopComponent impleme
     private ExperimentContext expContext;
     private GlobalContext global;
     private WellContext context;
+    private LoadMaskFileTask loadmaskfiletask;
     private transient final InstanceContent wellContextContent = LookupUtils.getPublisher(WellContext.class);
     private transient final Lookup.Result<ExperimentContext> expContextResults =
             LookupUtils.getSubscriber(ExperimentContext.class, new SubscriberListener());
@@ -213,27 +214,31 @@ public final class TorrentScoutMaskViewTopComponent extends TopComponent impleme
             //this.setStatus("Got no global context yet");
             return;
         }
-        
+
         expContext = global.getExperimentContext();
-        
-        if (expContext == null) return;
-        if (expContext != null) bfmask_file = this.expContext.getResultsDirectory() + "bfmask.bin";
+
+        if (expContext == null) {
+            return;
+        }
+        if (expContext != null) {
+            bfmask_file = this.expContext.getResultsDirectory() + "bfmask.bin";
+        }
         if (bfmask_file == null) {
             this.setStatusWarning("Got no bfmask file yet");
             return;
         }
-        this.btnReload.setToolTipText("Reload the file "+bfmask_file);
+        this.btnReload.setToolTipText("Reload the file " + bfmask_file);
         p("TRYING TO LOAD MASK:");
-        p("Mask file: "+bfmask_file);
-        p("Exp results dir "+expContext.getResultsDirectory());
-        p("Exp raw     dir "+expContext.getRawDir());
+        p("Mask file: " + bfmask_file);
+        p("Exp results dir " + expContext.getResultsDirectory());
+        p("Exp raw     dir " + expContext.getRawDir());
         if (FileUtils.isUrl(bfmask_file)) {
             this.setStatusWarning(bfmask_file + " is an url, hit reload if you want to see the data");
             return;
         }
 
         if (!FileUtils.exists(bfmask_file)) {
-            p("Got exp: "+expContext.toString());
+            p("Got exp: " + expContext.toString());
             this.setStatusError(bfmask_file + " does not seem to exist!");
             return;
         }
@@ -286,16 +291,22 @@ public final class TorrentScoutMaskViewTopComponent extends TopComponent impleme
     public void taskDone(Task t) {
         p("Task " + t + " is done");
         setCursor(null);
+        if (t == loadmaskfiletask) {
+            loadmaskfiletask = null;
+        }
         if (t.isSuccess()) {
             currentflag = (BfMaskFlag) this.jComboBox1.getSelectedItem();
             //msg("Currentflag: "+currentflag);
             if (currentflag == null) {
                 return;
             }
-           
+
             densityPanel.setContext(context, currentflag, (Integer) spinBucket.getValue());
-            if (expContext.getNrcols()>110) densityPanel.createDefaultSelection(100, 100, 110, 110);
-            else densityPanel.createDefaultSelection(50, 50, 60, 60);
+            if (expContext.getNrcols() > 110) {
+                densityPanel.createDefaultSelection(100, 100, 110, 110);
+            } else {
+                densityPanel.createDefaultSelection(50, 50, 60, 60);
+            }
         } else {
             GuiUtils.showNonModalMsg("Loading the bfmask.bin file failed");
         }
@@ -303,12 +314,16 @@ public final class TorrentScoutMaskViewTopComponent extends TopComponent impleme
     }
 
     private void loadFileInThread(String fileOrUrl) {
-        GuiUtils.showNonModalMsg("Loading bfmask file " + fileOrUrl);
-        LoadMaskFileTask task = new LoadMaskFileTask(this, fileOrUrl, (Integer) spinBucket.getValue());
-        task.execute();
+        //  GuiUtils.showNonModalMsg("Loading bfmask file " + fileOrUrl);
+        if (loadmaskfiletask == null) {
+            loadmaskfiletask = new LoadMaskFileTask(this, fileOrUrl, (Integer) spinBucket.getValue());
+            loadmaskfiletask.execute();
+        }
+
     }
 
     private class SubscriberListener implements LookupListener {
+
         @Override
         public void resultChanged(LookupEvent ev) {
             getLatestExperimentContext();
@@ -333,7 +348,7 @@ public final class TorrentScoutMaskViewTopComponent extends TopComponent impleme
 
     private void updateGlobal() {
         global = GlobalContext.getContext();
-        
+
     }
 
     private void getLatestExperimentContext() {
@@ -348,23 +363,21 @@ public final class TorrentScoutMaskViewTopComponent extends TopComponent impleme
             while (it.hasNext()) {
                 data = it.next();
             }
-            if (data == oldContext && data.getResultsDirectory().equalsIgnoreCase(oldContext.getResultsDirectory())) {
-                p("doing nothing, same exp");
-            } else {
-                oldContext = data;
-                update(oldContext);
-            }
+
+            oldContext = data;
+            update(oldContext);
+
         }
     }
 
     private void update(ExperimentContext result) {
         //   p("updating exp context "+result.getResDir());
-        if (expContext == null || !expContext.getResultsDirectory().equalsIgnoreCase(result.getResultsDirectory())) {
+        if (expContext == null || !expContext.isSameExperiment(result)) {
             this.expContext = result;
-             bfmask_file = expContext.getResultsDirectory() + "bfmask.bin";
+            bfmask_file = expContext.getResultsDirectory() + "bfmask.bin";
 
-             this.densityPanel.clear();
-            
+            this.densityPanel.clear();
+
             String f = expContext.getResultsDirectory() + "bfmask.bin";
             //if (bfmask_file==null || !bfmask_file.equalsIgnoreCase(f)) {
             bfmask_file = f;
@@ -375,13 +388,14 @@ public final class TorrentScoutMaskViewTopComponent extends TopComponent impleme
 
 
     }
-     private void doHintAction() {
-        String msg="<html><ul>";
-        msg+="<li>Move the image around with the <b>right</b> mouse button </li>";
-        msg+="<li>Select a coordinate by clicking the <b>left</b> mouse button </li>";
-        msg+="<li>Zoom the image in and out with a <b>mouse wheel</b> </li>";        
+
+    private void doHintAction() {
+        String msg = "<html><ul>";
+        msg += "<li>Move the image around with the <b>right</b> mouse button </li>";
+        msg += "<li>Select a coordinate by clicking the <b>left</b> mouse button </li>";
+        msg += "<li>Zoom the image in and out with a <b>mouse wheel</b> </li>";
         msg += "</ul></html>";
-        JOptionPane.showMessageDialog(this, msg);    
+        JOptionPane.showMessageDialog(this, msg);
     }
 
     /** This method is called from within the constructor to
@@ -591,6 +605,7 @@ public final class TorrentScoutMaskViewTopComponent extends TopComponent impleme
         LookupUtils.publish(wellSelectionContent, sel);
 
     }
+
     private class CacheFilesTask extends Task {
 
         boolean ok = false;
@@ -615,7 +630,7 @@ public final class TorrentScoutMaskViewTopComponent extends TopComponent impleme
         global = GlobalContext.getContext();
         if (global == null) {
             p("Got no global context - loading options");
-            
+
             return;
         }
 
@@ -624,7 +639,7 @@ public final class TorrentScoutMaskViewTopComponent extends TopComponent impleme
         }
 
         if (global.getExperimentContext() == null) {
-           // this.setStatusWarning("Got no experiment/result yet");
+            // this.setStatusWarning("Got no experiment/result yet");
             return;
         }
 

@@ -16,6 +16,7 @@
  */
 package com.iontorrent.torrentscout.explorer;
 
+import com.iontorrent.guiutils.widgets.Widget;
 import com.iontorrent.torrentscout.explorer.process.RasterView;
 import com.iontorrent.torrentscout.explorer.process.CurveView;
 import com.iontorrent.expmodel.ExperimentContext;
@@ -32,6 +33,7 @@ import com.iontorrent.rawdataaccess.pgmacquisition.RawType;
 import com.iontorrent.rawdataaccess.wells.BitMask;
 import com.iontorrent.threads.Task;
 import com.iontorrent.threads.TaskListener;
+import com.iontorrent.torrentscout.explorer.options.TorrentExplorerPanel;
 import com.iontorrent.torrentscout.explorer.process.FlowSelection;
 import com.iontorrent.utils.ErrorHandler;
 import com.iontorrent.utils.LookupUtils;
@@ -48,9 +50,7 @@ import java.util.Iterator;
 import java.util.prefs.Preferences;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
-import org.netbeans.api.options.OptionsDisplayer;
 import org.netbeans.api.progress.ProgressHandleFactory;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -71,7 +71,7 @@ import org.openide.util.lookup.InstanceContent;
 autostore = false)
 @TopComponent.Description(preferredID = "ProcessTopComponent",
 iconBase = "com/iontorrent/torrentscout/explorer/chart-curve-edit.png",
-persistenceType = TopComponent.PERSISTENCE_ALWAYS)
+persistenceType = TopComponent.PERSISTENCE_NEVER)
 @TopComponent.Registration(mode = "table_mode", openAtStartup = false)
 @ActionID(category = "Window", id = "com.iontorrent.torrentscout.explorer.ProcessTopComponent")
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
@@ -151,7 +151,8 @@ public final class ProcessTopComponent extends TopComponent implements TaskListe
     }
 
     public boolean doSaveChartAction() {
-        String file = FileTools.getFile("Save chart info into file", "*.csv", "", true);
+        
+        String file = Export.getFile("Save chart data into file", "*.csv", true);
         if (file == null) {
             return true;
         }
@@ -183,7 +184,7 @@ public final class ProcessTopComponent extends TopComponent implements TaskListe
         WellSelection sel = new WellSelection(c1, c2);
         WellCoordinate abs = pan.getCoord1();
         if (maincont.getAbsDataAreaCoord() != null && abs.equals(maincont.getAbsDataAreaCoord())) {
-            GuiUtils.showNonModalMsg("Same coordinates, I won'd to anything");
+            GuiUtils.showNonModalMsg("Same coordinates, I won't to anything", "Process");
             return true;
         }
         maincont.setAbsDataAreaCoord(abs);
@@ -277,7 +278,7 @@ public final class ProcessTopComponent extends TopComponent implements TaskListe
             expContext = GlobalContext.getContext().getExperimentContext();
         }
         if (expContext == null) {
-            //  GuiUtils.showNonModalMsg("Got no experiment context");
+            GuiUtils.showNonModalMsg("Got no experiment context from global contexet");
             return false;
         }
         maincont = ExplorerContext.getCurContext(expContext);
@@ -589,7 +590,7 @@ public final class ProcessTopComponent extends TopComponent implements TaskListe
             return;
         }
         if (load) {
-            GuiUtils.showNonModalMsg("Loading " + selection + " for " + maincont.getFiletype() + ", flow " + maincont.getFlow());
+            if (selection != null) GuiUtils.showNonModalMsg("Loading " + selection + " for " + maincont.getFiletype() + ", flow " + maincont.getFlow(), "Process");
         }
 
 

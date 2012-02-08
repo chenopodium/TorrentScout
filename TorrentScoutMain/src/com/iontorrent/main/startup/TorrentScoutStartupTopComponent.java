@@ -311,7 +311,7 @@ public final class TorrentScoutStartupTopComponent extends TopComponent implemen
             t.execute();
             // updateInfo();
         }
-
+        showMainComponent();
     }
 
     public void checkAndMaybeConvertFiles() {
@@ -510,27 +510,44 @@ public final class TorrentScoutStartupTopComponent extends TopComponent implemen
     }
 
     private void showExperimentViewer() {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            public void run() {
-                TopComponent tc = (TopComponent) WindowManager.getDefault().findTopComponent("ExperimentViewerTopComponent");
-                if (tc != null) {
-                    tc.requestActive();
-                    tc.requestVisible();
-                }
-            }
-        });
+//        SwingUtilities.invokeLater(new Runnable() {
+//
+//            public void run() {
+//                TopComponent tc = (TopComponent) WindowManager.getDefault().findTopComponent("ExperimentViewerTopComponent");
+//                if (tc != null) {
+//                    tc.requestActive();
+//                    tc.requestVisible();
+//                }
+//            }
+//        });
 
     }
 
     private void showOfflineComponent() {
+//        SwingUtilities.invokeLater(new Runnable() {
+//
+//            public void run() {
+//                TopComponent tc = (TopComponent) WindowManager.getDefault().findTopComponent("OfflineTopComponent");
+//                if (tc != null) {
+//                    tc.requestActive();
+//                    tc.requestVisible();
+//                }
+//            }
+//        });
+
+    }
+     private void showMainComponent() {
         SwingUtilities.invokeLater(new Runnable() {
 
+            @Override
             public void run() {
-                TopComponent tc = (TopComponent) WindowManager.getDefault().findTopComponent("OfflineTopComponent");
+                TopComponent tc = (TopComponent) WindowManager.getDefault().findTopComponent("TorrentScoutMainPageTopComponent");
+                p("Showing TorrentScoutMainPageTopComponent");
                 if (tc != null) {
+                    
                     tc.requestActive();
                     tc.requestVisible();
+                    tc.requestAttention(true);
                 }
             }
         });

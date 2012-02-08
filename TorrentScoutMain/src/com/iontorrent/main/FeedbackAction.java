@@ -22,11 +22,11 @@ import org.openide.windows.WindowManager;
 
 @ActionID(category = "Help",
 id = "com.iontorrent.main.FeedbackAction")
-@ActionRegistration(iconBase = "com/iontorrent/main/mail-new.png",
+@ActionRegistration(iconBase = "com/iontorrent/main/mail-new16.png",
 displayName = "#CTL_FeedbackAction")
 @ActionReferences({
     @ActionReference(path = "Menu/Help", position = 1600),
-    @ActionReference(path = "Toolbars/File", position = 500),
+    @ActionReference(path = "Toolbars/Help", position = 500),
     @ActionReference(path = "Shortcuts", name = "O-H"),
     @ActionReference(path = "Shortcuts", name = "D-B"),
     @ActionReference(path = "Shortcuts", name = "D-M")

@@ -117,7 +117,7 @@ public class FolderManager {
                 if (manager.getConfig(key).isDefault()) {
                     if (default_rule == null) {
                         default_rule = key.toLowerCase();
-                        p("Got default rule: " + default_rule);
+                  //      p("Got default rule: " + default_rule);
                     } else {
                         manager.getConfig(key).setDefault(false);
                     }
@@ -158,7 +158,7 @@ public class FolderManager {
         if (default_rule != null) {
             manager.setRule(default_rule, false);
         }
-        p("Got default rule: " + default_rule + " with url=" + manager.getDbUrl());
+    //    p("Got default rule: " + default_rule + " with url=" + manager.getDbUrl());
         
         return default_rule;
     }

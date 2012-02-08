@@ -216,11 +216,11 @@ public class ChipWellDensity extends GeneralWellDensity {
     }
 
     public void initDensityPlot() {
-        p(" initDensityPlot: mask.cols = "+mask.getNrCols()+", bucket size="+bucket_size);
+      //  p(" initDensityPlot: mask.cols = "+mask.getNrCols()+", bucket size="+bucket_size);
         int nr_col_buckets = mask.getNrCols() / bucket_size + 1;
         int nr_row_buckets = mask.getNrRows() / bucket_size + 1;
         nrflags = BfMaskFlag.getNrFlags();
-        p("initDensityPlot: bucket: " + bucket_size + ", nr cols: " + nr_col_buckets+"/"+nr_row_buckets + ", nrwells: " + bucket_size * nr_col_buckets);
+      //  p("initDensityPlot: bucket: " + bucket_size + ", nr cols: " + nr_col_buckets+"/"+nr_row_buckets + ", nrwells: " + bucket_size * nr_col_buckets);
         well_density = new int[nr_col_buckets][nr_row_buckets][nrflags];
         maxvalues = new int[nrflags];
         minvalues = new int[nrflags];

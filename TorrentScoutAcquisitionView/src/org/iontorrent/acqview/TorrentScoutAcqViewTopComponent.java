@@ -113,8 +113,8 @@ import org.openide.windows.WindowManager;
 autostore = false)
 @TopComponent.Description(preferredID = "TorrentScoutAcqViewTopComponent",
 iconBase = "org/iontorrent/acqview/office-chart-line.png",
-persistenceType = TopComponent.PERSISTENCE_ALWAYS)
-@TopComponent.Registration(mode = "right_editor_mode", openAtStartup = true)
+persistenceType = TopComponent.PERSISTENCE_NEVER)
+@TopComponent.Registration(mode = "right_editor_mode", openAtStartup = false)
 @ActionID(category = "Window", id = "org.iontorrent.acqview.TorrentScoutAcqViewTopComponent")
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
 @TopComponent.OpenActionRegistration(displayName = "#CTL_TorrentScoutAcqViewAction",
@@ -264,7 +264,7 @@ public final class TorrentScoutAcqViewTopComponent extends TopComponent
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                GuiUtils.showNonModalMsg("Refreshing view...", 1);
+              //  GuiUtils.showNonModalMsg("Refreshing view...", 1);
                 doRefreshAction();
 
             }
@@ -292,6 +292,7 @@ public final class TorrentScoutAcqViewTopComponent extends TopComponent
         flowPanel.setText("0");
         //flows = flowPanel.getFlows();
 
+        
         subPanel = new SubtractPanel(new FlowListener() {
 
             @Override
@@ -959,7 +960,9 @@ public final class TorrentScoutAcqViewTopComponent extends TopComponent
         if (acqPanel == null) {
             acqPanel = new MultiAcqPanel(filetype);
         }
+        p("SETTING SUBTRACT TO :"+subtract);
         acqPanel.setSubtract(subtract);
+        
         int nr = cur_context.getNrWells();
         DataAccessManager manager = DataAccessManager.getManager(cur_context);
         

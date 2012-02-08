@@ -37,7 +37,7 @@ public class SeqFlowUtil {
     /** find which flow cooresponds to x  in sequence space */
     public static int findLocationFlow(int x, SeqFlow sf) {   
         if (x < 0 || x > sf.loca.length) {
-            p("out of bounds: "+x);
+          //  p("out of bounds: "+x);
             return 0;
         }
        return sf.loca[x];

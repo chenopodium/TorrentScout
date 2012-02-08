@@ -66,7 +66,7 @@ import org.openide.util.lookup.InstanceContent;
 autostore = false)
 @TopComponent.Description(preferredID = "TorrentScoutGenomeToChipTopComponent",
 iconBase = "com/iontorrent/genometochip/chromo_ss.gif",
-persistenceType = TopComponent.PERSISTENCE_ALWAYS)
+persistenceType = TopComponent.PERSISTENCE_NEVER)
 @TopComponent.Registration(mode = "right_editor_mode", openAtStartup = false)
 @ActionID(category = "Window", id = "com.iontorrent.genometochip.TorrentScoutGenomeToChipTopComponent")
 @ActionReference(path = "Menu/Window" /*, position = 333 */)

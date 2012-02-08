@@ -22,6 +22,7 @@
  */
 package com.iontorrent.torrentscout.explorer;
 
+import com.iontorrent.guiutils.widgets.Widget;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.util.ArrayList;

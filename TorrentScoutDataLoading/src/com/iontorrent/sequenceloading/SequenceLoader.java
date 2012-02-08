@@ -53,7 +53,7 @@ import org.iontorrent.seq.sam.SamUtils;
  */
 public final class SequenceLoader implements TaskListener {
 
-    private File samfile;
+   // private File samfile;
     private File bamfile;
     private File sffile;
     private File sfftfile;
@@ -78,6 +78,8 @@ public final class SequenceLoader implements TaskListener {
     private ExperimentContext context;
     // ExperimentContext exp;
 
+    private boolean interactive;
+    
     public static SequenceLoader getSequenceLoader(ExperimentContext context) {
         return getSequenceLoader(context, true, true);
     }
@@ -102,6 +104,7 @@ public final class SequenceLoader implements TaskListener {
         this.results_path = context.getResultsDirectory();
         this.cache_dir = context.getCacheDir();
         this.plugin_dir = context.getPluginDir();
+        this.interactive = true;
         if (cache_dir == null) {
             err("Got no cache dir in sequence loader");
         }
@@ -122,29 +125,7 @@ public final class SequenceLoader implements TaskListener {
         //    p("Found bam: "+this.foundBamFile());
     }
 
-    public boolean createSamFile(String dir) {
-        // convert BAM to SAM. Inefficient, but we have no BAM indexer ;-)
-        String tmp = bamfile.getName();
-
-        if (!FileUtils.canWrite(dir)) {
-            err("Cannot write to dir " + dir);
-            return false;
-        } else {
-            p("Can write to dir " + dir);
-        }
-        String samfilename = tmp.substring(0, tmp.length() - 4) + ".sam";
-        samfile = new File(dir + samfilename);
-        p("Samfile: " + samfile);
-        SamUtils.convertBamToSam(bamfile, samfile);
-        if (!samfile.exists()) {
-            err("Could not convert bam " + bamfile + " to sam  " + samfile);
-            samfile = null;
-            return false;
-        }
-        //  getBamOrSamIndexFileName();
-
-        return true;
-    }
+ 
 
     public boolean maybeCreateSffIndex(TaskListener listener) {
         if (welltosffindextask != null) {
@@ -323,9 +304,6 @@ public final class SequenceLoader implements TaskListener {
         return (bamfile != null && bamfile.exists());
     }
 
-    public boolean foundSamFile() {
-        return (samfile != null && samfile.exists());
-    }
 
     public boolean foundSffFile() {
         return (sffile != null && sffile.exists());
@@ -355,7 +333,7 @@ public final class SequenceLoader implements TaskListener {
         if (!foundBamFile()) {
             msg("The BAM file " + bamfile + " is not there (yet)... might want to check the name");
             p(msg);
-            if (ask && !FileUtils.isUrl(results_path)) {
+            if (interactive && ask && !FileUtils.isUrl(results_path)) {
                 // xxx pick the file
                 curloader = null;
                 String s = FileTools.getFile("I couldn't find the right .BAM file, \nbut you can select the .BAM file yourself if you like", ".bam", results_path);
@@ -365,20 +343,16 @@ public final class SequenceLoader implements TaskListener {
                 } else {
                     if (s.toLowerCase().endsWith(".sam")) {
                         // got  sam file
-                        samfile = new File(s);
-                    } else {
-                        bamfile = new File(s);
+                        //samfile = new File(s);
+                    } else {                        
+                        updateBamFilename(new File(s));
                     }
                     msg = null;
                 }
             } else {
                 return true;
             }
-        }
-        if (samfile == null) {
-            samfile = new File(bamfile.toString().substring(0, bamfile.toString().length() - 4) + ".sam");
-            // getBamOrSamIndexFileName();
-        }
+        }       
         if (sam == null) {
             sam = getSamUtils();
         }
@@ -397,47 +371,14 @@ public final class SequenceLoader implements TaskListener {
            // err(ErrorHandler.getString(e));
             return null;
         }
-        sam = new SamUtils(samfile, bamfile, this.cache_dir, this.results_path, this.plugin_dir);
+        sam = new SamUtils(bamfile, this.cache_dir, this.results_path, this.plugin_dir);
         return sam;
     }
 
-    private boolean checkAndLocateSamFile(String filename) {
-        if (!checkAndMaybeCacheSamFile(filename)) {
-            // p(" checkAndMaybeCacheSamFile " + filename + " failed");
-            return false;
-        }
-        if (samfile == null || !samfile.exists()) {
-            msg("The SAM file " + samfile + " is not there (yet)... might want to check the name");
-
-            if (!FileUtils.isUrl(results_path)) {
-                // xxx pick the file
-                curloader = null;
-                String s = FileTools.getFile("I couldn't find the right .SAM file, \nbut you can select the .sam file yourself if you like", ".sam, .bam", results_path);
-                if (s == null) {
-                    return false;
-                } else {
-                    samfile = new File(s);
-                    // getBamOrSamIndexFileName();
-                    msg = null;
-                }
-            } else {
-                //   getBamOrSamIndexFileName();
-                return true;
-            }
-        }
-        if (sam == null) {
-            getSamUtils();
-        }
-        return true;
-    }
 
     public ArrayList<WellCoordinate> findWellCoords(long genomepos) {
         if (sam == null) {
-            boolean ok = checkAndLocateSamFile(null);
-            if (!ok) {
-                msg("I could not find a sam file");
-                return null;
-            }
+           return null;
         }
         ArrayList<WellCoordinate> coords = new ArrayList<WellCoordinate>();
         ArrayList<ReadPos> res = sam.findReadsByGenomePos(genomepos);
@@ -824,7 +765,7 @@ public final class SequenceLoader implements TaskListener {
             }
         }
         if (nr > 1) {
-            if (ask) {
+            if (interactive && ask) {
                 file = FileTools.getFile("I don't know which the right " + ex + " file is, please tell me", ex, path);
             } else {
                 file = null;
@@ -855,14 +796,13 @@ public final class SequenceLoader implements TaskListener {
         //   p("Checking if we can find sff file " + file);
         File f = this.findFileSomewhere(file);
         if (f == null || !f.exists()) {
-            f = FileUtils.findAndCopyFileFromUrlTocache(file, this.cache_dir, this.results_path, false, false, null, 1024 * 1024);
-        }
-        if (f == null || !f.exists()) {
-            file = findFile(".sff", askFiles, "tf.sff");
+            file = findFile("rawltrimmed.sff", askFiles, "untrimmed.rawlib.sff");
+            if (file == null) file = findFile("rawlib.sff", askFiles, "untrimmed.rawlib.sff");            
+            if (file == null) file = findFile(".sff", askFiles, "tf.sff");
             f = this.findFileSomewhere(file);
         }
         if (f == null || !f.exists()) {
-            if (askFiles) {
+            if (interactive && askFiles) {
                 file = FileTools.getFile("I couldn't find the right .SFF file, \nplease select it yourself", ".sff", results_path);
                 f = this.findFileSomewhere(file);
             }
@@ -902,7 +842,7 @@ public final class SequenceLoader implements TaskListener {
             f = this.findFileSomewhere(file);
         }
         if (f == null || !f.exists()) {
-            if (askFiles) {
+            if (interactive && askFiles) {
                 file = FileTools.getFile("I couldn't find the right .SFF TEST FRAG file, \nplease select it yourself", ".sff", results_path);
                 f = this.findFileSomewhere(file);
             }
@@ -918,12 +858,17 @@ public final class SequenceLoader implements TaskListener {
         }
     }
 
+    private void updateBamFilename(File f) {
+        bamfile = f;
+        this.context.setBamFilename(f.getName());
+    }
     private void updateSffFilename(File f) {
         // p("Sff file is: " + f);
         sffile = f;
         String key = this.context.getFileKey();       
         String filename = sffile.getName() + key+".idx";
        welltosffindexfile = findFileSomewhere(filename);
+       this.context.setSffFilename(f.getName());
         //  p("after findFileSomewhere: welltosffindexfile: " + welltosffindexfile);
         // p("welltosffindexfile exists? " + welltosffindexfile.exists());
     }
@@ -998,50 +943,7 @@ public final class SequenceLoader implements TaskListener {
 //    public File getSamIndexFile() {
 //        return this.samindexfile;
 //    }
-    private boolean checkAndMaybeCacheSamFile(String file) {
-        if (samfile != null && samfile.exists()) {
-            return true;
-        }
-
-        if (samfile != null && !samfile.exists()) {
-            samfile = this.findFileSomewhere(samfile.getName());
-        }
-
-        if (file == null) {
-            file = findFile(".sam", false);
-            if (file == null) {
-                msg("Could not find any sam file");
-                return false;
-            } else {
-                // p("Found file " + file);
-                samfile = new File(file);
-                // getBamOrSamIndexFileName();
-                return true;
-            }
-        }
-
-        File f = this.findFileSomewhere(file);
-        //  p("Checking if we can find sam file " + file);
-        if (f == null || !f.exists()) {
-            f = FileUtils.findAndCopyFileFromUrlTocache(file, this.cache_dir, this.results_path, false, false, null, 1024 * 1024);
-        }
-
-        if (f != null) {
-            samfile = f;
-        }
-        //   p("sam file is: " + samfile);
-        if (samfile == null) {
-            createSamFile(cache_dir);
-        }
-        //p("sam file is: " + samfile);
-        if (samfile != null) {
-            //  getBamOrSamIndexFileName();
-            return true;
-        } else {
-            msg("I found no sam/bam file");
-            return false;
-        }
-    }
+    
 
     private boolean checkAndMaybeCacheBamFile(String file, boolean ask) {
         if (bamfile != null) {
@@ -1055,7 +957,7 @@ public final class SequenceLoader implements TaskListener {
                 return false;
             } else {
                 // p("Found file " + file);
-                bamfile = new File(file);
+                updateBamFilename(new File(file));
 
                 return true;
             }
@@ -1072,32 +974,10 @@ public final class SequenceLoader implements TaskListener {
             f = this.findFileSomewhere(file);
         }
         if (f != null) {
-            bamfile = f;
+            updateBamFilename(f);
         }
         //   p("sam file is: " + samfile);
-        if (bamfile == null && file != null && file.length() > 4) {
-            // now check for .bam files
-            String samfile = file.substring(0, file.length() - 4) + ".sam";
-            f = findFileSomewhere(samfile);
-            if (f == null || !f.exists()) {
-                f = FileUtils.findAndCopyFileFromUrlTocache(samfile, this.cache_dir, this.results_path, false, true, null, 1024 * 1024);
-            }
-            if (f == null) {
-                msg("Found no .bam or .sam file in " + results_path + " or in cache " + cache_dir);
-                return false;
-            } else {
-                // convert BAM to SAM. Inefficient, but we have no BAM indexer ;-)
-                p("Converting SAM to BAM");
-                File newbamfile = new File(cache_dir + file);
-                sam.convertSamToBam(newbamfile, new File(samfile));
-                if (!newbamfile.exists()) {
-                    err("Could not convert sam " + samfile + " to bam  " + newbamfile);
-                    return false;
-                } else {
-                    bamfile = newbamfile;
-                }
-            }
-        }
+       
         //p("sam file is: " + samfile);
         if (bamfile != null) {
             return true;
@@ -1107,13 +987,11 @@ public final class SequenceLoader implements TaskListener {
         }
     }
 
+    
     public String getMsg() {
         return msg;
     }
 
-    public File getSamFile() {
-        return samfile;
-    }
 
     public boolean foundBai() {
         if (sam == null) {
@@ -1126,6 +1004,20 @@ public final class SequenceLoader implements TaskListener {
         boolean b = sam.hasBai();
         p("foundBai: " + b);
         return b;
+    }
+
+    /**
+     * @return the interactive
+     */
+    public boolean isInteractive() {
+        return interactive;
+    }
+
+    /**
+     * @param interactive the interactive to set
+     */
+    public void setInteractive(boolean interactive) {
+        this.interactive = interactive;
     }
 
 //    private class SamIndexTask extends Task {
@@ -1297,7 +1189,7 @@ public final class SequenceLoader implements TaskListener {
     }
 
     private static void p(String msg) {
-        System.out.println("SequenceLoader: " + msg);
-        Logger.getLogger( SequenceLoader.class.getName()).log(Level.INFO, msg);
+   //     System.out.println("SequenceLoader: " + msg);
+   //     Logger.getLogger( SequenceLoader.class.getName()).log(Level.INFO, msg);
     }
 }

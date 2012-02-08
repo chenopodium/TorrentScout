@@ -105,15 +105,25 @@ public class FileTools {
         if (!toSave) ans = cc.showOpenDialog(null);
         else  ans = cc.showSaveDialog(null);
         if (ans == JOptionPane.OK_OPTION) {
-            File f = cc.getSelectedFile();
-
+            File f = cc.getSelectedFile();           
+            if (toSave && f != null && ext != null && ext.length()>0 && !ext.endsWith("*")) {
+                 String file = f.getAbsolutePath();
+                if (ext.startsWith("*")) ext = ext.substring(1);
+                if (!file.endsWith(ext)) {
+                    if (!ext.startsWith(".")) ext+=".";
+                    p("Attaching "+ext+" to "+file);
+                    file = file +ext;
+                    f = new File(file);
+                }
+            }
             
             if (!f.exists()) {
                 if (!toSave) JOptionPane.showMessageDialog(new JFrame(), f + " does not exist - please select an existing file");
             }
             else {
                 if (toSave) {
-                    int ok= JOptionPane.showConfirmDialog(new JFrame(), "Would you want to overwrite this file?");
+                    
+                    int ok= JOptionPane.showConfirmDialog(new JFrame(), "Would you want to overwrite file "+ f+"?", "File exists", JOptionPane.YES_NO_OPTION);
                     if (ok != JOptionPane.YES_OPTION) return null;
                 }
             } 
@@ -138,7 +148,7 @@ public class FileTools {
             cc.setCurrentDirectory(val);
 
         }
-        cc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+     //   cc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         cc.setDialogTitle(title);
         cc.setAcceptAllFileFilterUsed(false);
         cc.setVisible(true);

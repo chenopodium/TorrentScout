@@ -68,7 +68,6 @@ public class CompositeWellDensity extends GeneralWellDensity {
 
     public String createCompositeImages(ProgressListener progress, String rawfile) {
         compexp.setCurblock(null);
-        p("************************ createCompositeImages ********************");
         int totcols = compexp.getNrcols();
         int totrows = compexp.getNrrows();
         ExperimentContext rootcontext = compexp.getRootContext();
@@ -76,6 +75,8 @@ public class CompositeWellDensity extends GeneralWellDensity {
         int bucketsize = mask.GRID;
         int compcols = totcols / bucketsize;
         int comprows = totrows / bucketsize;
+p("************************ createCompositeImages Tot rows/cols="+totrows+"/"+totcols+" ********************");
+        
 
         DatBlock first = compexp.findBlock(0, 0);
         p("First block: " + first);
@@ -98,7 +99,7 @@ public class CompositeWellDensity extends GeneralWellDensity {
             }
             else p("Could NOT find file "+rawfile);
         } else {
-            p("DO have ALL block mask files will create ALL  heat maps");
+            p("I have ALL block bfmask files will create ALL heat maps :-)");
             nrflags = BfMaskFlag.getNrFlags();
         }
 
@@ -115,6 +116,7 @@ public class CompositeWellDensity extends GeneralWellDensity {
         p("Processing " + compexp.getNrBlocks() + " blocks");
         double inc = 100.0 / (compexp.getNrBlocks() + 1);
         double prog = 0;
+        int errors = 0;
         for (DatBlock block : compexp.getBlocks()) {
             int startcol = block.getStart().getCol() / bucketsize;
             int startrow = block.getStart().getRow() / bucketsize;
@@ -129,7 +131,7 @@ public class CompositeWellDensity extends GeneralWellDensity {
                 createRawHeatMap(0, exp, bucketsize, w, h, startcol, compcols, startrow, comprows, fullimage);
             } else {
                 if (blockmask != null) {
-              //      p("Got mask:" + context.getMask().getNrCols() + "/" + context.getMask().getNrRows() + " cols/rows fro this block");
+                    p("Got bfmask:" + context.getMask().getNrCols() + "/" + context.getMask().getNrRows() + " cols/rows fro this block");
                     BfWellDensity wellDensity = new BfWellDensity(context.getMask(), bucketsize);
                 //    p("welldensity block size=" + wellDensity.getNrCols() + "/" + wellDensity.getNrRows() + ", should be =" + w / bucketsize + "/" + h / bucketsize);
                     int maxc = Math.min(wellDensity.getNrCols(), w / bucketsize);
@@ -146,7 +148,8 @@ public class CompositeWellDensity extends GeneralWellDensity {
                                 if (startcol + c < compcols && startrow + r < comprows) {
                                     fullimage[f][startcol + c][startrow + r] = nr;
                                 } else {
-                                    p("out of bounds " + (startcol + c) + "/" + (startrow + r));
+                                   if (errors <10) p("out of bounds " + (startcol + c) + "/" + (startrow + r)+", max is: "+comprows+"/"+comprows);
+                                   errors++;
                                 }
                             }
                         }
@@ -194,13 +197,15 @@ public class CompositeWellDensity extends GeneralWellDensity {
         int maxr = Math.min(wellDensity.getNrRows(), h / bucketsize);
         p("maxc/maxr=" + maxc + "/" + maxr);
         // wellDensity.setFlag(flag);
+        int errors = 0;
         for (int c = 0; c < maxc; c++) {
             for (int r = 0; r < maxr; r++) {
                 int nr = wellDensity.getCount(c, r);
                 if (startcol + c < compcols && startrow + r < comprows) {
                     fullimage[arraypos][startcol + c][startrow + r] = nr;
                 } else {
-                    p("out of bounds " + (startcol + c) + "/" + (startrow + r));
+                  if (errors <10)  p("out of bounds " + (startcol + c) + "/" + (startrow + r));
+                  errors++;
                 }
             }
         }
@@ -244,9 +249,9 @@ public class CompositeWellDensity extends GeneralWellDensity {
         }
         image.setData(raster);
         if (!hasdata) {
-            err("No data in image ");
+            //err("No data in image ");
         } else {
-            p("Got " + tot + "  values");
+           // p("Got " + tot + "  values");
         }
         try {
             //  p("writing buffered image to " + imageFileOrUrl);

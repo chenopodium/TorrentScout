@@ -63,7 +63,7 @@ public class IndexPanel extends javax.swing.JPanel {
             this.btnView.setVisible(false);
             this.btnView.setEnabled(false);
         }
-        this.lblExp.setText("<html><b>Results directory: "+exp.getResultsDirectory()+"</b><br>(Raw directory: "+exp.getRawDir()+")");
+        this.lblExp.setText("<html><b>Results directory: "+exp.getResultsDirectory()+"</b>");
         checkIndices();
     }
 
@@ -128,7 +128,7 @@ public class IndexPanel extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         jPanel1.add(boxBamHeatMaps, gridBagConstraints);
 
-        btnView.setFont(new java.awt.Font("Tahoma", 0, 12));
+        btnView.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         btnView.setForeground(new java.awt.Color(0, 153, 51));
         btnView.setText(org.openide.util.NbBundle.getMessage(IndexPanel.class, "IndexPanel.btnView.text")); // NOI18N
         btnView.addActionListener(new java.awt.event.ActionListener() {
@@ -165,7 +165,7 @@ public class IndexPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -214,7 +214,7 @@ public class IndexPanel extends javax.swing.JPanel {
             btnIndex.setForeground(new Color(0, 153, 51));
             btnIndex.setSelected(true);
             btnIndex.setEnabled(true);
-            this.btnView.setText("Load results data anyway");
+            this.btnView.setText("Close");
             btnView.setToolTipText("<html>This includes files like <b>bfmkas.bin</b> and <b>1.wells</b></html>");
             btnView.setForeground(Color.black);
         }

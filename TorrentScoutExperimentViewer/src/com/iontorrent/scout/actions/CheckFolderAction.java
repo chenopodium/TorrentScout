@@ -34,12 +34,13 @@ import org.openide.util.NbBundle.Messages;
 @ActionID(category = "File",
 id = "com.iontorrent.scout.actions.CheckFolderAction")
 @ActionRegistration(iconBase = "com/iontorrent/scout/actions/folder-go.png",
-displayName = "Show folder info")
+displayName = "Show info")
 @ActionReferences({
-    @ActionReference(path = "Menu/File", position = 0),
-    @ActionReference(path = "Toolbars/File", position = 0)
+    @ActionReference(path = "Menu/File", position = 5),
+    @ActionReference(path = "Toolbars/File", position = 5),
+    @ActionReference(path = "Shortcuts", name = "A-I")
 })
-@Messages("CTL_CheckFolderAction=Show folder info")
+@Messages("CTL_CheckFolderAction=Show info")
 public final class CheckFolderAction implements ActionListener {
 
     

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+    Document   : folderconfig.xml
+    Created on : 11. September 2011, 08:25
+    Author     : Chantal Roth
+    Description:
+    Sending email for feedback and bug reports
+-->
+<email-config>
+     <version>1.4</version>
+     <recipient>chantal.roth@lifetech.com</recipient>
+     <cc></cc>
+     <subject>Torrent Scout Feedback</subject>
+     <body><![CDATA[Hi Chantal,
+     I would like to report something about Torrent Scout:]]></body>
+</email-config>     

@@ -22,12 +22,14 @@
  */
 package com.iontorrent.torrentscout.explorer.process;
 
+import com.iontorrent.guiutils.widgets.CoordWidget;
 import com.iontorrent.guiutils.GuiUtils;
 import com.iontorrent.rawdataaccess.pgmacquisition.DataAccessManager;
 import com.iontorrent.rawdataaccess.pgmacquisition.RawType;
 import com.iontorrent.torrentscout.explorer.ContextChangeAdapter;
 import com.iontorrent.torrentscout.explorer.ExplorerContext;
-import com.iontorrent.torrentscout.explorer.Widget;
+import com.iontorrent.guiutils.widgets.Widget;
+import com.iontorrent.rawdataaccess.wells.BitMask;
 import com.iontorrent.utils.ErrorHandler;
 import com.iontorrent.wellmodel.RasterData;
 import com.iontorrent.wellmodel.WellCoordinate;
@@ -48,6 +50,7 @@ public class RasterView extends javax.swing.JPanel {
     public RasterView(ExplorerContext maincont, boolean load) {
         initComponents();
         this.maincont = maincont;
+        updateMaskList();
         maincont.addListener(new ContextChangeAdapter() {
 
             @Override
@@ -57,12 +60,36 @@ public class RasterView extends javax.swing.JPanel {
                     sliderFrames.setValue(f);
                 }
             }
+            public void masksChanged() {
+                 updateMaskList();
+            }
+
+            @Override
+            public void maskAdded(BitMask mask) {
+                 updateMaskList();
+            }
+            @Override
+            public void maskRemoved(BitMask mask) {
+                 updateMaskList();
+            }
+            
         });
         moviePanel = new RasterPanel();
         panMain.add("Center", moviePanel);
 
         // listenToKeysFrom(this);
         //  update(load);
+    }
+
+    protected void updateMaskList() {
+        if (maincont.getMasks() != null) {
+           showmask.removeAllItems();
+           showmask.addItem("No mask");
+           for (BitMask m : maincont.getMasks()) {
+               showmask.addItem(m);
+           }
+
+       }
     }
 
 //    public void listenToKeysFrom(JComponent comp) {
@@ -118,9 +145,10 @@ public class RasterView extends javax.swing.JPanel {
 
         WellCoordinate coord = maincont.getAbsDataAreaCoord();
         if (coord == null) {
+            GuiUtils.showNonModalDialog("The context has no selected coordinates for some reason. Please select coordinate first", "No coordinate");
             return;
         }
-        GuiUtils.showNonModalMsg("Loading flow " + maincont.getFlow() + ", type: " + maincont.getFiletype() + ", coord: " + maincont.getAbsDataAreaCoord() + ", rel coord: " + maincont.getRelativeDataAreaCoord());
+        GuiUtils.showNonModalMsg("Loading flow " + maincont.getFlow() + ", type: " + maincont.getFiletype() + ", coord: " + maincont.getAbsDataAreaCoord() + ", rel coord: " + maincont.getRelativeDataAreaCoord(), "Process");
 
         p("About to load data for " + maincont.getExp().getRawDir() + ", flow " + maincont.getFlow() + ", type: " + maincont.getFiletype() + ", REL coord: " + maincont.getRelativeDataAreaCoord());
         DataAccessManager manager = DataAccessManager.getManager(maincont.getExp().getWellContext());
@@ -160,14 +188,13 @@ public class RasterView extends javax.swing.JPanel {
         panMain = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         btnimage = new javax.swing.JButton();
-        showbg = new javax.swing.JCheckBox();
         cursors = new javax.swing.JTextField();
         snap = new javax.swing.JButton();
-        showuse = new javax.swing.JCheckBox();
-        showignore = new javax.swing.JCheckBox();
         jLabel1 = new javax.swing.JLabel();
         random = new javax.swing.JButton();
         hint = new javax.swing.JButton();
+        showmask = new javax.swing.JComboBox();
+        jLabel2 = new javax.swing.JLabel();
 
         jButton1.setText(org.openide.util.NbBundle.getMessage(RasterView.class, "RasterView.jButton1.text")); // NOI18N
 
@@ -207,22 +234,6 @@ public class RasterView extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         jPanel1.add(btnimage, gridBagConstraints);
 
-        showbg.setForeground(new java.awt.Color(0, 0, 204));
-        showbg.setText(org.openide.util.NbBundle.getMessage(RasterView.class, "RasterView.showbg.text")); // NOI18N
-        showbg.setToolTipText(org.openide.util.NbBundle.getMessage(RasterView.class, "RasterView.showbg.toolTipText")); // NOI18N
-        showbg.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                showbgActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridheight = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 6, 0, 0);
-        jPanel1.add(showbg, gridBagConstraints);
-
         cursors.setColumns(2);
         cursors.setText(org.openide.util.NbBundle.getMessage(RasterView.class, "RasterView.cursors.text")); // NOI18N
         cursors.setMaximumSize(new java.awt.Dimension(20, 20));
@@ -255,38 +266,6 @@ public class RasterView extends javax.swing.JPanel {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         jPanel1.add(snap, gridBagConstraints);
-
-        showuse.setForeground(new java.awt.Color(0, 153, 51));
-        showuse.setText(org.openide.util.NbBundle.getMessage(RasterView.class, "RasterView.showuse.text")); // NOI18N
-        showuse.setToolTipText(org.openide.util.NbBundle.getMessage(RasterView.class, "RasterView.showuse.toolTipText")); // NOI18N
-        showuse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                showuseActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridheight = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 6, 0, 0);
-        jPanel1.add(showuse, gridBagConstraints);
-
-        showignore.setForeground(new java.awt.Color(153, 0, 0));
-        showignore.setText(org.openide.util.NbBundle.getMessage(RasterView.class, "RasterView.showignore.text")); // NOI18N
-        showignore.setToolTipText(org.openide.util.NbBundle.getMessage(RasterView.class, "RasterView.showignore.toolTipText")); // NOI18N
-        showignore.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                showignoreActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridheight = 3;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(0, 6, 0, 0);
-        jPanel1.add(showignore, gridBagConstraints);
 
         jLabel1.setText(org.openide.util.NbBundle.getMessage(RasterView.class, "RasterView.jLabel1.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -328,6 +307,23 @@ public class RasterView extends javax.swing.JPanel {
         gridBagConstraints.gridy = 0;
         jPanel1.add(hint, gridBagConstraints);
 
+        showmask.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Show mask" }));
+        showmask.setToolTipText(org.openide.util.NbBundle.getMessage(RasterView.class, "RasterView.showmask.toolTipText")); // NOI18N
+        showmask.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                showmaskActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        jPanel1.add(showmask, gridBagConstraints);
+
+        jLabel2.setText(org.openide.util.NbBundle.getMessage(RasterView.class, "RasterView.jLabel2.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        jPanel1.add(jLabel2, gridBagConstraints);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -338,12 +334,9 @@ public class RasterView extends javax.swing.JPanel {
                 .addComponent(sliderFrames, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE)
                 .addGap(20, 20, 20))
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(panMain, javax.swing.GroupLayout.DEFAULT_SIZE, 507, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
+            .addComponent(panMain, javax.swing.GroupLayout.DEFAULT_SIZE, 527, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -352,7 +345,7 @@ public class RasterView extends javax.swing.JPanel {
                     .addComponent(jLabel4)
                     .addComponent(sliderFrames, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
                 .addComponent(panMain, javax.swing.GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE))
         );
@@ -376,7 +369,12 @@ public class RasterView extends javax.swing.JPanel {
     }//GEN-LAST:event_sliderFramesStateChanged
 
     public void redrawImages() {
-        moviePanel.redrawImages(showignore.isSelected(), showbg.isSelected(), showuse.isSelected());
+        if (moviePanel == null) return;
+        BitMask sel = null;
+        if (showmask.getSelectedItem()!= null && showmask.getSelectedItem() instanceof BitMask) sel =(BitMask)showmask.getSelectedItem();
+        
+        
+        moviePanel.redrawImages(sel);
         requestFocus();
         moviePanel.repaint();
     }
@@ -400,26 +398,16 @@ public class RasterView extends javax.swing.JPanel {
         moviePanel.repaint();
 
     }
-    private void showignoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showignoreActionPerformed
-        redrawImages();
-    }//GEN-LAST:event_showignoreActionPerformed
-
-    private void showbgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showbgActionPerformed
-        redrawImages();
-    }//GEN-LAST:event_showbgActionPerformed
-
-    private void showuseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showuseActionPerformed
-        redrawImages();
-    }//GEN-LAST:event_showuseActionPerformed
-
     private void cursorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cursorsActionPerformed
         updateCursors(false);
     }//GEN-LAST:event_cursorsActionPerformed
 
     private void snapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_snapActionPerformed
-        boolean sel = showignore.isSelected() || showbg.isSelected() || showuse.isSelected();
-        if (!sel) {
-            JOptionPane.showMessageDialog(this, "To snap coordinates to a mask, enable one of the masks (ignmore, bg or use).\nIt will snap them to the first selected mask");
+         BitMask sel = null;
+        if (showmask.getSelectedItem()!= null && showmask.getSelectedItem() instanceof BitMask) sel =(BitMask)showmask.getSelectedItem();
+        
+        if (sel == null) {
+            JOptionPane.showMessageDialog(this, "To snap coordinates to a mask, pick a mask.\nIt will snap them to the first selected mask");
             return;
         }
         updateCursors(true);
@@ -435,16 +423,17 @@ public class RasterView extends javax.swing.JPanel {
             return;
         }
         for (Widget w : maincont.getWidgets()) {
-            CoordWidget c = (CoordWidget) w;
-            int x = (int) (Math.random() * (double)maincont.getRasterSize());
-            int y = (int) (Math.random() * (double)maincont.getRasterSize());
-            p("Random x/y: "+x+"/"+y);
-            WellCoordinate abs = maincont.getAbsDataAreaCoord();
-            WellCoordinate rand = new WellCoordinate(abs.getCol() + x, abs.getRow() + y);
-            p("rand coord: "+rand);
-            c.setCoord(rand);
-            maincont.widgetChanged(w);
-
+            if (!w.isMainWidget()) {
+                CoordWidget c = (CoordWidget) w;
+                int x = (int) (Math.random() * (double)maincont.getRasterSize());
+                int y = (int) (Math.random() * (double)maincont.getRasterSize());
+                p("Random x/y: "+x+"/"+y);
+                WellCoordinate abs = maincont.getAbsDataAreaCoord();
+                WellCoordinate rand = new WellCoordinate(abs.getCol() + x, abs.getRow() + y);
+                p("rand coord: "+rand);
+                c.setAbsoluteCoords(rand);
+                maincont.widgetChanged(w);
+            }
         }
         this.updateCursors(false);
 
@@ -453,6 +442,10 @@ public class RasterView extends javax.swing.JPanel {
     private void hintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hintActionPerformed
         doHintAction();
     }//GEN-LAST:event_hintActionPerformed
+
+    private void showmaskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showmaskActionPerformed
+        this.redrawImages();
+    }//GEN-LAST:event_showmaskActionPerformed
 
     private void doHintAction() {
         String msg = "<html>You can do the following things here:<ul>";
@@ -478,13 +471,12 @@ public class RasterView extends javax.swing.JPanel {
     private javax.swing.JButton hint;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel panMain;
     private javax.swing.JButton random;
-    private javax.swing.JCheckBox showbg;
-    private javax.swing.JCheckBox showignore;
-    private javax.swing.JCheckBox showuse;
+    private javax.swing.JComboBox showmask;
     private javax.swing.JSlider sliderFrames;
     private javax.swing.JButton snap;
     // End of variables declaration//GEN-END:variables

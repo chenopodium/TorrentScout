@@ -26,7 +26,7 @@ import com.iontorrent.guiutils.GuiUtils;
 import com.iontorrent.rawdataaccess.wells.BitMask;
 import com.iontorrent.torrentscout.explorer.ContextChangeAdapter;
 import com.iontorrent.torrentscout.explorer.ExplorerContext;
-import com.iontorrent.utils.io.FileTools;
+import com.iontorrent.torrentscout.explorer.Export;
 import com.iontorrent.utils.stats.StatPoint;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -60,6 +60,8 @@ public class HistoView extends javax.swing.JPanel implements ActionListener {
     JTextField tmin;
     JTextField tmax;
 
+    double lastleft;
+    double lastright;
     //  BitMask selectedmask;
     /** Creates new form HistoView */
     public HistoView(ExplorerContext maincont) {
@@ -156,7 +158,7 @@ public class HistoView extends javax.swing.JPanel implements ActionListener {
         }
     }
 
-    private void update(boolean useminmax, boolean createNewStats) {
+    public void update(boolean useminmax, boolean createNewStats) {
         if (panel == null) {
             createNewStats = true;
         }
@@ -175,7 +177,7 @@ public class HistoView extends javax.swing.JPanel implements ActionListener {
         }
         maincont.setHistoMask(histomask);
 
-        String msg = "Computing between (green) " + maincont.getStartframe() + "-" + maincont.getEndframe() + ", and end (red) frame " + maincont.getCropright();
+        String msg = "Computing histogram";
         if (histomask != null) {
             double perc = histomask.computePercentage();
 
@@ -184,7 +186,7 @@ public class HistoView extends javax.swing.JPanel implements ActionListener {
             }
         }
         if (histomask == null) {
-            GuiUtils.showNonModalMsg(msg+" using ALL wells");
+           // GuiUtils.showNonModalMsg(msg+" using ALL wells");
         } else {
             GuiUtils.showNonModalMsg(msg + " using only wells from mask " + histomask);
         }
@@ -193,8 +195,20 @@ public class HistoView extends javax.swing.JPanel implements ActionListener {
 
         getUserPreferences();
         updateFunction(curfunction, useminmax);
+        if (datapoints == null) return;
         //   detail = new HistoPanel(maincont, datapoints, histodata);
-        if (createNewStats) {
+        
+        if (panel != null) {
+            this.lastleft = panel.getLeftX();
+            if (lastleft < 10) lastleft = 10;
+            this.lastright = panel.getRightX();
+            if (lastright <= lastleft) lastright = lastleft + 100;
+        }
+        else {
+            lastleft = 20;
+            lastright = 400;
+        }
+        if (createNewStats || panel == null) {
             panel = new HistoPanel(maincont, datapoints, histodata, bins, normalize, second);
             add("Center", panel);
         } else {
@@ -204,6 +218,9 @@ public class HistoView extends javax.swing.JPanel implements ActionListener {
 
         invalidate();
         revalidate();
+        panel.setLeftX(lastleft);
+        panel.setRightX(lastright);
+        
         //    panMain.add("South", detail);
         //  panel.paintImmediately(0, 0, 1000, 1000);
         // GuiUtils.showNonModalMsg("Computing histogram done");
@@ -522,8 +539,10 @@ public class HistoView extends javax.swing.JPanel implements ActionListener {
         // TODO add your handling code here:}//GEN-LAST:event_boxuseActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        String file = FileTools.getFile("Save histogram to file", ".csv", null, true);
+         
+        String file = Export.getFile("Save histogram to file", ".csv", true);
         if (file != null) {
+          
             this.export(file);
         }
     }//GEN-LAST:event_btnSaveActionPerformed

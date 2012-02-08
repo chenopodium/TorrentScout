@@ -23,10 +23,8 @@ import com.iontorrent.expmodel.GlobalContext;
 import com.iontorrent.expmodel.LoadDataContext;
 import com.iontorrent.guiutils.GuiUtils;
 import com.iontorrent.guiutils.netbeans.OpenWindowAction;
-import com.iontorrent.guiutils.wells.CoordSelectionPanel;
 import com.iontorrent.main.options.TorrentScoutSettingsPanel;
 import com.iontorrent.maskview.CompositeDensityPanel;
-import com.iontorrent.rawdataaccess.wells.BfMask;
 import com.iontorrent.rawdataaccess.wells.BfMaskFlag;
 import com.iontorrent.expmodel.ExperimentLoader;
 
@@ -42,7 +40,6 @@ import com.iontorrent.wellmodel.WellContext;
 import com.iontorrent.wellmodel.WellCoordinate;
 import com.iontorrent.wellmodel.WellSelection;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.logging.Level;
@@ -50,10 +47,10 @@ import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import javax.swing.Action;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
-import org.netbeans.api.progress.ProgressUtils;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -75,7 +72,7 @@ import org.openide.windows.WindowManager;
 autostore = false)
 @TopComponent.Description(preferredID = "TorrentScoutCompositeViewTopComponent",
 iconBase = "com/iontorrent/compview/chip_bb.png",
-persistenceType = TopComponent.PERSISTENCE_ALWAYS)
+persistenceType = TopComponent.PERSISTENCE_NEVER)
 @TopComponent.Registration(mode = "top_left", openAtStartup = false)
 @ActionID(category = "Window", id = "com.iontorrent.compview.TorrentScoutCompositeViewTopComponent")
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
@@ -84,6 +81,7 @@ preferredID = "TorrentScoutCompositeViewTopComponent")
 public final class TorrentScoutCompositeViewTopComponent extends TopComponent implements TaskListener {
 
     int MAX_COORDS = 10000;
+     private JLabel info;
     private String lastmsg;
     private BfMaskFlag currentflag;
     //private ProgressHandle progress;
@@ -128,8 +126,7 @@ public final class TorrentScoutCompositeViewTopComponent extends TopComponent im
         loader = (ExperimentLoader) WindowManager.getDefault().findTopComponent("ExperimentViewerTopComponent");
 
 
-        densityPanel = new CompositeDensityPanel(null, loader);
-        add("Center", densityPanel);
+       
         DOACTIONS = true;
     }
 
@@ -206,6 +203,9 @@ public final class TorrentScoutCompositeViewTopComponent extends TopComponent im
         //progress.stop();
 
         if (t.isSuccess()) {
+            String file = mask.getImageFile("composite", BfMaskFlag.RAW, flow, type, frame);
+            p("Forcing reading of newly computed file");
+            mask.readData(BfMaskFlag.RAW, file, true);
             updateScoresPanel();
         } else {
             msg("The heat map creation task failed - do the required files exist?");
@@ -310,7 +310,7 @@ public final class TorrentScoutCompositeViewTopComponent extends TopComponent im
         blocks.removeAllItems();
         if (expContext.getBlocks() != null) {
 
-            blocks.addItem("Thumbnails");
+            blocks.addItem("Pick a Block");
             for (DatBlock block : expContext.getBlocks()) {
                 blocks.addItem(block);
             }
@@ -350,6 +350,8 @@ public final class TorrentScoutCompositeViewTopComponent extends TopComponent im
         blocks = new javax.swing.JComboBox();
         hint = new javax.swing.JButton();
 
+        setBackground(new java.awt.Color(0, 0, 0));
+        setOpaque(true);
         setLayout(new java.awt.BorderLayout());
 
         jPanel2.setMaximumSize(new java.awt.Dimension(21, 21));
@@ -489,6 +491,7 @@ public final class TorrentScoutCompositeViewTopComponent extends TopComponent im
             //   msg("doactions is false not doing action");
             return;
         }
+        if (densityPanel == null) return;
         DOACTIONS = false;
 
         currentflag = (BfMaskFlag) this.comboFlags.getSelectedItem();
@@ -545,7 +548,7 @@ public final class TorrentScoutCompositeViewTopComponent extends TopComponent im
     }//GEN-LAST:event_btnSelectActionPerformed
     protected void publishExpContext(ExperimentContext exp) {
         if (exp != null) {
-            GuiUtils.showNonModalMsg("Sending ExperimentContext for selected block: " + exp.getResultsDirectory());
+            GuiUtils.showNonModalMsg("Loading " + exp.getRawDir());
             p("publishExpContext: Got a ExperimentContext: " + exp);
             GlobalContext.getContext().setExperimentContext(exp, false);
             LookupUtils.publish(expContent, exp);
@@ -578,13 +581,13 @@ public final class TorrentScoutCompositeViewTopComponent extends TopComponent im
             DatBlock block = (DatBlock) o;
             exp = this.expContext.getContext(block, true);
         } else {
-            exp = this.expContext.getThumbnailsContext(true);
+            //exp = this.expContext.getThumbnailsContext(true);
         }
         if (exp != null) {
             GuiUtils.showNonModalMsg("Loading data for block " + o);
             publishExpContext(exp);
         } else {
-            p("Got no context fpr " + o);
+            p("Got no context opr " + o);
         }
     }//GEN-LAST:event_blocksActionPerformed
 
@@ -624,7 +627,7 @@ public final class TorrentScoutCompositeViewTopComponent extends TopComponent im
             this.getLatestCompExp();
         }
         if (expContext == null) {
-            this.setStatusWarning("Got no composite experiment context - load a black bird data set first");
+            this.setStatusWarning("Got no Proton context - load a Proton data set first");
             return;
         } else {
             // p("Got composite context: " + expContext.getr);
@@ -656,14 +659,14 @@ public final class TorrentScoutCompositeViewTopComponent extends TopComponent im
         }
         if (!has) {
             p("Don't have image yet for " + currentflag);
-            GuiUtils.showNonModalMsg("Need to create the heat map(s) first...");
+           // GuiUtils.showNonModalMsg("Need to create the heat map(s) first...");
             if (cachetask == null) {
                 msg = "The hat map file " + mask.getFile(currentflag) + " does not seem to exist, I will have to generate it first. This might take a few minutes!";
                 setStatusWarning(msg);
                 // boolean ok = createImageFileFromScoreFlag();
                 //GuiUtils.showNonModalMsg("CompositeHeatMap: I have to create the composite heat maps first...", false, 10);
                 //   this.setStatusWarning("I have to parse some files and create images for the scores...");
-                ProgressHandle handle = ProgressHandleFactory.createHandle("Black bird: Creating composite image for total chip view for all blocks...");
+                ProgressHandle handle = ProgressHandleFactory.createHandle("Proton: Creating whole chip image for all blocks...");
 
                 cachetask = new CacheFilesTask(this, handle);
                 //  ProgressUtils.showProgressDialogAndRunLater(cachetask, "Creating custom heat maps...");
@@ -671,11 +674,13 @@ public final class TorrentScoutCompositeViewTopComponent extends TopComponent im
 
             } else {
                 msg = "Currently creating heat map(s) for " + currentflag + " ... please wait...";
-                GuiUtils.showNonModalMsg("I am already creating the heat maps, please wait...", 10);
+              //  GuiUtils.showNonModalMsg("I am already creating the heat maps, please wait...", 10);
                 setStatusWarning(msg);
 
             }
-            return;
+//            info = new JLabel("<html>You can pick a block from the <b>drop down box</b><br>(So you don't have to wait for the image to be computed)</html>");
+//            add("Center", info);
+//            return;
         }
         //   this.setStatus("Updating heat map");
         this.updateDensityPanel();
@@ -683,11 +688,18 @@ public final class TorrentScoutCompositeViewTopComponent extends TopComponent im
     }
 
     private void updateDensityPanel() {
-        GuiUtils.showNonModalMsg("Black Bird: reading complete block heat map for " + currentflag + "....", false, 5);
+        //GuiUtils.showNonModalMsg("Proton: reading complete block heat map for " + currentflag + "....", false, 5);
         if (currentflag == BfMaskFlag.RAW) {
             String file = mask.getImageFile("composite", BfMaskFlag.RAW, flow, type, frame);
-            p("Reading RAW file: " + file);
-            mask.readData(BfMaskFlag.RAW, file);
+            if (mask.hasImage("composite", currentflag, flow, type, frame)) { 
+                p("Reading RAW file: " + file);
+                mask.readData(BfMaskFlag.RAW, file);
+                p("read raw file");
+            }
+            else {
+                p("still reading empty file...");
+                mask.readData(BfMaskFlag.RAW, file);
+            }
         } else {
             mask.readData(currentflag);
         }
@@ -696,15 +708,17 @@ public final class TorrentScoutCompositeViewTopComponent extends TopComponent im
                 loader = (ExperimentLoader) WindowManager.getDefault().findTopComponent("ExperimentViewerTopComponent");
             }
             densityPanel = new CompositeDensityPanel(this.expContext, loader);
+            if (info != null) remove(info);
             add("Center", densityPanel);
         } else {
             densityPanel.setCompExp(expContext);
         }
 
-        // SELECT FLOW
-        int flow = 0;
+        
         densityPanel.setScoreMask(mask, currentflag, (Integer) spinBucket.getValue(), getType(), flow, frame);
-
+        this.repaint();
+        densityPanel.repaint();
+        p("repaingint");
     }
 
     private RawType getType() {

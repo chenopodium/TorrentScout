@@ -154,7 +154,8 @@ public class WellAlgorithm {
         }
         else if (take == null) {
             return !ignoremask.get(c, r);
-        } else if (ignoremask == null) {
+        }
+        else if (ignoremask == null) {
             return take.get(c, r);
         }
 
