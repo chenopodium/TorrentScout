@@ -70,7 +70,7 @@ public class SeekableRAStream extends SeekableStream implements LineReader {
     }
 
     private void p(String msg) {
-        System.out.println("SeekableRAStream: " + msg);
+//  System.out.println("SeekableRAStream: " + msg);
         //Logger.getLogger( SeekableRAStream.class.getName()).log(Level.INFO, msg, ex);
     }
 

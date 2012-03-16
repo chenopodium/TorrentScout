@@ -165,8 +165,8 @@ public abstract class AbstractLargeIndexer {
             
                 if (count % 1000000 == 0) {
                     outpw.flush();
-                    p("Appending line :"+merged+" from file "+smallest_file);
-                    p("Got "+count+" lines");
+                 //   p("Appending line :"+merged+" from file "+smallest_file);
+               //     p("Got "+count+" lines");
                 }
                 outpw.println(merged);
 
@@ -658,7 +658,7 @@ public abstract class AbstractLargeIndexer {
     }
 
     private static void p(String msg) {
-        System.out.println("AbstractLargeIndexer: " + msg);
+    //    System.out.println("AbstractLargeIndexer: " + msg);
         //Logger.getLogger( AbstractLargeIndexer.class.getName()).log(Level.INFO, msg);
     }
 }

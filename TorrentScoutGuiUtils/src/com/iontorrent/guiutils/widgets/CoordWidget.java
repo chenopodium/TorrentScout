@@ -59,7 +59,7 @@ public class CoordWidget extends Widget {
             armlen = 10;
         }
         
-        Polygon p = createCross(x-thickness/2, y- armlen-thickness/2, thickness, armlen);
+        Polygon p = createCross(x, y- armlen-thickness/2, thickness, armlen);
         g.fillPolygon(p);
       //  if (selected) g.setColor(getColor().darker());
         g.setColor(Color.black);

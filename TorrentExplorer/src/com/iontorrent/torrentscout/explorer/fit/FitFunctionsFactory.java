@@ -36,23 +36,29 @@ public class FitFunctionsFactory {
     static AbstractHistoFunction peak;
     static AbstractHistoFunction zeromer;
     
+    
     public static ArrayList<AbstractHistoFunction> getFunctions(ExplorerContext maincont) {
+        return getFunctions(maincont, false);
+    }
+    public static ArrayList<AbstractHistoFunction> getFunctions(ExplorerContext maincont, boolean minimum) {
         if (fun == null)  {
             fun = new ArrayList<AbstractHistoFunction> ();
             
             fun.add(new IntegralFunction(maincont));
             
             fun.add(new MaxMinusEndHeightFunction(maincont));
-            peak = new PeakFunction(maincont);
-            fun.add(peak);
-            zeromer = new ParametricAdjustment(maincont);
-            fun.add(zeromer);
-            fun.add(new CombineFunction(maincont, (PlotFunction)peak, (PlotFunction)zeromer));
+           if (!minimum) {
+                peak = new PeakFunction(maincont);
+                fun.add(peak);
+                zeromer = new ParametricAdjustment(maincont);
+                fun.add(zeromer);
+                fun.add(new CombineFunction(maincont, (PlotFunction)peak, (PlotFunction)zeromer));
+           }
             
             
             // this.boxFunc.addItem(new EndheightlFunction1(maincont));
             fun.add(new RSMErrorFunction(maincont));
-            fun.add(new CountFunction(maincont));
+            if (!minimum) fun.add(new CountFunction(maincont));
             fun.add(new SlopeFunction(maincont));
         }
         for (AbstractHistoFunction f: fun) {

@@ -190,6 +190,7 @@ public class NavigableImagePanel extends JPanel implements MouseMotionListener {
     private int endx = -1;
     private int endy = -1;
     private boolean wasdragged;
+    private boolean recreateNavImage;
 
     public double imageToPanelX(double x) {
         return (x * scale) + originX;
@@ -402,7 +403,7 @@ public class NavigableImagePanel extends JPanel implements MouseMotionListener {
         @Override
         public void mouseWheelMoved(MouseWheelEvent e) {
             Point p = e.getPoint();
-           // p("MouseWheel moved");
+            // p("MouseWheel moved");
             boolean zoomIn = (e.getWheelRotation() < 0);
             if (isInNavigationImage(p)) {
                 if (zoomIn) {
@@ -542,7 +543,7 @@ public class NavigableImagePanel extends JPanel implements MouseMotionListener {
         addMouseMotionListener(this);
 
         setZoomDevice(ZoomDevice.MOUSE_WHEEL);
-      //  ZoomDevice.
+        //  ZoomDevice.
     }
 
     private void drawXorRect(Graphics g, int sx, int sy, int dx, int dy) {
@@ -704,7 +705,7 @@ public class NavigableImagePanel extends JPanel implements MouseMotionListener {
      * @param image an image to be set in the panel
      */
     public void setImage(BufferedImage image) {
-        setImage(image, true);
+        setImage(image, false);
     }
 
     public void setImage(BufferedImage image, boolean reset) {
@@ -714,8 +715,10 @@ public class NavigableImagePanel extends JPanel implements MouseMotionListener {
         //for the new image.
         if (reset) {
             scale = 0.0;
+        } else {
+            recreateNavImage = true;
         }
-
+// recompute small image
         firePropertyChange(IMAGE_CHANGED_PROPERTY, (Image) oldImage, (Image) image);
         repaint();
     }
@@ -760,13 +763,14 @@ public class NavigableImagePanel extends JPanel implements MouseMotionListener {
         repaint();
     }
 
-     public void displayImageAtImage(Point scrImagePoint) {
-        
+    public void displayImageAtImage(Point scrImagePoint) {
+
         originX = -(scrImagePoint.x - getWidth() / 2);
         originY = -(scrImagePoint.y - getHeight() / 2);
         repaint();
     }
     //Tests whether a given point in the panel falls within the image boundaries.
+
     private boolean isInImage(Point p) {
         Coords coords = panelToImageCoords(p);
         int x = coords.getIntX();
@@ -1060,6 +1064,11 @@ public class NavigableImagePanel extends JPanel implements MouseMotionListener {
 
         if (scale == 0.0) {
             initializeParams();
+        } else if (recreateNavImage) {
+            recreateNavImage = false;
+            if (isNavigationImageEnabled()) {
+                createNavigationImage();
+            }
         }
 
         if (isHighQualityRendering()) {
@@ -1108,7 +1117,7 @@ public class NavigableImagePanel extends JPanel implements MouseMotionListener {
         cur_selection = new Selection();
         cur_selection.startPoint = start;
         cur_selection.endPoint = end;
-       // p("Got selection "+start+"/"+end);
+        // p("Got selection "+start+"/"+end);
         showSelection();
     }
 

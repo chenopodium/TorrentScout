@@ -56,9 +56,12 @@ public class CompleteMaskPanel extends javax.swing.JPanel {
         initComponents();
         this.maincont = maincont;
         this.expContext = maincont.getExp();
-        // add widgets to density panel
+        update(mask);
+    }
+    private void update(BitMask mask) {
+         // add widgets to density panel
+        if (densityPanel != null) remove(densityPanel);
         densityPanel = new MaskEditDensityPanel(expContext, mask);
-
 
         densityPanel.setContext(mask, 1);
         densityPanel.showNavigationImage(false);
@@ -66,7 +69,6 @@ public class CompleteMaskPanel extends javax.swing.JPanel {
         this.mask = mask;
         add("Center", densityPanel);
     }
-
     public void setColors(Color[] gradientColors) {
         densityPanel.setColors(gradientColors);
     }
@@ -107,7 +109,6 @@ public class CompleteMaskPanel extends javax.swing.JPanel {
         delete = new javax.swing.JButton();
         panMask = new javax.swing.JPanel();
 
-        setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(CompleteMaskPanel.class, "CompleteMaskPanel.border.title"))); // NOI18N
         setLayout(new java.awt.BorderLayout());
 
         panControls.setOpaque(false);
@@ -270,11 +271,11 @@ public class CompleteMaskPanel extends javax.swing.JPanel {
         panMask.setLayout(panMaskLayout);
         panMaskLayout.setHorizontalGroup(
             panMaskLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 388, Short.MAX_VALUE)
+            .addGap(0, 400, Short.MAX_VALUE)
         );
         panMaskLayout.setVerticalGroup(
             panMaskLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 250, Short.MAX_VALUE)
+            .addGap(0, 277, Short.MAX_VALUE)
         );
 
         add(panMask, java.awt.BorderLayout.CENTER);
@@ -287,8 +288,8 @@ public class CompleteMaskPanel extends javax.swing.JPanel {
     @Override
     public void setName(String name) {
         super.setName(name);
-        TitledBorder tb = (TitledBorder) this.getBorder();
-        tb.setTitle(name);
+//        TitledBorder tb = (TitledBorder) this.getBorder();
+//        tb.setTitle(name);
     }
 
     public void refresh() {
@@ -470,5 +471,6 @@ public class CompleteMaskPanel extends javax.swing.JPanel {
 
     void setMask(BitMask mask) {
         this.mask = mask;
+        setName(mask.getName());
     }
 }

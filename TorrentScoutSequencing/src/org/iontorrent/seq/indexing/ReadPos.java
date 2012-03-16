@@ -82,7 +82,7 @@ public class ReadPos {
     }
 
     private static void p(String msg) {
-        System.out.println("ReadPos: " + msg);
+//  System.out.println("ReadPos: " + msg);
         //Logger.getLogger( ReadPos.class.getName()).log(Level.INFO, msg);
     }
 }

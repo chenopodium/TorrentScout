@@ -52,7 +52,7 @@ public class Coord {
     }
 
     private static void p(String msg) {
-        System.out.println("Coord: " + msg);
+//  System.out.println("Coord: " + msg);
         //Logger.getLogger( Coord.class.getName()).log(Level.INFO, msg);
     }
 }

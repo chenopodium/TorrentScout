@@ -947,7 +947,7 @@ public class GenomeReadWriter {
     }
 
     private static void p(String msg) {
-        System.out.println("GenomeReadWriter: " + msg);
+//  System.out.println("GenomeReadWriter: " + msg);
         //Logger.getLogger( GenomeReadWriter.class.getName()).log(Level.INFO, msg);
     }
 }

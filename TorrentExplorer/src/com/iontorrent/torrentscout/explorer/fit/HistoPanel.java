@@ -52,6 +52,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
@@ -162,15 +163,21 @@ public class HistoPanel extends javax.swing.JPanel implements SelectionListener 
             public void mouseClicked(MouseEvent evt) {
                 double ex = evt.getX();
                 //curwidget = (HistoWidget) Widget.getClosest(ex, 0, hwidgets, 50);
-                if (histo == null) return;
+                if (histo == null || maincont.getWidgets() == null) return;
                 int bin = getBin((int) ex);
                 WellCoordinate abs = findCoordForBin(bin);
                 
-                p("Got bin " + bin + " with coord " + abs + ", changing main widget");
+                p("Got bin " + bin + " with coord " + abs + ", changing random (not main) widget");
                 if (abs != null) {
-                    for (Widget w : maincont.getWidgets()) {
+                    int nr = maincont.getWidgets().size();
+                    if (nr < 1) return;
+                    boolean found = false;
+                    while (!found) {
+                        int rand = (int) (Math.random()*nr);
+                        Widget w = maincont.getWidgets().get(rand);                   
                         CoordWidget cw = (CoordWidget) (w);
-                        if (cw.isMainWidget()) {
+                        if (nr ==1 || !cw.isMainWidget()) {
+                            found = true;
                             cw.setAbsoluteCoords(abs);
                             maincont.widgetChanged(w);
                             repaint();
@@ -293,6 +300,7 @@ public class HistoPanel extends javax.swing.JPanel implements SelectionListener 
 
     private void p(String string) {
         System.out.println("HistoPanel: " + string);
+        Logger.getLogger("HistoPanel: " + string);
     }
 
     @Override
@@ -302,7 +310,7 @@ public class HistoPanel extends javax.swing.JPanel implements SelectionListener 
         Graphics2D gg = (Graphics2D) g;
         width = getWidth();
         height = getHeight();
-        p("Painting histopanel "+width+"/"+height);
+       // p("Painting histopanel "+width+"/"+height);
         gg.clearRect(0, 0, width, height);
         //  gg.setColor(this.getParent().getBackground());
         //    gg.fillRect(0, 0, width, height);
@@ -438,7 +446,7 @@ public class HistoPanel extends javax.swing.JPanel implements SelectionListener 
             if (coord != null) {
                 int relx = coord.getCol() - cstart;
                 int rely = coord.getRow() - rstart;
-
+           //     p("got coord widget "+coord);
                 if (relx >= 0 && rely >= 0 && relx < size && rely < size) {
                     double value = histodata[relx][rely];
                     int x = this.getXForXval(value);
@@ -454,6 +462,7 @@ public class HistoPanel extends javax.swing.JPanel implements SelectionListener 
 
 
                 }
+                else p("NOT adding coord widget "+coord+" "+relx+"/"+rely);
             }
         }
         g.setStroke(new BasicStroke(1));
@@ -465,9 +474,9 @@ public class HistoPanel extends javax.swing.JPanel implements SelectionListener 
         double mid = histo.getBucketXValue(bin);
 
         double count = histo.getCount(bin);
-        if (count <= 0.0) {
-            GuiUtils.showNonModalMsg("Found nothing in bucket for bin "+bin+" value " + (mid+histo.getBucketDelta()/2));
-        }
+//        if (count <= 0.0) {
+//            GuiUtils.showNonModalMsg("Found nothing in bucket for bin "+bin+" value " + (mid+histo.getBucketDelta()/2));
+//        }
 
         double delta = count/10.0;
         
@@ -541,8 +550,11 @@ public class HistoPanel extends javax.swing.JPanel implements SelectionListener 
         double betweenLeftRight = histo.computeCumulativeProbabilityForBuckets(Math.min(binleft, binright), Math.max(binleft, binright));
         // compute values between scissors
         
-        g.drawString("" + count + " data points, mode="
-                + form.format(histo.getXValueForMaxY()) + ", between frames " + maincont.getStartframe() + "-" + maincont.getEndframe() + ", right red frame=" + maincont.getCropright(), this.BORDER, 20);
+        String function = "";
+        if (this.maincont.getHistoFunction() != null) {
+            function = "(fnc="+maincont.getHistoFunction().getName()+")";
+        }
+        g.drawString("" + count + " values "+function+", between " + maincont.getStartframe() + "-" + maincont.getEndframe() + ", right red frame=" + maincont.getCropright(), this.BORDER, 20);
         
         g.setColor(Color.white);
         if (normalize) {            

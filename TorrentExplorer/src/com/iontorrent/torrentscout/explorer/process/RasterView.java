@@ -45,7 +45,7 @@ public class RasterView extends javax.swing.JPanel {
 
     private RasterPanel moviePanel;
     ExplorerContext maincont;
-
+    int pixperwell = 4;
     /** Creates new form RasterView */
     public RasterView(ExplorerContext maincont, boolean load) {
         initComponents();
@@ -60,6 +60,7 @@ public class RasterView extends javax.swing.JPanel {
                     sliderFrames.setValue(f);
                 }
             }
+            @Override
             public void masksChanged() {
                  updateMaskList();
             }
@@ -72,9 +73,30 @@ public class RasterView extends javax.swing.JPanel {
             public void maskRemoved(BitMask mask) {
                  updateMaskList();
             }
-            
-        });
-        moviePanel = new RasterPanel();
+            @Override
+            public void coordChanged(WellCoordinate coord) {
+               // p("coord chanaged,checking widgets: ");
+                //  paintImmediately(0, 0, 1000, 1000);
+                if (moviePanel != null) {
+                    moviePanel.checkWidgets(false);
+                    repaint();
+                    
+                }                
+            }
+
+           
+            @Override
+            public void widgetChanged(Widget w) {
+              //  p("widget chnaged: " + w+", repaingint");
+                // repaint();
+                //  paintImmediately(0, 0, 1000, 1000);
+                if (moviePanel != null){
+                    moviePanel.checkWidgets(false);
+                    repaint();
+                }
+            }
+        });                  
+        moviePanel = new RasterPanel(pixperwell);
         panMain.add("Center", moviePanel);
 
         // listenToKeysFrom(this);
@@ -331,12 +353,12 @@ public class RasterView extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sliderFrames, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE)
+                .addComponent(sliderFrames, javax.swing.GroupLayout.DEFAULT_SIZE, 522, Short.MAX_VALUE)
                 .addGap(20, 20, 20))
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addComponent(panMain, javax.swing.GroupLayout.DEFAULT_SIZE, 527, Short.MAX_VALUE)
+                .addGap(249, 249, 249))
+            .addComponent(panMain, javax.swing.GroupLayout.DEFAULT_SIZE, 576, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -346,8 +368,8 @@ public class RasterView extends javax.swing.JPanel {
                     .addComponent(sliderFrames, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(2, 2, 2)
-                .addComponent(panMain, javax.swing.GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panMain, javax.swing.GroupLayout.DEFAULT_SIZE, 407, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -447,6 +469,11 @@ public class RasterView extends javax.swing.JPanel {
         this.redrawImages();
     }//GEN-LAST:event_showmaskActionPerformed
 
+    private void updateResolution() {
+        int raster_size = 400/pixperwell;
+        maincont.setRasterSize(raster_size);
+        moviePanel.setPixPerWell(pixperwell);
+    }
     private void doHintAction() {
         String msg = "<html>You can do the following things here:<ul>";
         msg += "<li>drag the cursors around in the left view eith the <b>left</b> mouse button </li>";

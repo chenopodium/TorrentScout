@@ -51,7 +51,9 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import org.openide.util.Exceptions;
 
@@ -63,6 +65,7 @@ public abstract class GeneralDensityPanel extends JPanel implements WellModel, A
 
     protected int coordscale = 1;
     protected WellsImagePanel imagePanel;
+    protected WellsImagePanel oldimagePanel;
     protected GeneralWellDensity wellDensity;
     /** the offscreen image to which the density plot is drawn */
     protected BufferedImage bimage;
@@ -84,11 +87,73 @@ public abstract class GeneralDensityPanel extends JPanel implements WellModel, A
     //   private Font fcoord1 = new Font(Font.SANS_SERIF, Font.BOLD, 16);
     protected ExperimentContext expcontext;
     private int nrWidgets;
-    public GeneralDensityPanel(ExperimentContext exp) {
+    private JPopupMenu rightMenu;
+    private MouseAdapter popAdapter;
+    private WellCoordinate popcoord;
+
+    protected boolean useMainWidget;
+    protected boolean useCornerWidgets;
+    
+    public GeneralDensityPanel(ExperimentContext exp, int nrwidgets) {
         setLayout(new BorderLayout());
         this.expcontext = exp;
+        this.nrWidgets = nrwidgets;
         this.setBackground(Color.black);
+        makePopup();
+    }
 
+    protected void addPopup(String cmd) {
+        rightMenu.add(makeMenuItem(cmd));
+    }
+
+    private void makePopup() {
+        rightMenu = new JPopupMenu("Actions");
+        popAdapter = new MouseAdapter() {
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    showPopupMenu(e);
+                }
+            }
+
+            // And on other platforms, mousePressed sets PopupTrigger.
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    showPopupMenu(e);
+                }
+            }
+
+            // Get the component over which the right button click
+            // occurred and show the menu there.
+            public void showPopupMenu(MouseEvent e) {
+                popcoord = imagePanel.getCoord(e);
+                p("Got popupcoord="+popcoord);
+                rightMenu.show(GeneralDensityPanel.this, e.getX(), e.getY());
+            }
+        }; // anonymous MouseAdapter subclass
+
+    } // makePopup
+
+    /** A utility method for making menu items. **/
+    private JMenuItem makeMenuItem(String label) {
+        JMenuItem item = new JMenuItem(label);
+        item.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String cmd = e.getActionCommand().toLowerCase().trim();
+                WellCoordinate coord = popcoord;
+                p("Got popup command:" + cmd + " at " + coord);
+                processPopupCommand(cmd, coord);
+            }
+        });
+        return item;
+    } // 
+
+    protected void processPopupCommand(String cmd, WellCoordinate coord) {
+        p("Got popup command: " + cmd + ", no handler implemented");
     }
 
     /**
@@ -200,16 +265,18 @@ public abstract class GeneralDensityPanel extends JPanel implements WellModel, A
     }
 
     public RenderedImage myCreateImage(int minw, int minh) {
-        if (bimage == null ) {
+        if (bimage == null) {
             try {
                 this.setSize(minw, minh);
                 createAndDrawImage();
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
-            
+
         }
-        if (bimage != null) p("Got image:"+bimage+" of size "+bimage.getWidth()+"/"+bimage.getHeight());
+        if (bimage != null) {
+            p("Got image:" + bimage + " of size " + bimage.getWidth() + "/" + bimage.getHeight());
+        }
 //        imagePanel.setSize(Math.max(minw, bimage.getWidth()), Math.max(minh, bimage.getHeight()));
 //        
 //        int width =Math.max(minw,imagePanel.getWidth());
@@ -417,8 +484,9 @@ public abstract class GeneralDensityPanel extends JPanel implements WellModel, A
             imagePanel.setCoordscale(coordscale);
 
         } else {
+
             imagePanel = new WellsImagePanel(expcontext, BORDER, bimage, pixpercol, pixperrow, wellDensity.getBucketSize(), this, nrWidgets);
-           
+
             imagePanel.setCoordscale(coordscale);
             //   p("WellsImagePanel created");
             add("Center", imagePanel);
@@ -427,29 +495,30 @@ public abstract class GeneralDensityPanel extends JPanel implements WellModel, A
 
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    if (SwingUtilities.isRightMouseButton(e)) {
-                        return;
-                    }
+
                     processClick(e);
                 }
 
                 @Override
                 public void mouseReleased(MouseEvent e) {
-                    if (SwingUtilities.isRightMouseButton(e)) {
-                        return;
-                    }
+
                     processClick(e);
                 }
             });
+            imagePanel.addMouseListener(popAdapter);
         }
 
         afterImageCreated();
         add("East", gradient);
         gradient.repaint();
         imagePanel.repaint();
+        this.repaint();
     }
 
     protected void processClick(MouseEvent e) {
+        if (e.getButton() != MouseEvent.BUTTON1) {
+            popcoord = imagePanel.getCoord(e.getPoint());
+        }
         if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() > 1) {
             p("GeneralDensityPanel.processClick");
             WellSelection sel = imagePanel.getWellSelection();
@@ -461,13 +530,13 @@ public abstract class GeneralDensityPanel extends JPanel implements WellModel, A
             if (sel != null) {
                 ArrayList<WellCoordinate> coords = getCoords(sel);
                 sel.setAllWells(coords);
-                p("publishing selection");
+                p("publishing SELECTION");
                 publishSelection(sel);
             }
-            
+
             WellCoordinate coord = imagePanel.getWellCoordinate();
-           
-            
+
+
             if (wellcontext == null && expcontext != null) {
                 wellcontext = expcontext.getWellContext();
             }
@@ -525,7 +594,7 @@ public abstract class GeneralDensityPanel extends JPanel implements WellModel, A
 
     protected void p(String msg) {
         System.out.println(getClass().getName() + ": " + msg);
-        Logger.getLogger( GeneralDensityPanel.class.getName()).log(Level.INFO, msg);
+        Logger.getLogger(GeneralDensityPanel.class.getName()).log(Level.INFO, msg);
     }
 
     /**
@@ -539,7 +608,7 @@ public abstract class GeneralDensityPanel extends JPanel implements WellModel, A
      * @param coordscale the coordscale to set
      */
     public void setCoordscale(int coordscale) {
-     //   p("SETTING COORDSCALE TO: " + coordscale);
+        //   p("SETTING COORDSCALE TO: " + coordscale);
         this.coordscale = coordscale;
     }
 
@@ -555,5 +624,19 @@ public abstract class GeneralDensityPanel extends JPanel implements WellModel, A
      */
     public void setNrWidgets(int nrWidgets) {
         this.nrWidgets = nrWidgets;
+    }
+   
+     protected void showWell(int c, int r, Graphics2D g, Color color, boolean fill) {        
+        int y = (int) (((r  / BUCKET - 1) * pixperrow));                        
+        int x = (int) (BORDER + (c  / BUCKET * pixpercol));
+        g.setColor(color);
+        if (fill) {
+            g.fill3DRect(x-1, y-1 , (int)pixpercol+2, (int)pixperrow+2, true);
+        }
+        else {
+            g.draw3DRect(x-1, y-1 , (int)pixpercol+2, (int)pixperrow+2, true);
+        }
+        
+       // g.drawString("" + value, x, maxy - starty + 3);
     }
 }

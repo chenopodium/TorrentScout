@@ -307,7 +307,7 @@ public class SffRead {
     }
 
     private void p(String msg) {
-        System.out.println("SffRead: " + msg);
+//  System.out.println("SffRead: " + msg);
         //Logger.getLogger( SffRead.class.getName()).log(Level.INFO, msg, ex);
     }
 

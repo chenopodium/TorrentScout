@@ -29,7 +29,7 @@ import com.iontorrent.rawdataaccess.pgmacquisition.RawType;
 import com.iontorrent.rawdataaccess.wells.BitMask;
 import com.iontorrent.threads.Task;
 import com.iontorrent.threads.TaskListener;
-import com.iontorrent.torrentscout.explorer.automate.MultiFlowPanel;
+import org.iontorrent.acqview.MultiFlowPanel;
 import com.iontorrent.torrentscout.explorer.options.TorrentExplorerPanel;
 import com.iontorrent.utils.ErrorHandler;
 import com.iontorrent.utils.LookupUtils;
@@ -141,24 +141,7 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
     public void componentOpened() {
         getLatestExperimentContext();
     }
-
-    public boolean recreateGui() {
-        this.boxsignal.removeAllItems();
-        // boxsignal.setModel(new DefaultComboBoxModel(maincont.getMasks()));
-        boxsignal.addItem("No mask (use all wells)");
-        if (maincont == null) {
-            return true;
-        }
-        if (maincont.getMasks() != null) {
-            for (BitMask m : maincont.getMasks()) {
-                this.boxsignal.addItem(m);
-
-            }
-
-        }
-        return false;
-    }
-
+  
     private void update(ExperimentContext result) {
         if (result == null) {
             result = GlobalContext.getContext().getExperimentContext();
@@ -206,34 +189,8 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
         maincont = ExplorerContext.getCurContext(expContext);
         getUserPreferences();
         // boxsignal.setModel(new DefaultComboBoxModel(maincont.getMasks()));
-        boxsignal.addItem("No mask (use all wells)");
-        if (maincont.getMasks() != null && maincont.getMasks().size() > 0) {
-            for (BitMask m : maincont.getMasks()) {
-                this.boxsignal.addItem(m);
-
-            }
-            if (maincont.getSignalMask() != null) {
-                boxsignal.setSelectedItem(maincont.getSignalMask());
-            } else {
-
-                boxsignal.setSelectedItem(maincont.getMasks().get(maincont.getMasks().size() - 1));
-            }
-        }
+      
         info.setText(maincont.getExp().getRawDir());
-//        if (maincont.getIgnoreMask() != null) {
-//            boxignore.setSelectedItem(maincont.getIgnoreMask());
-//        } else {
-//            boxignore.setSelectedIndex(0);
-//        }
-//
-//        if (maincont.getBgMask() != null) {
-//            boxbg.setSelectedItem(maincont.getBgMask());
-//        } else {
-//            boxbg.setSelectedIndex(2);
-//        }
-
-
-
         maincont.addListener(
                 new ContextChangeAdapter() {
 
@@ -244,17 +201,6 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
                         // recomputeChart();
                     }
 
-                    @Override
-                    public void masksChanged() {
-                        recreateGui();
-                    }
-
-                    @Override
-                    public void maskAdded(BitMask mask) {
-                        //boxignore.addItem(mask);
-                        boxsignal.addItem(mask);
-                        // boxbg.addItem(mask);
-                    }
                 });
 
         panel.add("Center", tab);
@@ -312,12 +258,8 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
 //            p("Using ignmore " + ignore.getName());
 //        }
 
-        forsignal = null;
-        if (boxsignal.getSelectedIndex() > -1 && (boxsignal.getSelectedItem() instanceof BitMask)) {
-            forsignal = (BitMask) boxsignal.getSelectedItem();
-            p("Using mask " + forsignal.getName() + " to to compute signal");
-
-        }
+        forsignal = maincont.getSignalMask();
+       
         if (ignore == null) {
             JOptionPane.showMessageDialog(this, "I see no ignore/pinned mask - you can select it in the Process component\n.Make sure you have selected a region");
 
@@ -334,8 +276,7 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
         if (bg == null) {
             JOptionPane.showMessageDialog(this, "You selected no BG mask - will use ALL (no pinned) wells - you can select a bg mask in the Process windows");
 
-        }
-        maincont.setSignalMask(forsignal);
+        }      
         if (forsignal != null) {
             double perc = forsignal.computePercentage();
             if (perc < 1) {
@@ -370,6 +311,7 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
         }
 
         if (subtractflow > -1) {
+            GuiUtils.showNonModalMsg("Subtracting flow "+subtractflow);
             subtract = automateFlow(subtractflow, null);
             //updateChart(task.getFlow(), res);
         }
@@ -391,10 +333,7 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
 
     @Override
     protected void componentActivated() {
-        if (recreateGui()) {
-            return;
-        }
-
+       
     }
 
     private RasterData computeNN(RasterData data, ProgressListener prog) {
@@ -667,9 +606,6 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
     private void initComponents() {
 
         bar = new javax.swing.JToolBar();
-        boxskip = new javax.swing.JCheckBox();
-        jLabel3 = new javax.swing.JLabel();
-        boxsignal = new javax.swing.JComboBox();
         btnNN = new javax.swing.JButton();
         boxsub = new javax.swing.JCheckBox();
         jLabel5 = new javax.swing.JLabel();
@@ -679,6 +615,7 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
         btnimage = new javax.swing.JButton();
         hint = new javax.swing.JButton();
         info = new javax.swing.JLabel();
+        boxskip = new javax.swing.JCheckBox();
         panel = new javax.swing.JPanel();
 
         setBackground(new java.awt.Color(204, 255, 255));
@@ -686,38 +623,12 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
         bar.setRollover(true);
         bar.setOpaque(false);
 
-        org.openide.awt.Mnemonics.setLocalizedText(boxskip, org.openide.util.NbBundle.getMessage(AutomateTopComponent.class, "AutomateTopComponent.boxskip.text")); // NOI18N
-        boxskip.setToolTipText(org.openide.util.NbBundle.getMessage(AutomateTopComponent.class, "AutomateTopComponent.boxskip.toolTipText")); // NOI18N
-        boxskip.setFocusable(false);
-        boxskip.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        boxskip.setOpaque(false);
-        boxskip.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                boxskipActionPerformed(evt);
-            }
-        });
-        bar.add(boxskip);
-
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(AutomateTopComponent.class, "AutomateTopComponent.jLabel3.text")); // NOI18N
-        bar.add(jLabel3);
-
-        boxsignal.setToolTipText(org.openide.util.NbBundle.getMessage(AutomateTopComponent.class, "AutomateTopComponent.boxsignal.toolTipText")); // NOI18N
-        boxsignal.setMaximumSize(new java.awt.Dimension(100, 20));
-        boxsignal.setMinimumSize(new java.awt.Dimension(70, 18));
-        boxsignal.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                boxsignalActionPerformed(evt);
-            }
-        });
-        bar.add(boxsignal);
-
         btnNN.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/iontorrent/torrentscout/explorer/system-run-3.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(btnNN, org.openide.util.NbBundle.getMessage(AutomateTopComponent.class, "AutomateTopComponent.btnNN.text")); // NOI18N
         btnNN.setToolTipText(org.openide.util.NbBundle.getMessage(AutomateTopComponent.class, "AutomateTopComponent.btnNN.toolTipText")); // NOI18N
         btnNN.setFocusable(false);
-        btnNN.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnNN.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
         btnNN.setMargin(new java.awt.Insets(1, 1, 1, 1));
-        btnNN.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         btnNN.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnNNActionPerformed(evt);
@@ -789,6 +700,18 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
         org.openide.awt.Mnemonics.setLocalizedText(info, org.openide.util.NbBundle.getMessage(AutomateTopComponent.class, "AutomateTopComponent.info.text")); // NOI18N
         bar.add(info);
 
+        org.openide.awt.Mnemonics.setLocalizedText(boxskip, org.openide.util.NbBundle.getMessage(AutomateTopComponent.class, "AutomateTopComponent.boxskip.text")); // NOI18N
+        boxskip.setToolTipText(org.openide.util.NbBundle.getMessage(AutomateTopComponent.class, "AutomateTopComponent.boxskip.toolTipText")); // NOI18N
+        boxskip.setFocusable(false);
+        boxskip.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
+        boxskip.setOpaque(false);
+        boxskip.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                boxskipActionPerformed(evt);
+            }
+        });
+        bar.add(boxskip);
+
         panel.setOpaque(false);
         panel.setLayout(new java.awt.BorderLayout());
 
@@ -815,21 +738,6 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
 //        }
     }
 
-    public void maskSignalSelected() {
-        if (maincont == null) {
-            return;
-        }
-        if (boxsignal.getSelectedItem() instanceof BitMask) {
-            BitMask mask = (BitMask) this.boxsignal.getSelectedItem();
-            if (mask != maincont.getSignalMask()) {
-                maincont.setSignalMask(mask);
-            }
-        } else {
-            if (maincont.getSignalMask() != null) {
-                maincont.setSignalMask(null);
-            }
-        }
-    }
     private void btnNNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNNActionPerformed
         this.recomputeChart();
     }//GEN-LAST:event_btnNNActionPerformed
@@ -841,10 +749,6 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
             this.doSaveMutltiChartAction();
         }
 	}//GEN-LAST:event_btnSaveActionPerformed
-
-    private void boxsignalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxsignalActionPerformed
-        maskSignalSelected();
-    }//GEN-LAST:event_boxsignalActionPerformed
 
     private void boxskipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxskipActionPerformed
         // TODO add your handling code here:
@@ -868,7 +772,6 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
     }//GEN-LAST:event_hintActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToolBar bar;
-    private javax.swing.JComboBox boxsignal;
     private javax.swing.JCheckBox boxskip;
     private javax.swing.JCheckBox boxsub;
     private javax.swing.JButton btnNN;
@@ -877,7 +780,6 @@ public final class AutomateTopComponent extends TopComponent implements TaskList
     private javax.swing.JButton hint;
     private javax.swing.JLabel info;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel panel;
     private javax.swing.JTextField txtSubtract;

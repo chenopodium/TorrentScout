@@ -108,7 +108,7 @@ public class SeqFlowUtil {
     }
     
     private static void p(String msg) {
-        System.out.println("SeqFlowUtil: " + msg);
+//  System.out.println("SeqFlowUtil: " + msg);
         //Logger.getLogger( SeqFlowUtil.class.getName()).log(Level.INFO, msg);
     }
 }

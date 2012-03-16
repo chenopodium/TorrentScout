@@ -47,9 +47,9 @@ public final class ChartAction implements ActionListener {
     }
     @Override
     public void actionPerformed(ActionEvent e) {
-      
-        TopComponent tc = (TopComponent) WindowManager.getDefault().findTopComponent("TorrentScoutAcqViewTopComponent");       
-        
+      TopComponent tc = (TopComponent) WindowManager.getDefault().findTopComponent("WellTableTopComponent");       
+        openComponent(tc, false);
+        tc = (TopComponent) WindowManager.getDefault().findTopComponent("TorrentScoutAcqViewTopComponent");               
         openComponent(tc, true);
     }
     protected static void openComponent(TopComponent tc, boolean attention) {

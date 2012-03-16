@@ -189,6 +189,7 @@ public class ColorGradient {
 
         return gradient;
     }
+    
 
     private void err(String msg, Exception ex) {
         Logger.getLogger( ColorGradient.class.getName()).log(Level.SEVERE, msg, ex);

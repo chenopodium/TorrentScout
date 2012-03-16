@@ -28,14 +28,14 @@
           <Group type="102" alignment="1" attributes="0">
               <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="sliderFrames" pref="473" max="32767" attributes="1"/>
+              <Component id="sliderFrames" pref="522" max="32767" attributes="1"/>
               <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
           </Group>
           <Group type="102" alignment="0" attributes="0">
               <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="249" max="-2" attributes="0"/>
           </Group>
-          <Component id="panMain" alignment="0" pref="527" max="32767" attributes="1"/>
+          <Component id="panMain" alignment="0" pref="576" max="32767" attributes="1"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -47,8 +47,8 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jPanel1" min="-2" pref="23" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-              <Component id="panMain" pref="411" max="32767" attributes="1"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="panMain" pref="407" max="32767" attributes="1"/>
           </Group>
       </Group>
     </DimensionLayout>

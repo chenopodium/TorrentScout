@@ -22,6 +22,7 @@
  */
 package com.iontorrent.torrentscout.explorer.edit;
 
+import com.iontorrent.guiutils.GuiUtils;
 import com.iontorrent.rawdataaccess.wells.BitMask;
 import com.iontorrent.torrentscout.explorer.ExplorerContext;
 import com.iontorrent.utils.StringTools;
@@ -55,16 +56,19 @@ public class MaskCommandPanel extends javax.swing.JPanel {
     }
 
     public void doParseAction() {
-        String msg = parser.doParseAction(this.txtCmd.getText());
+        
+        String cmd = txtCmd.getText();
+        String msg = parser.doParseAction(cmd);
         if (msg != null && msg.length() > 0) {
             JOptionPane.showMessageDialog(this, msg);
         }
-
         if (parser.getResult() == null) {
             if (parser.getMessage() != null) {
                 txtCmd.setText(parser.getMessage());
             }
+            else GuiUtils.showNonModalMsg("Could not parse "+cmd, "Parsing error");                        
         }
+        else GuiUtils.showNonModalMsg(cmd+" parsed -> "+parser.getResult().getName(), "Parsing OK");                        
         cont.maskChanged(parser.getResult());
         // cont.masksChanged();
         list.actionPerformed(null);

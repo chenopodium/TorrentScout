@@ -273,7 +273,7 @@ public class BAMIndex {
     }
 
     private static void p(String msg) {
-        System.out.println("SAMIndex: " + msg);
+//  System.out.println("SAMIndex: " + msg);
        Logger.getLogger(WellToSamIndex.class.getName()).log(Level.INFO, msg);
     }
 }

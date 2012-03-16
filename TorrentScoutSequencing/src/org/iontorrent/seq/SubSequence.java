@@ -199,7 +199,7 @@ public class SubSequence implements SequenceIF {
     }
 
     private static void p(String msg) {
-        System.out.println("SubSequence: " + msg);
+//  System.out.println("SubSequence: " + msg);
         //Logger.getLogger( SubSequence.class.getName()).log(Level.INFO, msg);
     }
 

@@ -207,7 +207,7 @@ class MyTextTagCodes {
     }
 
     private void p(String msg) {
-        System.out.println("MyTextTagCodes: " + msg);
+//  System.out.println("MyTextTagCodes: " + msg);
         //Logger.getLogger( MyTextTagCodes.class.getName()).log(Level.INFO, msg, ex);
     }
 }

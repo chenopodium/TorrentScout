@@ -50,6 +50,7 @@ public abstract class AbstractByteSequence implements SequenceIF {
     public byte getBaseCode(int i) {
         if (i >= sequence.length) {
             err("Sequence length:" + sequence.length + ", attempting to access base " + i);
+            return 0;
         }
         return sequence[i];
     }
@@ -311,7 +312,7 @@ public abstract class AbstractByteSequence implements SequenceIF {
     }
 
     private static void p(String msg) {
-        System.out.println("AbstractByteSequence: " + msg);
+     //   System.out.println("AbstractByteSequence: " + msg);
         //Logger.getLogger( AbstractByteSequence.class.getName()).log(Level.INFO, msg, ex);
     }
 }

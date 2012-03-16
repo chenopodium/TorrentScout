@@ -542,11 +542,11 @@ public class HistoStatistics {
         // da: right side
         double da = histo[ba][0] + intervalbetweenbuckets / 2 - a;
         if (da > intervalbetweenbuckets || da < 0) {
-            this.printStats();
-            p("computeCumulativeProbability " + a + "-" + b);
-            p("ba:" + ba + ", bb:" + bb + ", bucketdelta:" + intervalbetweenbuckets);
-            p("histo[ba][0]=" + histo[ba][0]);
-            err("Bucketdelta < da: " + da);
+         //   this.printStats();
+//            p("computeCumulativeProbability " + a + "-" + b);
+//            p("ba:" + ba + ", bb:" + bb + ", bucketdelta:" + intervalbetweenbuckets);
+//            p("histo[ba][0]=" + histo[ba][0]);
+//            err("Bucketdelta < da: " + da);
         }
         // db: LEFT side
         double db = b - histo[bb][0] + intervalbetweenbuckets / 2;
@@ -639,7 +639,7 @@ public class HistoStatistics {
     }
 
     public String toString() {
-        printStats();
+     //   printStats();
         return toCsv();
     }
 
@@ -746,7 +746,7 @@ public class HistoStatistics {
     }
 
     private void p(String msg) {
-        System.out.println("HistoStatistics: " + msg);
+      //  System.out.println("HistoStatistics: " + msg);
         //Logger.getLogger( HistoStatistics.class.getName()).log(Level.INFO, msg, ex);
     }
 }

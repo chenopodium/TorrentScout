@@ -200,7 +200,7 @@ public class Kmer extends DNASequence {
     }
 
     private static void p(String msg) {
-        System.out.println("Kmer: " + msg);
+//  System.out.println("Kmer: " + msg);
         //Logger.getLogger( Kmer.class.getName()).log(Level.INFO, msg);
     }
 }

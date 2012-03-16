@@ -60,7 +60,7 @@ public class Markups {
     }
 
     private void p(String msg) {
-        System.out.println("Markups: " + msg);
+//  System.out.println("Markups: " + msg);
         //Logger.getLogger( Markups.class.getName()).log(Level.INFO, msg, ex);
     }
 }

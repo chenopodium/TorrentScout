@@ -58,15 +58,27 @@ public class RasterPanel extends JPanel{
     //MovieHeatMap view; 
     private SubregionView view;
     private int SIZE = 200;
-
+    private int pix_per_well;
+    ExplorerContext maincont;
     public RasterPanel() {
+        this(4);
+    }
+    public RasterPanel(int pix_per_well) {
         setLayout(new BorderLayout());
         setBackground(Color.black);
+        this.pix_per_well = pix_per_well;
         this.setMinimumSize(new Dimension(SIZE, SIZE));
         // view = new MovieFrameView();
        // updateView(true);
     }
+    public void setPixPerWell(int pixperwell) {
+        this.pix_per_well = pixperwell;
+        this.update(maincont);
+    }
 
+    public SubregionView getSubregionView() {
+        return view;
+    }
     @Override
     public void repaint() {
         super.repaint();
@@ -167,6 +179,8 @@ public class RasterPanel extends JPanel{
     public String update(ExplorerContext maincont) {
         p(" Update called in RasterPanel");
         //   this.context = context;
+        if (maincont == null) return null;
+        this.maincont = maincont;
         WellCoordinate coord = maincont.getAbsDataAreaCoord();
         if (coord == null) {
             // coord = new WellCoordinate(0,0);
@@ -191,7 +205,7 @@ public class RasterPanel extends JPanel{
             remove(gradient);
         }
          
-        view = new SubregionView(maincont);
+        view = new SubregionView(maincont, pix_per_well);
        // this.addKeyListener(view);
         p("Created SubregionView, frame "+maincont.getFrame());
         view.setFrame(maincont.getFrame());

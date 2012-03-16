@@ -243,7 +243,7 @@ public class Chunk implements SequenceIF {
     }
     
     private static void p(String msg) {
-        System.out.println("Chunk: " + msg);
+//  System.out.println("Chunk: " + msg);
         //Logger.getLogger( Chunk.class.getName()).log(Level.INFO, msg);
     }
 

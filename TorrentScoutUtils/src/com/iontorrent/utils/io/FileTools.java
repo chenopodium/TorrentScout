@@ -148,7 +148,7 @@ public class FileTools {
             cc.setCurrentDirectory(val);
 
         }
-     //   cc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        cc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         cc.setDialogTitle(title);
         cc.setAcceptAllFileFilterUsed(false);
         cc.setVisible(true);

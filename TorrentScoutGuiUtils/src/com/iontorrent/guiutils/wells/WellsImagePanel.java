@@ -73,20 +73,18 @@ public class WellsImagePanel extends NavigableImagePanel {
     private ExperimentContext exp;
     private int areaOffsetX;
     private int areaOffsetY;
+    private boolean useMainWidget;
+    private boolean useCornerWidgets;
     private ArrayList<Widget> widgets;
     private CoordWidget curwidget;
     CoordWidget mainwidget;
     CoordWidget corner1;
     CoordWidget corner2;
-    private int nrwidgets;
 
     public WellsImagePanel(final ExperimentContext exp, final int BORDER, final BufferedImage image, final double pixpercol, final double pixperrow, final int bucket_size, WellModel model, int nrwidgets) throws IOException {
         super(image);
-        this.nrwidgets = nrwidgets;
-        if (this.nrwidgets == 0) {
-            this.nrwidgets = 3;
-        }
-        p("Nr widgets: "+nrwidgets);
+        decideOnWidgets(nrwidgets);
+
         // this.setSelectionSize(100/bucket_size);
         this.BORDER = BORDER;
         this.exp = exp;
@@ -101,7 +99,9 @@ public class WellsImagePanel extends NavigableImagePanel {
         tipmanager.setDismissDelay(300000);
         tipmanager.setInitialDelay(1);
 
-        if (nrwidgets >0) createWidgets(this.nrwidgets);
+        if (this.useCornerWidgets || this.useMainWidget) {
+            createWidgets();
+        }
         addMouseListener(new MouseAdapter() {
 
             @Override
@@ -117,17 +117,12 @@ public class WellsImagePanel extends NavigableImagePanel {
                 curwidget = (CoordWidget) Widget.getClosest(ex, ey, widgets);
                 p("mouse clicked at " + ex + "/" + ey + ", found widget: " + curwidget);
 
-                if (mainwidget == null) {
+                if (mainwidget == null && !useCornerWidgets) {
                     // there are no widgets! so we have to ALWAYS select
                     p("no widgets - sending well selection");
-                    WellCoordinate well = getCoord(evt);
-                    wellselection = new WellSelection(well, well);
-                    if (exp != null) {
-                        wellselection.setOffx(exp.getColOffset());
-                        wellselection.setOffy(exp.getRowOffset());
-                    }
-                }
-                else if (curwidget != null) {
+                    wellcoord = getCoord(evt);
+
+                } else if (curwidget != null) {
                     curwidget.setSelected(true);
                     if (evt.getClickCount() > 1) {
                         widgetClicked();
@@ -144,23 +139,38 @@ public class WellsImagePanel extends NavigableImagePanel {
                             widgetClicked();
                         }
                     } else {
-                        setToolTipText(getToolTipText(evt));
-                        GuiUtils.showNonModelMsg("Widget", "Use the widgets to select a well or region, or drag the rectangle");
+                        if (mainwidget == null) {
+                            wellcoord = getCoord(evt);
+                        } else {
+                            setToolTipText(getToolTipText(evt));
+                            GuiUtils.showNonModelMsg("Widget", "Use the widgets to select a well or region, or drag the rectangle");
+                        }
                     }
                 }
 
             }
-            
+
             protected void widgetClicked() {
                 p("DOUBLE click on widget or rect, sending event");
-                if (curwidget == mainwidget) {
+                if (curwidget == mainwidget && mainwidget != null) {
                     p("creating new well coord");
                     wellcoord = mainwidget.getAbsoluteCoord();
                     //                p("Image mouse clicked, got coord: " + wellcoord);
                 } else {
                     p("Sending well selection");
-                    wellselection = new WellSelection(corner1.getAbsoluteCoord().getX(), corner1.getAbsoluteCoord().getY(),
-                            corner2.getAbsoluteCoord().getX(), corner2.getAbsoluteCoord().getY());
+                    int col1 = imageXToChip(corner1.getX());
+                    int col2 = imageXToChip(corner2.getX());
+                    int row1 = imageYToChip(corner1.getY());
+                    int row2 = imageYToChip(corner2.getY());
+                    col1 = Math.max(0, col1);
+                    col2 = Math.max(0, col2);
+                    row1 = Math.max(0, row1);
+                    row2 = Math.max(0, row2);
+
+                    WellCoordinate c1 = new WellCoordinate(Math.min(col1, col2), Math.min(row1, row2));
+                    WellCoordinate c2 = new WellCoordinate(Math.max(col1, col2) - 1, Math.max(row1, row2) + 1);
+
+                    wellselection = new WellSelection(c1, c2);
                     if (exp != null) {
                         wellselection.setOffx(exp.getColOffset());
                         wellselection.setOffy(exp.getRowOffset());
@@ -215,7 +225,9 @@ public class WellsImagePanel extends NavigableImagePanel {
 
             protected Rectangle createRect() {
                 // first time - check if inside
-                if (corner1 == null || corner2 == null) return null;
+                if (corner1 == null || corner2 == null) {
+                    return null;
+                }
                 int x1 = corner1.getX();
                 int x2 = corner2.getX();
                 int y1 = corner1.getY();
@@ -318,14 +330,33 @@ public class WellsImagePanel extends NavigableImagePanel {
 //        });
     }
 
-    public void moveViewTo(int x, int y) {
-        
-        
-           Point p = new Point(x, y);
-           p("Moving view to: "+p);
-           displayImageAtImage(p);
-      
+    protected void decideOnWidgets(int nrwidgets) {
+        if (nrwidgets == 0) {
+            nrwidgets = 3;
+        }
+        if (nrwidgets >= 2) {
+            this.useCornerWidgets = true;
+            p("Using corner widgets");
+        } else {
+            p("NOt using corner widget");
+        }
+        if (nrwidgets == 1 || nrwidgets > 2) {
+            p("Using main widget");
+            this.useMainWidget = true;
+        } else {
+            p("NOt using main widget");
+        }
     }
+
+    public void moveViewTo(int x, int y) {
+
+
+        Point p = new Point(x, y);
+        p("Moving view to: " + p);
+        displayImageAtImage(p);
+
+    }
+
     @Override
     public void mouseDragged(MouseEvent e) {
         //   p("Mouse dragged");
@@ -346,8 +377,11 @@ public class WellsImagePanel extends NavigableImagePanel {
                 getWell(curwidget);
                 // checking if corner is too far away
                 CoordWidget other = null;
-                if (curwidget == corner1) other = corner2;
-                else if (curwidget == corner2) other = corner1;
+                if (curwidget == corner1) {
+                    other = corner2;
+                } else if (curwidget == corner2) {
+                    other = corner1;
+                }
                 if (other != null) {
                     WellCoordinate c1 = curwidget.getAbsoluteCoord();
                     WellCoordinate c2 = other.getAbsoluteCoord();
@@ -356,28 +390,34 @@ public class WellsImagePanel extends NavigableImagePanel {
                     int dx = c1.getCol() - c;
                     int dy = c1.getRow() - r;
                     boolean changed = false;
-                    
+
                     if (Math.abs(dx) > 200) {
-                        if (dx > 0) dx = 200;
-                        else dx = -200;
-                        c = Math.max(exp.getColOffset(), (c1.getCol()-dx));
-                        c = Math.min(c, exp.getColOffset()+exp.getNrcols());
+                        if (dx > 0) {
+                            dx = 200;
+                        } else {
+                            dx = -200;
+                        }
+                        c = Math.max(exp.getColOffset(), (c1.getCol() - dx));
+                        c = Math.min(c, exp.getColOffset() + exp.getNrcols());
                         changed = true;
                     }
                     if (Math.abs(dy) > 200) {
-                        if (dy > 0) dy = 200;
-                        else dy = -200;
-                        r = Math.max(exp.getRowOffset(), (c1.getRow()-dy));
-                        r = Math.min(r, exp.getRowOffset()+exp.getNrrows());
+                        if (dy > 0) {
+                            dy = 200;
+                        } else {
+                            dy = -200;
+                        }
+                        r = Math.max(exp.getRowOffset(), (c1.getRow() - dy));
+                        r = Math.min(r, exp.getRowOffset() + exp.getNrrows());
                         changed = true;
                     }
-                   // p("dxd/dy="+dx+"/"+dy+" widget coord: "+c1+", other coord is now: "+c2);
+                    // p("dxd/dy="+dx+"/"+dy+" widget coord: "+c1+", other coord is now: "+c2);
                     if (changed) {
-                         c2.setCol(c);
-                         c2.setRow(r);
-                         Point imagep = getMiddleImageCoord(c2);
-                         other.setX(imagep.x);
-                         other.setY(imagep.y);
+                        c2.setCol(c);
+                        c2.setRow(r);
+                        Point imagep = getMiddleImageCoord(c2);
+                        other.setX(imagep.x);
+                        other.setY(imagep.y);
                     }
                 }
                 repaint();
@@ -410,10 +450,9 @@ public class WellsImagePanel extends NavigableImagePanel {
         }
     }
 
-    public void createWidgets(int nrwidgets) {
+    public void createWidgets() {
         // adding main widget
         widgets = new ArrayList<Widget>();
-        if (nrwidgets <= 0 ) return;
         WellCoordinate c = null;
         if (exp != null && exp.getWellContext() != null) {
             c = exp.getWellContext().getCoordinate();
@@ -423,32 +462,36 @@ public class WellsImagePanel extends NavigableImagePanel {
             int y = 10;
             c = new WellCoordinate(x, y);
         }
-        p("Creating main widget. Nr widgets: "+nrwidgets);
-        mainwidget = (CoordWidget) this.addWidget(c, Color.yellow, 0);
-        mainwidget.setMainWidget(true);
 
-        for (int i = 1; i < nrwidgets; i++) {
-            Color color = null;
-            if (i < widgetcolors.length) {
-                color = widgetcolors[i];
-            } else {
-                color = new Color((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255));
-            }
-            c = null;
-            if (exp.getWellContext().getSelection() != null) {
-                p("Got well selection, using those coordinate");
-                if (i == 1) {
-                    c = exp.getWellContext().getSelection().getCoord1();
-                } else if (i == 2) {
-                    c = exp.getWellContext().getSelection().getCoord2();
+        if (this.useMainWidget) {
+            mainwidget = (CoordWidget) this.addWidget(c, Color.yellow, 0);
+            mainwidget.setMainWidget(true);
+        }
+
+        if (this.useCornerWidgets) {
+            for (int i = 1; i < 3; i++) {
+                Color color = null;
+                if (i < widgetcolors.length) {
+                    color = widgetcolors[i];
+                } else {
+                    color = new Color((int) (Math.random() * 255), (int) (Math.random() * 255), (int) (Math.random() * 255));
                 }
+                c = null;
+                if (exp.getWellContext().getSelection() != null) {
+                    p("Got well selection, using those coordinate");
+                    if (i == 1) {
+                        c = exp.getWellContext().getSelection().getCoord1();
+                    } else if (i == 2) {
+                        c = exp.getWellContext().getSelection().getCoord2();
+                    }
+                }
+                if (c == null) {
+                    int x = 100;
+                    int y = 100;
+                    c = new WellCoordinate(x, y);
+                }
+                addWidget(c, color, i);
             }
-            if (c == null) {
-                int x = 100;
-                int y = 100;
-                c = new WellCoordinate(x, y);
-            }
-            addWidget(c, color, i);
         }
     }
 
@@ -485,8 +528,9 @@ public class WellsImagePanel extends NavigableImagePanel {
             if (mainwidget == null) {
                 // no widgets!
                 msg += "<br><b>Double Click</b> to select a region";
+            } else {
+                msg += "<br>Move a <b>widget</b> to select a well or region";
             }
-            else msg += "<br>Move a <b>widget</b> to select a well or region";
         }
         return "<html>" + msg + "</html>";
         //+" (im: "+coord.x+"/"+coord.y+"), chipy: "+(image.getHeight()-coord.y-BORDER)+
@@ -502,11 +546,13 @@ public class WellsImagePanel extends NavigableImagePanel {
         int ey = w.getY();
 
         WellCoordinate c = getCoord(new Point(ex, ey));
-        if (exp != null)this.exp.makeAbsolute(c);
+        if (exp != null) {
+            this.exp.makeAbsolute(c);
+        }
         w.setAbsoluteCoords(c);
 
         if (w == corner1 || w == corner2) {
-            //  p("SET SELECTTION ");
+            p("getWell(Widget) : got corner. SET SELECTTION:  " + corner1.getAbsoluteCoord().toString());
             setSelection(new Coords(corner1.getX(), corner1.getY()),
                     new Coords(corner2.getX(), corner2.getY()));
         }
@@ -519,8 +565,14 @@ public class WellsImagePanel extends NavigableImagePanel {
         Point imagep = getMiddleImageCoord(abscoord);
         //   Coords nav=this.panelToImageCoords(imagep);
         //     p(coord.toString() + "-> image " + imagep);
-        //  p("Creating widget  at " + imagep);
-        CoordWidget w = new CoordWidget(color, imagep.x, imagep.y, nr);
+        p("Creating widget  at " + imagep + "  for well " + abscoord);
+        int x = Math.max(imagep.x, BORDER);
+        int y = Math.max(imagep.y, BORDER);
+        if (image != null) {
+            x = Math.min(image.getWidth() - BORDER, x);
+            y = Math.min(image.getWidth() - BORDER, y);
+        }
+        CoordWidget w = new CoordWidget(color, (int) (x), (int) (y), nr);
         if (nr == 1) {
             corner1 = w;
         } else if (nr == 2) {
@@ -532,7 +584,7 @@ public class WellsImagePanel extends NavigableImagePanel {
     }
 
     public Point getMiddleImageCoord(WellCoordinate abscoord) {
-        
+
         return this.getImagePointFromWell(abscoord);
     }
 
@@ -592,26 +644,49 @@ public class WellsImagePanel extends NavigableImagePanel {
         return new Point(x, y);
     }
 
+    public int getBucketSize() {
+        return this.bucket_size;
+    }
+
+    /**
+     * @return the useMainWidget
+     */
+    public boolean isUseMainWidget() {
+        return useMainWidget;
+    }
+
+    /**
+     * @param useMainWidget the useMainWidget to set
+     */
+    public void setUseMainWidget(boolean useMainWidget) {
+        this.useMainWidget = useMainWidget;
+    }
+
+    /**
+     * @return the useCornerWidgets
+     */
+    public boolean isUseCornerWidgets() {
+        return useCornerWidgets;
+    }
+
+    /**
+     * @param useCornerWidgets the useCornerWidgets to set
+     */
+    public void setUseCornerWidgets(boolean useCornerWidgets) {
+        this.useCornerWidgets = useCornerWidgets;
+    }
+
     public interface WellModel {
 
         public double getValue(int col, int row);
     }
 
     private void getLatestSelection() {
-        final Collection<? extends WellSelection> selections = selectionSelection.allInstances();
-        if (!selections.isEmpty()) {
-            //  p("Getting last selection");
-            WellSelection selection = null;
-            Iterator<WellSelection> it = (Iterator<WellSelection>) selections.iterator();
-            while (it.hasNext()) {
-                selection = it.next();
-            }
-            if (selection != null) {
-              //  p("getLatestSelection: Got new well selection: " + selection);
-                setWellSelection(selection);
-                repaint();
-            }
-
+        WellSelection sel = exp.getWellContext().getSelection();
+        if (sel != null) {
+            p("getLatestSelection: Got new well selection: " + sel);
+            setWellSelection(sel);
+            repaint();
         }
 
     }
@@ -652,7 +727,6 @@ public class WellsImagePanel extends NavigableImagePanel {
         int row = imageYToChip(y);
         return new WellCoordinate(col, row);
     }
-    
 
     @Override
     public void mouseMoved(MouseEvent e) {
@@ -753,11 +827,11 @@ public class WellsImagePanel extends NavigableImagePanel {
 
     private void p(String msg) {
         System.out.println("WellsImagePanel: " + msg);
-        Logger.getLogger( WellsImagePanel.class.getName()).log(Level.INFO, msg);
+        Logger.getLogger(WellsImagePanel.class.getName()).log(Level.INFO, msg);
     }
 
     public void setWellSelection(WellSelection selection) {
-      //  p("SETWELLSELECTION CALLED");
+        p("SETWELLSELECTION CALLED:" + selection);
         // this.wellselection = selection;
 
         // also zoom to selection
@@ -772,15 +846,20 @@ public class WellsImagePanel extends NavigableImagePanel {
         if (corner1 != null) {
             corner1.setAbsoluteCoords(c1);
             corner2.setAbsoluteCoords(c2);
-           
+
             if (exp != null) {
                 if (exp.getWellContext().getCoordinate() != null) {
                     WellCoordinate c = new WellCoordinate(exp.getWellContext().getCoordinate());
                     exp.makeAbsolute(c);
-                    mainwidget.setAbsoluteCoords(c);
+                    if (mainwidget != null) {
+                        mainwidget.setAbsoluteCoords(c);
+                    }
+                } else {
+                    if (mainwidget != null) {
+                        mainwidget.setAbsoluteCoords(c1);
+                    }
                 }
-                else mainwidget.setAbsoluteCoords(c1);
-            }            
+            }
         }
 
         setSelection(start, end);

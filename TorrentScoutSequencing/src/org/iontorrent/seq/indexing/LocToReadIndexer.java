@@ -219,7 +219,7 @@ public class LocToReadIndexer extends AbstractLargeIndexer {
     }
 
     private static void p(String msg) {
-        System.out.println("LocToReadIndexer: " + msg);
+//  System.out.println("LocToReadIndexer: " + msg);
         //Logger.getLogger( LocToReadIndexer.class.getName()).log(Level.INFO, msg);
     }
 }

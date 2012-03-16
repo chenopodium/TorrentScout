@@ -101,7 +101,7 @@ public class FlowNrPanel extends JPanel {
             String s = f.toString();
             s = s.substring(1, s.length() - 1);
             txtFlow.setText(s);
-        }
+        } 
     }
 
     /** This method is called from within the constructor to

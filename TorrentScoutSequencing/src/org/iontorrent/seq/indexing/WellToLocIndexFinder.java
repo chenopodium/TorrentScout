@@ -95,7 +95,7 @@ public class WellToLocIndexFinder extends WellToLocIndexer {
     }
 
     private static void p(String msg) {
-        System.out.println("WellToLocIndexFinder: " + msg);
+//  System.out.println("WellToLocIndexFinder: " + msg);
         //Logger.getLogger( WellToLocIndexFinder.class.getName()).log(Level.INFO, msg);
     }
 
@@ -104,7 +104,7 @@ public class WellToLocIndexFinder extends WellToLocIndexer {
         File d = new File(this.getDictFile());
         boolean has= f.exists() && f.length() > 0 && d.exists() && d.length() > 0;
         if (!has) {
-            p("Did not find welltolocindex: "+f+" in directory "+d);
+       //     p("Did not find welltolocindex: "+f+" in directory "+d);
         }
         return has;
     }

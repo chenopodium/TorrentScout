@@ -1,25 +1,26 @@
 /*
-*	Copyright (C) 2011 Life Technologies Inc.
-*
-*   This program is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 2 of the License, or
-*   (at your option) any later version.
-*
-*   This program is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ *	Copyright (C) 2011 Life Technologies Inc.
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 2 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
 package com.iontorrent.utils.stats;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,15 +31,15 @@ import java.util.logging.Logger;
  */
 public class StatPoint {
 
-    double mean;
-    double var;
-    double min;
-    double max;
-    String name;
-    boolean isPercentage;
-    boolean isCount;
+    private double mean;
+    private double var;
+    private double min;
+    private double max;
+    private String name;
+    private boolean isPercentage;
+    private boolean isCount;
     private Object moreInfo;
-    ArrayList<Double> values;
+    private ArrayList<Double> values;
 
     public StatPoint(String name, boolean isPercentage) {
         this.name = name;
@@ -51,6 +52,14 @@ public class StatPoint {
         return values;
     }
 
+    public double getMean() {
+        return mean;
+    }
+
+    public double getVariance() {
+        return var;
+    }
+
     public double getMax() {
         max = Double.MIN_VALUE;
         for (Double d : values) {
@@ -59,6 +68,14 @@ public class StatPoint {
             }
         }
         return max;
+    }
+
+    public double getTotal() {
+        double tot = 0;
+        for (Double d : values) {
+            tot += d;
+        }
+        return tot;
     }
 
     public double getMin() {
@@ -86,10 +103,11 @@ public class StatPoint {
     @Override
     public String toString() {
         String res = name + ":";
+        DecimalFormat f = new DecimalFormat("#.###");
         if (isCount) {
             res += size();
         } else {
-            res += mean + "+-" + var + ", " + min + "-" + max + ", " + size() + " values";
+            res += f.format(mean) + "+-" +  f.format(this.getStdDev()) + ", " +  f.format(min) + "-" +  f.format(max) + ", " + size() + " values";
             if (getMoreInfo() != null) {
                 res += getMoreInfo().toString();
             }
@@ -98,10 +116,11 @@ public class StatPoint {
     }
 
     public String toCsv() {
+         DecimalFormat f = new DecimalFormat("#.###");
         if (isCount) {
             return name + ", " + size();
         } else {
-            return name + ", " + mean + ", " + var + ", " + min + ", " + max;
+            return name + ", " + f.format(mean)  + ", " + f.format(this.getStdDev()) + ", " + f.format(min)  + ", " + f.format(max) ;
         }
     }
 
@@ -141,8 +160,10 @@ public class StatPoint {
 
         var = computeVariance(values, mean);
     }
-  
 
+    public double getStdDev() {
+        return Math.sqrt(var);
+    }
     public double computeVariance(ArrayList<Double> values, double mean) {
         if (values.size() < 1) {
             return 1.0;
@@ -169,7 +190,7 @@ public class StatPoint {
             sum += diff * diff;
         }
 
-        double var = sum / (count - 1);
+        var = sum / (count - 1);
         //var = Math.min(100, var);
         return var;
     }
@@ -196,7 +217,7 @@ public class StatPoint {
     }
 
     private void p(String msg) {
-        System.out.println("StatPoint: " + msg);
-        //Logger.getLogger( StatPoint.class.getName()).log(Level.INFO, msg, ex);
+        //System.out.println("StatPoint: " + msg);
+        Logger.getLogger(StatPoint.class.getName()).log(Level.INFO, msg);
     }
 }

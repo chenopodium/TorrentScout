@@ -118,6 +118,7 @@ public abstract class AbstractHistoFunction implements HistoFunction {
         if (cont.getData() == null) {
             return false;
         }
+        cont.setHistoFunction(this);
         statpoint = new StatPoint(name, false);
         data = cont.getData();
         int size = data.getRaster_size();

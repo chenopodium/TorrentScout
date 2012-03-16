@@ -159,15 +159,20 @@ public class MultiAcqChartPanel extends JPanel {
                 out += "\n";
             }
         }
-        for (int f = 0; f < dataset.getItemCount(0); f++) {
-            double x = dataset.getXValue(0, f);
-            out += x + ",";
-            for (int s = 0; s < nr; s++) {
-                out += dataset.getY(s, f);
-                if (s + 1 < nr) {
-                    out += ", ";
-                } else {
-                    out += "\n";
+        if (nr > 0) {
+            for (int f = 0; f < dataset.getItemCount(0); f++) {
+                double x = dataset.getXValue(0, f);
+                out += x + ",";
+                for (int s = 0; s < nr; s++) {
+                    if (s <dataset.getSeriesCount() && f < dataset.getItemCount(s) ) {
+                        out += dataset.getY(s, f);
+                        if (s + 1 < nr) {
+                            out += ", ";
+                        } else {
+                            out += "\n";
+                        }
+                    }
+                    else out += "\n";
                 }
             }
         }
@@ -216,7 +221,7 @@ public class MultiAcqChartPanel extends JPanel {
                           if (subresults != null) {
                               subresult = subresults.get(key);
                           }
-                        p("adding to series " + dataresult.getName() + ":" + Arrays.toString(dataresult.getData()));
+                     //   p("adding to series " + dataresult.getName() + ":" + Arrays.toString(dataresult.getData()));
                         double[] nframedata = dataresult.getData();
                         double[] ndata = new double[nframedata.length];
                         double[] sdata = null;

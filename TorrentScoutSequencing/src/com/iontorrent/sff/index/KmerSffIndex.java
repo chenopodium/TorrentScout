@@ -378,7 +378,7 @@ public class KmerSffIndex extends AbstractLargeIndexer {
     }
 
     private static void p(String msg) {
-        System.out.println("KmerSffIndex: " + msg);
+//  System.out.println("KmerSffIndex: " + msg);
         //Logger.getLogger( KmerSffIndex.class.getName()).log(Level.INFO, msg);
     }
 

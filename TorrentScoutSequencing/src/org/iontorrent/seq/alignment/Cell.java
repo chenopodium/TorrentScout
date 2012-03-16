@@ -175,7 +175,7 @@ public class Cell {
     }
 
     private void p(String msg) {
-        System.out.println("Cell: " + msg);
+//  System.out.println("Cell: " + msg);
         //Logger.getLogger( Cell.class.getName()).log(Level.INFO, msg, ex);
     }
 }

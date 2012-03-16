@@ -21,13 +21,35 @@ import java.util.logging.Logger;
 import java.util.TimerTask;
 import javax.swing.JDialog;
 import com.sun.awt.AWTUtilities;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 
 public class Fader extends TimerTask {
 
     private JDialog jDialog;
+    double visibility;
+    boolean trans;
 
     public Fader(JDialog jDialog) {
         this.jDialog = jDialog;
+        visibility = AWTUtilities.getWindowOpacity(jDialog);
+
+        try {
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            GraphicsDevice[] gs =
+                    ge.getScreenDevices();
+            for (int j = 0; j < gs.length; j++) {
+                GraphicsDevice gd = gs[j];
+                GraphicsConfiguration[] gc =  gd.getConfigurations();
+                for (int i = 0; i < gc.length; i++) {
+                    if (AWTUtilities.isTranslucencyCapable(gc[i])) {
+                        trans = true;
+                    }
+                }
+            }
+        } catch (Exception e) {
+        }
     }
     //As Fader extends from Timer, it's the run() method which does the main job
 
@@ -35,11 +57,17 @@ public class Fader extends TimerTask {
     public void run() {
         //The opacity is reduced by 0,01f steps
         //If this value equals 0 (invisible), we close the JDialog with dispose()
-        if (AWTUtilities.getWindowOpacity(jDialog) > 0.01f){
-            AWTUtilities.setWindowOpacity(jDialog, AWTUtilities.getWindowOpacity(jDialog) - 0.01f);
-        }
-        else {
+        visibility = visibility - 0.01;
+        if (visibility < 0.01) {
             jDialog.dispose();
+        }
+        if (trans) {
+            float op = AWTUtilities.getWindowOpacity(jDialog);
+            if (op > 0.01) {
+                AWTUtilities.setWindowOpacity(jDialog, op - 0.01f);
+            } else {
+                jDialog.dispose();
+            }
         }
     }
 }

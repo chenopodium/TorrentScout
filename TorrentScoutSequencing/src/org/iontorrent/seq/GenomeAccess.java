@@ -69,7 +69,7 @@ public class GenomeAccess {
     }
     
     private static void p(String msg) {
-        System.out.println("GenomeAccess: " + msg);
+//  System.out.println("GenomeAccess: " + msg);
         //Logger.getLogger( GenomeAccess.class.getName()).log(Level.INFO, msg);
     }
 }

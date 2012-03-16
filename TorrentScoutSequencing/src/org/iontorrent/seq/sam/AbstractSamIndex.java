@@ -269,7 +269,7 @@ public abstract class AbstractSamIndex {
     }
 
     private static void p(String msg) {
-        System.out.println("AbstractSamIndex: " + msg);
+       // System.out.println("AbstractSamIndex: " + msg);
        Logger.getLogger(AbstractSamIndex.class.getName()).log(Level.INFO, msg);
     }
 }

@@ -124,7 +124,7 @@ public class LocToReadIndexFinder extends LocToReadIndexer {
     }
 
     private static void p(String msg) {
-        System.out.println("LocToReadIndexFinder: " + msg);
+//  System.out.println("LocToReadIndexFinder: " + msg);
         //Logger.getLogger( LocToReadIndexFinder.class.getName()).log(Level.INFO, msg);
     }
 

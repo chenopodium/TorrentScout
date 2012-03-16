@@ -95,6 +95,7 @@ public final class ProcessTopComponent extends TopComponent implements TaskListe
     private FiletypePanel typePanel;
     private RasterData data;
     boolean DOACTION;
+    private boolean automatic_nn;
 
     public ProcessTopComponent() {
         initComponents();
@@ -130,7 +131,7 @@ public final class ProcessTopComponent extends TopComponent implements TaskListe
         }
         p("flow changed");
         maincont.setFlow(f);
-        this.rasterViewCreate(true, null);
+        //this.rasterViewCreate(true, null);
         // recomputeChart();
     }
 
@@ -199,78 +200,16 @@ public final class ProcessTopComponent extends TopComponent implements TaskListe
             return;
         }
         Preferences p = NbPreferences.forModule(com.iontorrent.torrentscout.explorer.options.TorrentExplorerPanel.class);
-        int span = p.getInt("span", 5);
+        int span = p.getInt("span", 8);
         int size = p.getInt("masksize", 100);
+        automatic_nn = p.getBoolean("automatic_nn", true);
         maincont.setRasterSize(size);
         maincont.setSpan(span);
         maincont.setMedianFunction("median");
     }
 
-    public void maskIgnoreSelected() {
-        BitMask mask = (BitMask) this.boxignore.getSelectedItem();
-        if (mask != maincont.getIgnoreMask()) {
-            maincont.setIgnoreMask(mask);
-            if (raster != null) {
-                raster.redrawImages();
-
-            }
-        }
-    }
-
-    public void boxUseSelected() {
-        BitMask mask = (BitMask) this.boxuse.getSelectedItem();
-        if (mask != maincont.getSignalMask()) {
-            maincont.setSignalMask(mask);
-            if (raster != null) {
-                raster.redrawImages();
-
-            }
-        }
-    }
-
-    public void rebuildMaskComboBoxes() {
-        DOACTION = false;
-        boxignore.removeAllItems();
-        boxuse.removeAllItems();
-        boxempty.removeAllItems();
-
-        // boxMasks.addItem("No mask (use all wells)");
-        if (maincont.getMasks() != null && maincont.getMasks().size() > 0) {
-            int nr = maincont.getMasks().size();
-            //  boxempty.addItem("0. Use all wells");
-            for (BitMask m : maincont.getMasks()) {
-                this.boxignore.addItem(m);
-                this.boxempty.addItem(m);
-                this.boxuse.addItem(m);
-            }
-            DOACTION = true;
-
-            if (maincont.getIgnoreMask() != null) {
-
-                boxignore.setSelectedItem(maincont.getIgnoreMask());
-            } else {
-                boxignore.setSelectedIndex(0);
-            }
-            if (maincont.getSignalMask() != null) {
-                p("Got signal mask: " + maincont.getSignalMask());
-                boxuse.setSelectedItem(maincont.getSignalMask());
-            } else {
-                boxuse.setSelectedItem(maincont.getMasks().get(nr - 1));
-                maincont.setSignalMask(maincont.getMasks().get(nr - 1));
-                p("Got no signal mask, using " + maincont.getMasks().get(nr - 1));
-            }
-
-            if (maincont.getMasks().size() > 1) {
-                //
-            } else {
-                boxempty.addItem("All wells");
-            }
-            boxempty.setSelectedIndex(1);
-        }
-        DOACTION = true;
-
-    }
-
+   
+   
     protected boolean getExpContext() {
         //  Exception e = new Exception("showing stack trace");
         //   p(ErrorHandler.getString(e));
@@ -325,8 +264,7 @@ public final class ProcessTopComponent extends TopComponent implements TaskListe
             return;
         }
         maincont = ExplorerContext.getCurContext(expContext);
-        getUserPreferences();
-        rebuildMaskComboBoxes();
+        getUserPreferences();        
 
         rasterViewCreate(true, null);
 
@@ -339,28 +277,11 @@ public final class ProcessTopComponent extends TopComponent implements TaskListe
                 // rasterViewCreate(true, null);
             }
 
-            @Override
-            public void masksChanged() {
-                p("masks chnaged");
-                rebuildMaskComboBoxes();
-                //rasterViewCreate(true);
-            }
-
-//             @Override
-//            public void maskChanged(BitMask mask) {
-//                p("mask chnaged");
-//                rebuildMaskComboBoxes();
-//                //rasterViewCreate(true);
-//            }
-            @Override
-            public void maskAdded(BitMask mask) {
-                rebuildMaskComboBoxes();
-            }
-
+          
             @Override
             public void flowChanged(int flow) {
                 p("flow changed: " + flow);
-                //  rasterViewCreate(true, "Raw data");
+                rasterViewCreate(true, "Raw data");
             }
 
             @Override
@@ -397,8 +318,11 @@ public final class ProcessTopComponent extends TopComponent implements TaskListe
     }
 
     private RasterData computeNN(ProgressListener prog) {
-        p("computeNN. Maincont is: " + maincont);
-        if (maincont.getData() == null) {
+        return computeNN(prog, maincont.getData());
+    }
+    private RasterData computeNN(ProgressListener prog, RasterData rawdata) {
+     //   p("computeNN. Maincont is: " + maincont);
+        if (rawdata == null) {
             GuiUtils.showNonModalDialog("<html>I see no data yet - did you already pick a region?<br>"
                     + "(Even if you see something somewhere, if you didn't actually select a region, it might just show some sample data)</html>", "No data - region selected?");
             return null;
@@ -412,35 +336,28 @@ public final class ProcessTopComponent extends TopComponent implements TaskListe
             NearestNeighbor nn = new NearestNeighbor(span, maincont.getMedianFunction());
             BitMask ignore = maincont.getIgnoreMask();
             BitMask take = maincont.getBgMask();
-            if (boxignore.getSelectedIndex() > -1 && boxignore.getSelectedItem() instanceof BitMask) {
-                ignore = (BitMask) boxignore.getSelectedItem();
-            }
-            if (boxempty.getSelectedIndex() > -1 && boxempty.getSelectedItem() instanceof BitMask) {
-                take = (BitMask) boxempty.getSelectedItem();
-
-            }
-
+           
             if (take != null && take == ignore) {
                 JOptionPane.showMessageDialog(this, "You select the same mask for ignore and bg :-). \nYou should select another mask for the bg (or you get a null result. I will just return the old data.");
-                return maincont.getData();
+                return rawdata;
             }
             if (take != null && take.computePercentage() < 1) {
                 int ans = JOptionPane.showConfirmDialog(this, "<html>The bg mask only has " + take.computePercentage() + "% wells, do you want to still use it?"
                         + "<br><b>Did you already select a region?</b>"
                         + "<br>You might want to use the MaskEditor (and <b>refresh</b> the masks possibly) to check them</html>", "Few wells", JOptionPane.OK_CANCEL_OPTION);
                 if (ans == JOptionPane.CANCEL_OPTION) {
-                    return maincont.getData();
+                    return rawdata;
                 }
             }
             maincont.setBgMask(take);
             maincont.setIgnoreMask(ignore);
-            prog.setMessage("Masked neighbor subtraction: ignore mask " + ignore + " and empty mask " + take);
-            // RasterData nndata = nn.compute(maincont.getData(), mask, prog, span);
+            if (prog != null) prog.setMessage("Masked neighbor subtraction: ignore mask " + ignore + " and empty mask " + take);
+            // RasterData nndata = nn.compute(rawdata, mask, prog, span);
 
 
-            p("calling computebetter");
-            // if (boxslow.isSelected()) nndata =nn.computeSlow(maincont.getData(), ignore, take, prog, span);
-            nndata = nn.computeBetter(maincont.getData(), ignore, take, prog, span);
+         //   p("calling computebetter");
+            // if (boxslow.isSelected()) nndata =nn.computeSlow(rawdata, ignore, take, prog, span);
+            nndata = nn.computeBetter(rawdata, ignore, take, prog, span);
 
 
         } catch (Exception e) {
@@ -456,6 +373,8 @@ public final class ProcessTopComponent extends TopComponent implements TaskListe
 
     private void doHintAction() {
         String msg = "<html>You can do the following things here:<ul>";
+         msg += "<li><b>Pick the masks for NN subtraction in the Mask Editor Component</b></li>";
+         msg += "<li>You can change the automatic NN subtraction in the <b>Options/Explorer options tab</b></li>";
         msg += "<li>drag the cursors around in the left view with the <b>left</b> mouse button </li>";
         msg += "<li>overlay masks by selecting them in the drop down box and checking one of the 3 check boxes </li>";
         msg += "<li>move the yellow cursor (main cursor) around:";
@@ -611,19 +530,37 @@ public final class ProcessTopComponent extends TopComponent implements TaskListe
         }
         raster.update(load, maincont);
 
+        
         // paintImmediately(0,0,1000,1000);
         panImage.repaint();
         raster.repaint();
 
         if (load) {
             title = "Raw data";
-        }
+        }     
+        title += " flow "+maincont.getFlow()+"="+base;
         chartViewCreate(title);
 
         invalidate();
         revalidate();
         //this.paintAll(getGraphics());
         repaint();
+        if (load) {
+            if (this.automatic_nn) {
+                p("also doing nn - disable nn");
+                this.btnNN.setEnabled(false);
+                btnNN.setText("");
+                btnNN.setToolTipText("Automatically computing NN - check Explorer Options if you wish to change it!");            
+                RasterData data = computeNN(null);
+                maincont.setData(data);
+                rasterViewCreate(false,"After masked neighbor subtraction, span=" + maincont.getSpan() + ", BG mask=" + maincont.getBgMask() );
+            }
+            else {
+                this.btnNN.setEnabled(true);
+                btnNN.setText("Compute NN");
+                btnNN.setToolTipText("Click to compute NN bg subtraction - check Explorer Options if you wish <b>automate</b> this!");            
+            }
+        }
 
     }
 
@@ -650,18 +587,12 @@ public final class ProcessTopComponent extends TopComponent implements TaskListe
     private void initComponents() {
 
         toolbar = new javax.swing.JToolBar();
-        subtract = new javax.swing.JButton();
-        btnSelect = new javax.swing.JButton();
         btnNN = new javax.swing.JButton();
         btnreload = new javax.swing.JButton();
+        subtract = new javax.swing.JButton();
+        btnSelect = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
         hint = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        boxignore = new javax.swing.JComboBox();
-        jLabel2 = new javax.swing.JLabel();
-        boxempty = new javax.swing.JComboBox();
-        jLabel3 = new javax.swing.JLabel();
-        boxuse = new javax.swing.JComboBox();
         refresh = new javax.swing.JButton();
         info = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -670,32 +601,6 @@ public final class ProcessTopComponent extends TopComponent implements TaskListe
 
         toolbar.setRollover(true);
         toolbar.setOpaque(false);
-
-        subtract.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/iontorrent/torrentscout/explorer/minus.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(subtract, org.openide.util.NbBundle.getMessage(ProcessTopComponent.class, "ProcessTopComponent.subtract.text")); // NOI18N
-        subtract.setToolTipText(org.openide.util.NbBundle.getMessage(ProcessTopComponent.class, "ProcessTopComponent.subtract.toolTipText")); // NOI18N
-        subtract.setFocusable(false);
-        subtract.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        subtract.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        subtract.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                subtractActionPerformed(evt);
-            }
-        });
-        toolbar.add(subtract);
-
-        btnSelect.setIcon(new javax.swing.ImageIcon(getClass().getResource("/select-rectangular.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(btnSelect, org.openide.util.NbBundle.getMessage(ProcessTopComponent.class, "ProcessTopComponent.btnSelect.text")); // NOI18N
-        btnSelect.setToolTipText(org.openide.util.NbBundle.getMessage(ProcessTopComponent.class, "ProcessTopComponent.btnSelect.toolTipText")); // NOI18N
-        btnSelect.setFocusable(false);
-        btnSelect.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
-        btnSelect.setMargin(new java.awt.Insets(1, 1, 1, 1));
-        btnSelect.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSelectActionPerformed(evt);
-            }
-        });
-        toolbar.add(btnSelect);
 
         btnNN.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/iontorrent/torrentscout/explorer/system-run-3.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(btnNN, org.openide.util.NbBundle.getMessage(ProcessTopComponent.class, "ProcessTopComponent.btnNN.text")); // NOI18N
@@ -724,6 +629,32 @@ public final class ProcessTopComponent extends TopComponent implements TaskListe
         });
         toolbar.add(btnreload);
 
+        subtract.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/iontorrent/torrentscout/explorer/minus.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(subtract, org.openide.util.NbBundle.getMessage(ProcessTopComponent.class, "ProcessTopComponent.subtract.text")); // NOI18N
+        subtract.setToolTipText(org.openide.util.NbBundle.getMessage(ProcessTopComponent.class, "ProcessTopComponent.subtract.toolTipText")); // NOI18N
+        subtract.setFocusable(false);
+        subtract.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        subtract.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        subtract.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subtractActionPerformed(evt);
+            }
+        });
+        toolbar.add(subtract);
+
+        btnSelect.setIcon(new javax.swing.ImageIcon(getClass().getResource("/select-rectangular.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(btnSelect, org.openide.util.NbBundle.getMessage(ProcessTopComponent.class, "ProcessTopComponent.btnSelect.text")); // NOI18N
+        btnSelect.setToolTipText(org.openide.util.NbBundle.getMessage(ProcessTopComponent.class, "ProcessTopComponent.btnSelect.toolTipText")); // NOI18N
+        btnSelect.setFocusable(false);
+        btnSelect.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        btnSelect.setMargin(new java.awt.Insets(1, 1, 1, 1));
+        btnSelect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSelectActionPerformed(evt);
+            }
+        });
+        toolbar.add(btnSelect);
+
         btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/iontorrent/maskview/document-export.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(btnSave, org.openide.util.NbBundle.getMessage(ProcessTopComponent.class, "ProcessTopComponent.btnSave.text")); // NOI18N
         btnSave.setToolTipText(org.openide.util.NbBundle.getMessage(ProcessTopComponent.class, "ProcessTopComponent.btnSave.toolTipText")); // NOI18N
@@ -748,42 +679,6 @@ public final class ProcessTopComponent extends TopComponent implements TaskListe
             }
         });
         toolbar.add(hint);
-
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(ProcessTopComponent.class, "ProcessTopComponent.jLabel1.text")); // NOI18N
-        toolbar.add(jLabel1);
-
-        boxignore.setMaximumSize(new java.awt.Dimension(100, 20));
-        boxignore.setMinimumSize(new java.awt.Dimension(80, 18));
-        boxignore.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                boxignoreActionPerformed(evt);
-            }
-        });
-        toolbar.add(boxignore);
-
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(ProcessTopComponent.class, "ProcessTopComponent.jLabel2.text")); // NOI18N
-        toolbar.add(jLabel2);
-
-        boxempty.setMaximumSize(new java.awt.Dimension(100, 20));
-        boxempty.setMinimumSize(new java.awt.Dimension(80, 18));
-        boxempty.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                boxemptyActionPerformed(evt);
-            }
-        });
-        toolbar.add(boxempty);
-
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(ProcessTopComponent.class, "ProcessTopComponent.jLabel3.text")); // NOI18N
-        toolbar.add(jLabel3);
-
-        boxuse.setMaximumSize(new java.awt.Dimension(100, 20));
-        boxuse.setMinimumSize(new java.awt.Dimension(80, 18));
-        boxuse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                boxuseActionPerformed(evt);
-            }
-        });
-        toolbar.add(boxuse);
 
         refresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/iontorrent/torrentscout/explorer/view-refresh-3.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(refresh, org.openide.util.NbBundle.getMessage(ProcessTopComponent.class, "ProcessTopComponent.refresh.text")); // NOI18N
@@ -847,14 +742,6 @@ public final class ProcessTopComponent extends TopComponent implements TaskListe
 
     }//GEN-LAST:event_btnNNActionPerformed
 
-    private void boxignoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxignoreActionPerformed
-        if (DOACTION) {
-            maskIgnoreSelected();
-        }
-
-
-    }//GEN-LAST:event_boxignoreActionPerformed
-
     private void btnreloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnreloadActionPerformed
         rasterViewCreate(true, "Raw data");
 
@@ -870,34 +757,12 @@ public final class ProcessTopComponent extends TopComponent implements TaskListe
 
     }
 		//GEN-LAST:event_btnSaveActionPerformed
-    private void boxemptyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxemptyActionPerformed
-
-        if (!DOACTION) {
-            return;
-        }
-        BitMask mask = null;
-        if (boxempty.getSelectedItem() instanceof BitMask) {
-            mask = (BitMask) this.boxempty.getSelectedItem();
-        }
-
-        maincont.setBgMask(mask);
-        if (raster != null) {
-            raster.redrawImages();
-        }
-
-    }//GEN-LAST:event_boxemptyActionPerformed
 
     private void refreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshActionPerformed
-        rebuildMaskComboBoxes();
+        
         this.raster.redrawImages();
 
     }//GEN-LAST:event_refreshActionPerformed
-
-    private void boxuseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxuseActionPerformed
-        if (DOACTION) {
-            boxUseSelected();
-        }
-    }//GEN-LAST:event_boxuseActionPerformed
 
     private void subtractActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subtractActionPerformed
 
@@ -933,9 +798,15 @@ public final class ProcessTopComponent extends TopComponent implements TaskListe
             JOptionPane.showMessageDialog(this, "I could not load flow " + pan.getFlow() + ", " + pan.getFiletype() + ", @ " + maincont.getAbsDataAreaCoord());
             return;
         }
-
+        String what = "raw";
+        if (this.automatic_nn) {
+            GuiUtils.showNonModalMsg("Computing NN before subtraction");
+            sub = computeNN(null,sub);
+            what = "NN subtracted";
+        }
+            
         data.subtract(sub);
-        JOptionPane.showMessageDialog(this, "I subtracted data from " + pan.getFlow() + ", " + pan.getFiletype() + ", @ " + maincont.getAbsDataAreaCoord());
+        JOptionPane.showMessageDialog(this, "I subtracted the "+what+" data from " + pan.getFlow() + ", " + pan.getFiletype() + ", @ " + maincont.getAbsDataAreaCoord());
         this.rasterViewUpdate();
 
     }//GEN-LAST:event_subtractActionPerformed
@@ -945,18 +816,12 @@ public final class ProcessTopComponent extends TopComponent implements TaskListe
         doHintAction();     }//GEN-LAST:event_hintActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox boxempty;
-    private javax.swing.JComboBox boxignore;
-    private javax.swing.JComboBox boxuse;
     private javax.swing.JButton btnNN;
     private javax.swing.JButton btnSave;
     private javax.swing.JButton btnSelect;
     private javax.swing.JButton btnreload;
     private javax.swing.JButton hint;
     private javax.swing.JLabel info;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel panChart;
     private javax.swing.JPanel panImage;

@@ -60,7 +60,7 @@ public abstract class Directions {
     }
 
     private void p(String msg) {
-        System.out.println("Directions: " + msg);
+//  System.out.println("Directions: " + msg);
         //Logger.getLogger( Directions.class.getName()).log(Level.INFO, msg, ex);
     }
 }

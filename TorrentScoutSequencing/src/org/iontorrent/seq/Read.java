@@ -111,7 +111,7 @@ public class Read extends DNASequence{
     }
     
     private static void p(String msg) {
-        System.out.println("Read: " + msg);
+//  System.out.println("Read: " + msg);
         //Logger.getLogger( Read.class.getName()).log(Level.INFO, msg);
     }
 

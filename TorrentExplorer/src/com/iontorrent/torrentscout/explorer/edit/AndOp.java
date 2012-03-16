@@ -30,7 +30,7 @@ public class AndOp extends AbstractOperation{
 
     @Override
     public boolean execute(BitMask m1, BitMask m2, BitMask m3) {
-        return m3.subtract(m1, m2);
+        return m3.intersect(m1, m2);
     }   
     
 }

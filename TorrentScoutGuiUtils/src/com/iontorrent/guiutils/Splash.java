@@ -65,6 +65,7 @@ public class Splash extends JDialog {
       
         // 99 x dt. 1 sec -> 10ms
         Timer timer = new Timer();
+        
         timer.schedule(new Fader(this), 2000, 10*secs);
     }
 }

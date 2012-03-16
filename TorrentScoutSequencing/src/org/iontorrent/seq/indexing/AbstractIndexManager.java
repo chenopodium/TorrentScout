@@ -61,7 +61,7 @@ public abstract class AbstractIndexManager {
     }
     
     private static void p(String msg) {
-        System.out.println("AbstractIndexManager: " + msg);
+    //    System.out.println("AbstractIndexManager: " + msg);
         //Logger.getLogger( AbstractIndexManager.class.getName()).log(Level.INFO, msg);
     }
 }

@@ -95,6 +95,8 @@ public class MaskCalcPanel extends javax.swing.JPanel implements ActionListener 
             } else {
                 m3.setName("result");
             }
+            cont.masAdded(m3);
+            
         } else {
             m3 = (BitMask) boxes[2].getSelectedItem();
         }

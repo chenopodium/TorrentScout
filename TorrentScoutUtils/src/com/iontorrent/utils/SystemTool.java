@@ -137,7 +137,7 @@ public class SystemTool {
         } catch (Exception e) {
             val = "<UNREADABLE>";
         }
-        if (val != null) p("Got environment var "+prop+"="+val);
+       // if (val != null) p("Got environment var "+prop+"="+val);
         return val;
     }
 

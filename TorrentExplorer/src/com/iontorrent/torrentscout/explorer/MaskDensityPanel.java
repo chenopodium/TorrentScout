@@ -54,8 +54,7 @@ public abstract class MaskDensityPanel extends GeneralDensityPanel implements We
     protected int MAX_COORDS = 10000;
 
     public MaskDensityPanel(ExperimentContext exp) {
-        super(exp);
-        this.setNrWidgets(1);
+        super(exp, -1);
 
     }
 
@@ -92,6 +91,7 @@ public abstract class MaskDensityPanel extends GeneralDensityPanel implements We
         //   p("Creating default selection");
         imagePanel.setWellSelection(selection);
         publishSelection(selection);
+        repaint();
     }
 
     @Override

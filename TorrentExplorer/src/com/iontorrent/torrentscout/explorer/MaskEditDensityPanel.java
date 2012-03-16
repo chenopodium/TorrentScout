@@ -41,39 +41,65 @@ import java.util.ArrayList;
 public class MaskEditDensityPanel extends MaskDensityPanel {
 
     BitMask mask;
+WellCoordinate lastcoord;
 
     public MaskEditDensityPanel(ExperimentContext exp, BitMask mask) {
         super(exp);
         this.mask = mask;
-        
-        
-        //this.imagePanel.seta
+        addPopup("Flip bit");
+
     }
-    
+  protected void showWell(WellCoordinate rel, Graphics2D g, Color color, boolean fill) {        
+        int r = rel.getRow()- mask.getRelCoord().getRow();
+        int c = rel.getCol() - mask.getRelCoord().getCol();
+        super.showWell(c, r, g, color, fill);
+     }
+    @Override
+    protected void processPopupCommand(String cmd, WellCoordinate coord) {
+        p("processPopupCommand: Got popup command: " + cmd +" at "+coord);
+        if (cmd.startsWith("flip")) {
+            p("processPopupCommand:Got flip");
+            boolean val = mask.get(coord);
+            p("before: mask at "+coord+"="+val);
+            val = !val;
+         //   p("Val is now:"+val);
+            mask.set(coord, val);
+            lastcoord = new WellCoordinate(coord);
+            if (expcontext != null) this.expcontext.makeRelative(lastcoord);
+            setContext(mask, imagePanel.getBucketSize());
+            
+            p("after: mask at "+coord+"="+mask.get(coord));
+        }
+        else {
+            err("processPopupCommand:Unknown command: "+cmd);
+        }
+    }
 
     @Override
     protected void drawCoords(Graphics2D g, int cols, int maxy, int rows, int maxx) {
-        
+
         drawCoords(g, cols, maxy, rows, maxx, Color.lightGray);
-     
+
         g.setFont(new Font("sans serif", Font.BOLD, 12));
         g.setColor(Color.yellow);
-        g.drawString(mask.computePercentage() + "%", BORDER, 25);
+        g.drawString(mask.getName()+": "+mask.computePercentage() + "%", BORDER, 25);
 
     }
+
     @Override
     protected void afterImageCreated() {
-      if (imagePanel != null && mask != null) {
-          //p("SETTING AREA OFFSETS to the relative coords of the mask:"+mask.getRelCoord());
+        if (imagePanel != null && mask != null) {
+            //p("SETTING AREA OFFSETS to the relative coords of the mask:"+mask.getRelCoord());
             this.imagePanel.setAreaOffsetX(mask.getRelCoord().getCol());
             this.imagePanel.setAreaOffsetY(mask.getRelCoord().getRow());
-        }  
-      else p("NOT setting area offsts, image is "+imagePanel+", mask is: "+mask);
+        } else {
+            p("NOT setting area offsts, image is " + imagePanel + ", mask is: " + mask);
+        }
     }
 
     @Override
     protected void drawCoords(Graphics2D g, int cols, int maxy, int rows, int maxx, Color coordcolor) {
-       // p("Drawing coords");
+        // p("Drawing coords");
 
         int COORDDELTA = 100;
         //if (cols/BUCKET)
@@ -106,7 +132,19 @@ public class MaskEditDensityPanel extends MaskDensityPanel {
         offy += mask.getRelCoord().getRow();
 
         drawCoords(g, coordcolor, offx, cols, COORDDELTA, maxy, offy, rows, maxx);
+        // highlight selected well
+        if (this.expcontext != null && expcontext.getWellContext() != null && expcontext.getWellContext().getCoordinate()!= null) {
+            WellCoordinate rel = new WellCoordinate( expcontext.getWellContext().getCoordinate());
+            expcontext.makeRelative(rel);
+            showWell(rel, g, Color.yellow, true);
+        }
+        if (lastcoord != null) {
+            showWell(lastcoord, g, Color.red, false);
+        }
+
     }
+
+   
 
     @Override
     public double getValue(int col, int row) {
@@ -118,20 +156,24 @@ public class MaskEditDensityPanel extends MaskDensityPanel {
             //  p(" Got offset:"+offx+"/"+offy);
         }
 
-       
-        int d = mask.getMaskAt(col-offx, row-offy);
+
+        int d = mask.getMaskAt(col - offx, row - offy);
         return d;
 
     }
-     @Override
-     /** cooords are relative to this experiment or block */
+
+    @Override
+    /** cooords are relative to this experiment or block */
     protected ArrayList<WellCoordinate> getCoords(WellSelection sel) {
-        if (mask == null) return null;
+        if (mask == null) {
+            return null;
+        }
         ArrayList<WellCoordinate> coords = mask.getAllCoordsWithData(MAX_COORDS,
                 sel.getCoord1().getCol(), sel.getCoord1().getRow(), sel.getCoord2().getCol(), sel.getCoord2().getRow());
         return coords;
     }
-     @Override
+
+    @Override
     public String getToolTipText(MouseEvent e) {
         WellCoordinate coord = imagePanel.getCoord(e);
         if (wellcontext == null) {
@@ -146,13 +188,13 @@ public class MaskEditDensityPanel extends MaskDensityPanel {
         }
 
         offx += mask.getRelCoord().getCol();
-        offy += mask.getRelCoord().getRow(); 
+        offy += mask.getRelCoord().getRow();
         int realcol = coord.getX() + offx;
         int realrow = coord.getY() + offy;
-        
+
 
         // also get value
-        return "x/col=" + realcol + ", y/row=" + realrow + ", value "+coord+"=" + imagePanel.getValue(coord.getCol(), coord.getRow());
+        return "x/col=" + realcol + ", y/row=" + realrow + ", value " + coord + "=" + imagePanel.getValue(coord.getCol(), coord.getRow());
         //+" (im: "+coord.x+"/"+coord.y+"), chipy: "+(image.getHeight()-coord.y-BORDER)+
         //" ), bucket: "+bucket_size+", pixpercol: "+pixpercol+" BORDER="+BORDER;
 
@@ -161,6 +203,7 @@ public class MaskEditDensityPanel extends MaskDensityPanel {
     public void setContext(BitMask mask, int bucketsize) {
         this.wellcontext = expcontext.getWellContext();
         this.mask = mask;
+
         wellDensity = new BitWellDensity(mask, bucketsize);
 
         if (wellDensity == null) {
@@ -172,5 +215,7 @@ public class MaskEditDensityPanel extends MaskDensityPanel {
         } catch (IOException ex) {
             p(ErrorHandler.getString(ex));
         }
+
+        //this.imagePanel.moveViewTo(WIDTH, WIDTH);
     }
 }

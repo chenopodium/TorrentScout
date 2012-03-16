@@ -1,25 +1,26 @@
 /*
-*	Copyright (C) 2011 Life Technologies Inc.
-*
-*   This program is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 2 of the License, or
-*   (at your option) any later version.
-*
-*   This program is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ *	Copyright (C) 2011 Life Technologies Inc.
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 2 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
 package org.iontorrent.seq.sam;
 
+import com.iontorrent.utils.ErrorHandler;
 import com.iontorrent.utils.io.FileUtils;
 import java.io.File;
 import java.io.FileWriter;
@@ -69,8 +70,9 @@ public class SamUtils {
     String cache_dir;
     String result_dir;
     String plugin_dir;
+    static int errors;
 
-    public SamUtils(File abamfile,  String cache_dir, String result_dir, String plugin_dir) {
+    public SamUtils(File abamfile, String cache_dir, String result_dir, String plugin_dir) {
         // this.samfile = asamfile;
         this.bamfile = abamfile;
         this.result_dir = result_dir;
@@ -85,10 +87,10 @@ public class SamUtils {
         //this.welltosamindexfile = indexfile;
         int len = bamfile.getName().length();
         String name = bamfile.getName().toLowerCase();
-        int hashcode = len*10+name.charAt(len/2)+name.charAt(len/4);
-        genometoreadindexer = new LocToReadIndexFinder(result_dir,hashcode);
-         if (!genometoreadindexer.hasIndex()) {
-            genometoreadindexer = new LocToReadIndexFinder(plugin_dir,hashcode);
+        int hashcode = len * 10 + name.charAt(len / 2) + name.charAt(len / 4);
+        genometoreadindexer = new LocToReadIndexFinder(result_dir, hashcode);
+        if (!genometoreadindexer.hasIndex()) {
+            genometoreadindexer = new LocToReadIndexFinder(plugin_dir, hashcode);
         }
         if (!genometoreadindexer.hasIndex()) {
             genometoreadindexer = new LocToReadIndexFinder(cache_dir, hashcode);
@@ -101,8 +103,8 @@ public class SamUtils {
             welltolocdindexer = new WellToLocIndexFinder(cache_dir, hashcode);
         }
         if (!welltolocdindexer.hasIndex()) {
-            p("welltolocindexer.hasIndex is false: Got no well to loc index at all. Checked the dirs:"
-                    + "\nplugin dir: "+plugin_dir+"\nresults dir: "+result_dir+"\ncache dir: "+cache_dir);
+            //      p("welltolocindexer.hasIndex is false: Got no well to loc index at all. Checked the dirs:"
+            //              + "\nplugin dir: "+plugin_dir+"\nresults dir: "+result_dir+"\ncache dir: "+cache_dir);
         }
 
     }
@@ -137,6 +139,7 @@ public class SamUtils {
 //    public void setWellToSamIndexFile(File f) {
 //        this.welltosamindexfile = f;
 //    }
+
     public boolean hasGenomeToReadIndex() {
         return genometoreadindexer.hasIndex();
     }
@@ -180,32 +183,34 @@ public class SamUtils {
         if (readlocfile.exists()) {
             p("Readlocfile " + readlocfile + "  already exists, won't overwrite it");
         } else {
-          //  SAMFileWriterFactory fact = new SAMFileWriterFactory();
-             int count = 0;
-             p("Creating readlocfile " + readlocfile + "  from BAM " + bamfile);
+            //  SAMFileWriterFactory fact = new SAMFileWriterFactory();
+            int count = 0;
+            p("Creating readlocfile " + readlocfile + "  from BAM " + bamfile);
+            
             try {
                 //ValidationStringency.DEFAULT_STRINGENCY = ValidationStringency.SILENT;
+                SAMFileReader.setDefaultValidationStringency(SAMFileReader.ValidationStringency.SILENT);
                 final SAMFileReader inputSam = new SAMFileReader(bamfile);
                 inputSam.setValidationStringency(ValidationStringency.SILENT);
-                
+
                 PrintWriter out = null;
                 try {
                     out = new PrintWriter(new FileWriter(readlocfile));
                 } catch (IOException ex) {
-                    Exceptions.printStackTrace(ex);
+                    err("Error in createing printwriter on "+readlocfile+":"+ ErrorHandler.getString(ex));
                 }
                 if (out == null) {
                     err("Could not create index file " + readlocfile);
                     return;
                 }
-               
+
                 for (final SAMRecord rec : inputSam) {
                     ReadPos rp = new ReadPos();
-                    
+
                     rp.readname = rec.getReadName();
                     int start = rec.getAlignmentStart();
                     int end = rec.getAlignmentEnd();
-                    if (start > 0 || end > 0 && rp.readname!= null) {
+                    if (start > 0 || end > 0 && rp.readname != null) {
                         rp.pos = Math.min(start, end);
                         rp.endpos = Math.max(start, end);
                         out.println(rp.pos + "\t" + rp.toString());
@@ -214,14 +219,13 @@ public class SamUtils {
                 }
                 out.close();
                 inputSam.close();
+            } catch (Exception e) {
+                err("createReadLocationsIndexFile: " + e.getMessage());
             }
-            catch (Exception e) {
-                err("createReadLocationsIndexFile: "+e.getMessage());
-            }
-            if (count ==0) {
+            if (count == 0) {
                 warn("Found NO records in BAM file! Won't do index");
                 return;
-                       
+
             }
         }
 
@@ -389,8 +393,15 @@ public class SamUtils {
         }
         read.setFlags(rec.getFlags());
 
-
-        Object md = rec.getAttribute("MD");
+        rec.setValidationStringency(ValidationStringency.SILENT);
+        Object md = null;
+        try { 
+            md = rec.getAttribute("MD");
+        }
+        catch (Exception e) {
+            p(ErrorHandler.getString(e));
+            p("Should not get an exception here if we use SILENT!");
+        }
         if (md == null) {
             read.setMd("");
         } else {
@@ -406,6 +417,9 @@ public class SamUtils {
             read.setReferenceName(rec.getReferenceName());
             //    read.setFastaFile(getFastaFile(rec));
             read.setCommandLine(getCommandLine(rec));
+
+            // read.setReferenceName(rec.getReferenceName());
+
             read.setAlignmentStart(rec.getAlignmentStart());
             read.setAlignmentEnd(rec.getAlignmentEnd());
             read.setCigarString(rec.getCigarString());
@@ -465,7 +479,7 @@ public class SamUtils {
         try {
             refchars = SequenceUtil.makeReferenceFromAlignment(rec, true);
         } catch (Exception e) {
-             //   p("Got no MD tag for: " + rec.getReadName());
+            //   p("Got no MD tag for: " + rec.getReadName());
         }
 
 
@@ -488,9 +502,9 @@ public class SamUtils {
 
         if (ref == null) {
             errmsg = "Was not able to get sequence " + start + "-" + end + " from " + rec.getReadName();
-          //  p(errmsg);
-         //   p("Header is: "+rec.getHeader().toString());
-          //  p("Cigar string: "+ rec.getCigarString());
+            //  p(errmsg);
+            //   p("Header is: "+rec.getHeader().toString());
+            //  p("Cigar string: "+ rec.getCigarString());
 //            Exception e = new Exception("test");
 //            e.printStackTrace();
             int len = end - start + 1;
@@ -533,7 +547,7 @@ public class SamUtils {
     }
 
     public boolean hasBai() {
-         if (!bamfile.exists()) {
+        if (!bamfile.exists()) {
             errmsg = "Bam file " + bamfile + " does not exist";
             err(errmsg);
             return false;
@@ -546,14 +560,18 @@ public class SamUtils {
             indexFile = new File(indexFileBase + ".bam.bai");
         }
         if (!indexFile.exists()) {
-            errmsg = "Bam file index " + indexFile + " does not exist, please create the index first... ";            
+            errmsg = "Bam file index " + indexFile + " does not exist, please create the index first... ";
             err(errmsg);
             return false;
+        } else {
+            return true;
         }
-        else return true;
     }
+
     public ArrayList<SAMRecord> findRecords(long posInGenome, String refname) {
-        if (!hasBai()) return null;
+        if (!hasBai()) {
+            return null;
+        }
         final SAMFileReader input = new SAMFileReader(bamfile);
 
         CloseableIterator<SAMRecord> it = input.query(refname, (int) posInGenome, (int) posInGenome, false);
@@ -577,7 +595,7 @@ public class SamUtils {
             return null;
         }
         List<CigarElement> cigar = rec.getCigar().getCigarElements();
-        
+
 
         int readlen = rec.getReadLength();
         int kmerlen[] = new int[readlen + 1];
@@ -600,90 +618,96 @@ public class SamUtils {
         int start1 = 0;
         int start2 = 0;
         ArrayList<Cell> cells = new ArrayList<Cell>();
-        for (CigarElement el : cigar) {
-            int len = el.getLength();
-            String OP = el.getOperator().name().toUpperCase();
-            Cell cell = new Cell();
-            cell.set(pos1, pos2, 0);
-            cells.add(cell);
+        try {
+            for (CigarElement el : cigar) {
+                int len = el.getLength();
+                String OP = el.getOperator().name().toUpperCase();
+                Cell cell = new Cell();
+                cell.set(pos1, pos2, 0);
+                cells.add(cell);
 
-            //		System.out.print(el.getOperator().name()+":"+el.getLength()+" " );
-            if (OP.equals("I")) {
-                // totins += len;
-                for (int i = 0; i < len; i++) {
-                    alref = alref.append("_");
-                    char base = readseq.charAt(posinseq2);
-                    byte b = DNASequence.getCharToByte(base);
-                    
-                    alread = alread.append(base);
-                    mark = mark.append(" ");
-                    posinseq2++;
-                    pos2++;
+                //		System.out.print(el.getOperator().name()+":"+el.getLength()+" " );
+                if (OP.equals("I")) {
+                    // totins += len;
+                    for (int i = 0; i < len && posinseq2 < readseq.length(); i++) {
+                        alref = alref.append("_");
+                        char base = readseq.charAt(posinseq2);
+                        byte b = DNASequence.getCharToByte(base);
 
-                }
-            } else if (OP.equals("D")) {
-                //  totdel += len;
+                        alread = alread.append(base);
+                        mark = mark.append(" ");
+                        posinseq2++;
+                        pos2++;
 
-                for (int i = 0; i < len; i++) {
-                    alref = alref.append(ref.getBaseChar(posinref1));
-                    alread = alread.append("_");
-                    mark = mark.append(" ");
-                    pos1++;
-                    posinref1++;
-                }
-            } else if (OP.equals("M") || OP.equals("X") || OP.equals("=")) {
-                if (len < kmerlen.length) {
-                    kmerlen[len]++;
-                }
-                if (len > maxkmer) {
-                    maxkmer = len;
-                }
-                for (int i = 0; i < len; i++) {
-                    char base = readseq.charAt(posinseq2);
-                    if (ref.getBaseChar(posinref1)=='x' || ref.getBaseChar(posinref1)=='X') {
-                        ref.setBaseCharAt(posinref1, base);
-                      //  p("putting "+base+" at "+posinref1);
                     }
-                    char baseref = ref.getBaseChar(posinref1);
-                    alref = alref.append(baseref);
-                    alread = alread.append(base);
-                    
-                    if (base == baseref) {
-                        mark = mark.append("|");
-                    } else {
-                        mark = mark.append(":");
+                } else if (OP.equals("D")) {
+                    //  totdel += len;
+
+                    for (int i = 0; i < len && posinref1 < ref.getLength(); i++) {
+                        alref = alref.append(ref.getBaseChar(posinref1));
+                        alread = alread.append("_");
+                        mark = mark.append(" ");
+                        pos1++;
+                        posinref1++;
                     }
-//                    if (OP.equals("X")) {
-//                        mark = mark.append(":");
-//                    } else {
-//                        mark = mark.append("|");
-//                    }
-                    posinseq2++;
-                    posinref1++;
-                    pos1++;
-                    pos2++;
+                } else if (OP.equals("M") || OP.equals("X") || OP.equals("=")) {
+                    if (len < kmerlen.length) {
+                        kmerlen[len]++;
+                    }
+                    if (len > maxkmer) {
+                        maxkmer = len;
+                    }
+                    for (int i = 0; i < len && posinseq2 < readseq.length() && posinref1 < ref.getLength(); i++) {
+                        char base = readseq.charAt(posinseq2);
+                        if (ref.getBaseChar(posinref1) == 'x' || ref.getBaseChar(posinref1) == 'X') {
+                            ref.setBaseCharAt(posinref1, base);
+                            //  p("putting "+base+" at "+posinref1);
+                        }
+                        char baseref = ref.getBaseChar(posinref1);
+                        alref = alref.append(baseref);
+                        alread = alread.append(base);
 
-                }
-                /** 
-                 * M 0 alignment match (can be a sequence match or mismatch)
-                I 1 insertion to the reference
-                D 2 deletion from the reference
-                N 3 skipped region from the reference
-                S 4 soft clipping (clipped sequences present in SEQ)
-                H 5 hard clipping (clipped sequences NOT present in SEQ)
-                P 6 padding (silent deletion from padded reference)
-                = 7 sequence match
-                X 8 sequence mismatch
-                 */
-            } else if (OP.equals("S")) { // SKIP
-                if (posinseq2 == 0) {
-                    start2 = len;
-                }
-                posinseq2 += len;
+                        if (base == baseref) {
+                            mark = mark.append("|");
+                        } else {
+                            mark = mark.append(":");
+                        }
+                        posinseq2++;
+                        posinref1++;
+                        pos1++;
+                        pos2++;
 
-            } else {
-                p("Unknown cigar element:" + el.getOperator().name());
+                    }
+                    /** 
+                     * M 0 alignment match (can be a sequence match or mismatch)
+                    I 1 insertion to the reference
+                    D 2 deletion from the reference
+                    N 3 skipped region from the reference
+                    S 4 soft clipping (clipped sequences present in SEQ)
+                    H 5 hard clipping (clipped sequences NOT present in SEQ)
+                    P 6 padding (silent deletion from padded reference)
+                    = 7 sequence match
+                    X 8 sequence mismatch
+                     */
+                } else if (OP.equals("S")) { // SKIP
+                    if (posinseq2 == 0) {
+                        start2 = len;
+                    }
+                    posinseq2 += len;
+
+                } else if (OP.equals("H")) { // SKIP
+                    // do nothing
+
+                } else {
+                    if (errors < 10) {
+                        p("Unknown cigar element:" + el.getOperator().name());
+                        errors++;
+                    }
+                }
             }
+
+        } catch (Exception e) {
+            err("Problem in extracting alignment: " + ErrorHandler.getString(e));
         }
 /// include skipped bases!
         // NO KEY!
@@ -711,11 +735,12 @@ public class SamUtils {
         return al;
 
     }
+
     public int[] computeQlengths(SAMRecord rec, int[] errorValues) {
         Alignment al = extractAlignment(rec);
         return al.computeQlengths(errorValues);
     }
-   
+
     /** ================== LOGGING ===================== */
     private static void err(String msg, Exception ex) {
         Logger.getLogger(SamUtils.class.getName()).log(Level.SEVERE, msg, ex);
@@ -731,7 +756,7 @@ public class SamUtils {
     }
 
     private static void p(String msg) {
-        System.out.println("SamUtils: " + msg);
+//  System.out.println("SamUtils: " + msg);
         //Logger.getLogger( SamUtils.class.getName()).log(Level.INFO, msg, ex);
     }
 }

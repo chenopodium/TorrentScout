@@ -392,7 +392,7 @@ public class MySamTextReader {
     }
 
     private void p(String msg) {
-        System.out.println("MySamTextReader: " + msg);
+//  System.out.println("MySamTextReader: " + msg);
         //  Logger.getLogger( MySamTextReader.class.getName()).log(Level.INFO, msg);
     }
 }

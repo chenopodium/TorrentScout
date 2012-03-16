@@ -51,13 +51,13 @@ public class SamUtilsTest {
 //
 //    @Test
 //    public void testcreateReadLocationsIndexFile() {
-//         System.out.println("createIndex");       
+// //  System.out.println("createIndex");       
 //        instance.createReadLocationsIndexFile();
 //    }
     
      @Test
     public void testFindReads() {
-        System.out.println("testFindReads");       
+//  System.out.println("testFindReads");       
         
         ArrayList<ReadPos> res = instance.findReadsByGenomePos(7984);
         p("Got read pos: "+res);
@@ -69,7 +69,7 @@ public class SamUtilsTest {
 //     */
 //    @Test
 //    public void testCreateIndex() {
-//        System.out.println("createIndex");       
+////  System.out.println("createIndex");       
 //        instance.createIndex();
 //        assertEquals(instance.hasSamIndex(), true);            
 //    }
@@ -80,7 +80,7 @@ public class SamUtilsTest {
      */
 //    @Test
 //    public void testGetCommandLine() {
-//        System.out.println("getCommandLine");
+////  System.out.println("getCommandLine");
 //        SAMRecord rec = instance.getSequenceByIndex(x, y);
 //        String result = SamUtils.getCommandLine(rec);
 //        p("command line: "+result);
@@ -91,7 +91,7 @@ public class SamUtilsTest {
 //     */
 //    @Test
 //    public void testGetFastaFile() {
-//        System.out.println("getFastaFile");
+////  System.out.println("getFastaFile");
 //       SAMRecord rec = instance.getSequenceByIndex(x, y);
 //        String result = SamUtils.getFastaFile(rec);
 //       p("Fasta file: "+result);
@@ -103,7 +103,7 @@ public class SamUtilsTest {
      */
 //    @Test
 //    public void testGetReferenceSequence() {
-//        System.out.println("getReferenceSequence");
+////  System.out.println("getReferenceSequence");
 //        SAMRecord rec = instance.getSequenceByIndex(x, y);
 //        DNASequence result = SamUtils.getReferenceSequence(rec);
 //        p("ref seq:"+result);
@@ -114,7 +114,7 @@ public class SamUtilsTest {
 //     */
 //    @Test
 //    public void testGetReferenceNames() {
-//        System.out.println("getReferenceNames");
+////  System.out.println("getReferenceNames");
 //        ArrayList result = instance.getReferenceNames();
 //        p("refrence names: "+result.toString());
 //    }
@@ -124,7 +124,7 @@ public class SamUtilsTest {
      */
 //    @Test
 //    public void testFindRecords() {
-//        System.out.println("findRecords");
+////  System.out.println("findRecords");
 //        long posInGenome = 0L;
 //        String refname = instance.getReferenceNames().get(0);
 //                
@@ -135,6 +135,6 @@ public class SamUtilsTest {
    
     
     private void p(String s) {
-        System.out.println("TestSamUtils: "+s);
+//  System.out.println("TestSamUtils: "+s);
     }
 }

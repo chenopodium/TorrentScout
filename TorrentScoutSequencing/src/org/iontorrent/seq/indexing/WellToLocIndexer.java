@@ -224,7 +224,7 @@ public class WellToLocIndexer extends AbstractLargeIndexer {
     }
 
     private static void p(String msg) {
-        System.out.println("WellToLocIndexer: " + msg);
+//  System.out.println("WellToLocIndexer: " + msg);
         //Logger.getLogger( WellToLocIndexer.class.getName()).log(Level.INFO, msg);
     }
 }

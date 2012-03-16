@@ -31,6 +31,32 @@ import java.util.logging.Logger;
  */
 public class StringTools {
 
+    /** pattern can be 0,1,2 or 0-1,3,4-7 */
+    public static ArrayList<Integer> parseInts(String pattern) {
+        // check for -
+        ArrayList<String> items = StringTools.parseList(pattern, ",");
+        ArrayList<Integer> flows = new ArrayList<Integer>();
+        for (String it : items) {
+            if (it.indexOf("-") > 0) {
+                ArrayList<Integer> nrs = StringTools.parseListtoInt(it, "-");
+                if (nrs != null && nrs.size() == 2) {
+                    int a = nrs.get(0);
+                    int b = nrs.get(1);
+                    for (int f = a; f <= b; f++) {
+                        flows.add(f);
+                    }
+                }
+            } else {
+                try {
+                    int f = Integer.parseInt(it);
+                    flows.add(f);
+                } catch (Exception e) {
+                }
+            }
+        }
+        return flows;
+    }
+
     public static String addNL(String desc, String nl, int WIDTH) {
         if (desc == null || desc.length() < WIDTH) {
             return desc;

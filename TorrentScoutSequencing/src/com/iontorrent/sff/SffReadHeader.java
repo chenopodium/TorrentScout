@@ -180,7 +180,7 @@ protected int read(RandomAccessFile in) throws Exception {
     }
 
     private void p(String msg) {
-        System.out.println("SffReadHeader: " + msg);
+//  System.out.println("SffReadHeader: " + msg);
         //Logger.getLogger( SffReadHeader.class.getName()).log(Level.INFO, msg, ex);
     }
 }

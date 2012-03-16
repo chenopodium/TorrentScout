@@ -65,7 +65,7 @@ public class SequenceReader {
     }
 
     private void p(String msg) {
-        System.out.println("SequenceReader: " + msg);
+//  System.out.println("SequenceReader: " + msg);
         //Logger.getLogger( SequenceReader.class.getName()).log(Level.INFO, msg, ex);
     }
 }

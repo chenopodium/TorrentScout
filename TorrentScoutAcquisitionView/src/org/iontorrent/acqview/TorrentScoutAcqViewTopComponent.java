@@ -78,6 +78,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
+import javax.swing.event.ChangeEvent;
 import org.iontorrent.acqview.options.RawOptionsPanel;
 import org.iontorrent.acqview.utils.AlgParamPanel;
 import com.iontorrent.expmodel.FiletypeListener;
@@ -87,6 +88,8 @@ import com.iontorrent.guiutils.flow.FlowNrPanel;
 import com.iontorrent.guiutils.flow.SubtractPanel;
 import com.iontorrent.utils.ToolBox;
 import java.util.Arrays;
+import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeListener;
 import org.iontorrent.acqview.utils.ParamChangeListener;
 import org.iontorrent.seq.Read;
 
@@ -129,10 +132,13 @@ public final class TorrentScoutAcqViewTopComponent extends TopComponent
     private transient final InstanceContent wellCoordContent = LookupUtils.getPublisher(WellCoordinate.class);
     private WellContext cur_context;
     private MultiAcqPanel acqPanel;
+    private MultiFlowPanel cmulti;
+    
     // private JScrollPane scroll;
     private JLabel lblMsg;
     private RawType filetype;
     private JPanel centerPanel;
+    private JTabbedPane charttab;
     private CurveSelectionPanel curvePanel;
     //  private JLabel lblMin;
     //   WellFlowData data;
@@ -146,6 +152,7 @@ public final class TorrentScoutAcqViewTopComponent extends TopComponent
     private WellContextFilter filter;
     private ProgressHandle progress;
     private WellFlowDataResult nnresult;
+    private int curtab;
     private transient final Lookup.Result<WellSelection> selectionSelection =
             LookupUtils.getSubscriber(WellSelection.class, new WellSelectionListener());
     private transient final Lookup.Result<ExperimentContext> expContextResults =
@@ -159,8 +166,11 @@ public final class TorrentScoutAcqViewTopComponent extends TopComponent
     LoadRawDataTask loadrawdatatask;
     WellAlgorithmTask zeromertask;
     WellAlgorithmTask nntask;
-    private DataTransPanel transPanel;
-    
+    private DataTransPanel transPanel;    
+    private WellFlowDataResult[] results;
+    private int[] flownr;
+    private boolean[] taskdone;
+
     public TorrentScoutAcqViewTopComponent() {
         initComponents();
 
@@ -170,7 +180,17 @@ public final class TorrentScoutAcqViewTopComponent extends TopComponent
 
         initPanNorth();
         initMainPanel();
-        topPanel.add("West", centerPanel);
+        add("Center", centerPanel);
+        charttab = new JTabbedPane();
+        centerPanel.add("Center", charttab);
+        charttab.addChangeListener(new ChangeListener() {
+
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                curtab = charttab.getSelectedIndex();
+            }
+            
+        });
         loadPreferences();
         this.setOpaque(false);
     }
@@ -264,7 +284,7 @@ public final class TorrentScoutAcqViewTopComponent extends TopComponent
 
             @Override
             public void actionPerformed(ActionEvent e) {
-              //  GuiUtils.showNonModalMsg("Refreshing view...", 1);
+                //  GuiUtils.showNonModalMsg("Refreshing view...", 1);
                 doRefreshAction();
 
             }
@@ -285,14 +305,13 @@ public final class TorrentScoutAcqViewTopComponent extends TopComponent
         });
 
         //  bar.add(btnAlg);
-        topPanel.setOpaque(false);
-        topPanel.add("North", panNorth);
+        add("North", panNorth);
 
         flowPanel = new FlowNrPanel(this);
         flowPanel.setText("0");
         //flows = flowPanel.getFlows();
 
-        
+
         subPanel = new SubtractPanel(new FlowListener() {
 
             @Override
@@ -313,6 +332,7 @@ public final class TorrentScoutAcqViewTopComponent extends TopComponent
     private void selectCoordinate() {
         SingleCoordSelectionPanel pan = new SingleCoordSelectionPanel();
 
+        if (expContext ==null) expContext = GlobalContext.getContext().getExperimentContext();
         if (expContext.getRowOffset() > 0 || expContext.getColOffset() > 0) {
             pan.setCoord1(new WellCoordinate(expContext.getColOffset(), expContext.getRowOffset()));
         }
@@ -360,6 +380,9 @@ public final class TorrentScoutAcqViewTopComponent extends TopComponent
         if (acqPanel != null) {
             acqPanel.clear();
         }
+        if (cmulti != null) {
+            cmulti.clear();
+        }
         if (cur_context != null) {
             DataAccessManager manager = DataAccessManager.getManager(cur_context);
             manager.clear();
@@ -375,7 +398,7 @@ public final class TorrentScoutAcqViewTopComponent extends TopComponent
 
     private void addMsg(String txt) {
         lblMsg = new JLabel("<html>" + txt + "</html>");
-        centerPanel.add("Center", lblMsg);
+        centerPanel.add("North", lblMsg);
         centerPanel.repaint();
         this.invalidate();
         this.revalidate();
@@ -411,7 +434,7 @@ public final class TorrentScoutAcqViewTopComponent extends TopComponent
             }
         });
         msgpanel.add("Center", new FlowPanel(btn));
-        centerPanel.add("Center", msgpanel);
+        centerPanel.add("North", msgpanel);
         centerPanel.repaint();
         this.invalidate();
         this.revalidate();
@@ -457,7 +480,7 @@ public final class TorrentScoutAcqViewTopComponent extends TopComponent
             }
         });
         msgpanel.add("Center", new FlowPanel(btn));
-        centerPanel.add("Center", msgpanel);
+        centerPanel.add("North", msgpanel);
         centerPanel.repaint();
         this.invalidate();
         this.revalidate();
@@ -487,9 +510,36 @@ public final class TorrentScoutAcqViewTopComponent extends TopComponent
             } else {
                 GuiUtils.showNonModalMsg("Computed bg with " + nrempty + " empty cached flows");
             }
-            acqPanel.addResults(res, flow);
+            addFinalResultToChart(res, flow);
         }
 
+    }
+
+    private void updateMultiChart() {
+        // create one huge dataset for all flows, show it
+        long starttime = 0;
+        ArrayList<WellFlowDataResult> chartres = new ArrayList<WellFlowDataResult>();
+        for (int i = 0; i < flownr.length; i++) {
+            WellFlowDataResult nndata = results[i];
+
+            int flow = flownr[i];
+            if (nndata != null) {
+                p("updateMultiChart: starttime for flow " + flow + "=" + starttime);
+                nndata.setStarttime(starttime);
+                starttime += nndata.getLastTimeStamp();
+
+                chartres.add(nndata);
+            }
+            else p("updateMultiChart: Got no result for flow "+flow+" and i "+i);
+
+
+        }
+        cmulti.setResults(chartres);
+        cmulti.update("NN subtracted traces at " + (this.expContext.getWellContext().getAbsoluteCoordinate()),
+                expContext);
+
+        cmulti.repaint();
+        
     }
 
     private void computeNN(WellCoordinate a, WellCoordinate b, WellCoordinate c, WellCoordinate d, int flow) throws HeadlessException {
@@ -502,7 +552,7 @@ public final class TorrentScoutAcqViewTopComponent extends TopComponent
             if (cur_context.getSelection() != null) {
                 nr = cur_context.getSelection().getAreaSize();
             }
-            if (curvePanel.getBoxAllWells().isSelected() && nr > 200 ) {
+            if (curvePanel.getBoxAllWells().isSelected() && nr > 200) {
                 boolean doit = true;
                 if (nr > 2000) {
                     int ok = JOptionPane.showConfirmDialog(this, "<html>Your selection contains " + nr + " wells. The NN algorithm could take quite some time.<br>"
@@ -521,7 +571,7 @@ public final class TorrentScoutAcqViewTopComponent extends TopComponent
             } else {
                 ArrayList<WellFlowDataResult> res = alg.compute();
                 p("adding nn result for flow " + flow + ":" + res);
-                acqPanel.addResults(res, flow);
+                addFinalResultToChart(res, flow);
             }
         } else {
             GuiUtils.showNonModalMsg("Need to wait with NN, need to cache more data...");
@@ -542,7 +592,7 @@ public final class TorrentScoutAcqViewTopComponent extends TopComponent
             if (cur_context.getSelection() != null) {
                 nr = cur_context.getSelection().getAreaSize();
             }
-            if (curvePanel.getBoxAllWells().isSelected() && nr > 200 ) {
+            if (curvePanel.getBoxAllWells().isSelected() && nr > 200) {
                 boolean doit = true;
                 if (nr > 2000) {
                     int ok = JOptionPane.showConfirmDialog(this, "<html>Your selection contains " + nr + " wells. The Zeromer algorithm could take quite some time.<br>"
@@ -559,11 +609,51 @@ public final class TorrentScoutAcqViewTopComponent extends TopComponent
                 }
             } else {
                 ArrayList<WellFlowDataResult> res = alg.compute();
-                acqPanel.addResults(res, flow);
+                addFinalResultToChart(res, flow);
             }
 
         } else {
             GuiUtils.showNonModalMsg("Need to wait with zeromer calculation, need to cache more data...");
+        }
+    }
+
+    private void addFinalResultToChart(ArrayList<WellFlowDataResult> res, int flow) {
+        if (res != null) acqPanel.addResults(res, flow);
+        // only add CERTAIN results to the MULTI FLOW chart... just the bg subtracted
+        WellFlowDataResult toadd = null;
+        if (res != null) {
+            for (WellFlowDataResult re: res) {
+                p("Got result of type: "+re.getResultType());
+                if (re.getResultType().equals(ResultType.NN_RAW_BG)) {
+                    toadd = re;
+                    p("Found a result to add to multiflowchart: "+re.getResultType());
+                }
+            }
+        }
+        if (res != null && toadd == null) {
+            p("Nothing for multiflowchart");
+            return;
+        }
+        int index = -1;
+        for (int i = 0; i < flownr.length; i++) {
+            if (flownr[i] == flow) {
+                index = i;
+                break;
+            }
+        }
+        results[index] = toadd;
+        taskdone[index] = true;
+        boolean alldone = true;
+        for (int i = 0; i < curflows.size(); i++) {
+            if (!taskdone[i]) {
+                alldone = false;
+            }
+        }
+        if (alldone) {
+            p("ALL tasks are done, will now create multichart in correct flow order: " + flownr);            
+            updateMultiChart();
+        } else {
+            p("Not all done yet: " + Arrays.toString(taskdone));
         }
     }
 
@@ -623,7 +713,6 @@ public final class TorrentScoutAcqViewTopComponent extends TopComponent
     private void repaintPanel() {
         updateInfo();
         //scroll = new JScrollPane(acqPanel);
-        centerPanel.add("Center", acqPanel);
         centerPanel.setToolTipText("<html>" + acqPanel.getInfo() + "</html>");
         //   p("got info: " + acqPanel.getInfo());
         acqPanel.setToolTipText(centerPanel.getToolTipText());
@@ -900,9 +989,7 @@ public final class TorrentScoutAcqViewTopComponent extends TopComponent
 
     private void update(boolean mayStartThread) {
         //  p("Updating acquisition panel");
-        if (acqPanel != null) {
-            centerPanel.remove(acqPanel);
-        }
+       
         if (lblMsg != null) {
             centerPanel.remove(lblMsg);
         }
@@ -954,26 +1041,41 @@ public final class TorrentScoutAcqViewTopComponent extends TopComponent
             // nrflows = cur_context.getWellData(cur_context.getCoordinate()).getNrFlows();
         }
 
-        //    this.lblInfo.setText("Raw data for " + cur_context.getCoordinate() + ", " + nrflows + " flows");
-
-
-        if (acqPanel == null) {
+        if (acqPanel != null) charttab.remove(acqPanel);
+        else {
             acqPanel = new MultiAcqPanel(filetype);
         }
-        p("SETTING SUBTRACT TO :"+subtract);
+        p("SETTING SUBTRACT TO :" + subtract);
         acqPanel.setSubtract(subtract);
         
         int nr = cur_context.getNrWells();
         DataAccessManager manager = DataAccessManager.getManager(cur_context);
+
+        if (subtract > -1 && !curflows.contains(subtract)) {
+            curflows.add(subtract);
+        }
+
+
+        results = new WellFlowDataResult[curflows.size()];
+        flownr = new int[curflows.size()];
+        taskdone = new boolean[curflows.size()];
+        if (cmulti != null) charttab.remove(cmulti);
+        cmulti = new MultiFlowPanel(filetype);   
+        cmulti.setSubtract(subtract);
+        cmulti.setYaxis("Raw count");
         
-        if (subtract>-1 && !curflows.contains(subtract)) curflows.add(subtract);
-       
-        for (int flow : curflows) {
+        charttab.add("Single flows", acqPanel);        
+        charttab.add("Multi flow", cmulti);        
+        if (curtab > 0) charttab.setSelectedIndex(curtab);
+        for (int i = 0; i < curflows.size(); i++) {
+            int flow = curflows.get(i);
+            flownr[i] = flow;
+
             filter = new WellContextFilter(cur_context, haveflags, nothaveflags, filetype, flow, cur_context.getCoordinate());
             WellFlowData data = null;
             if (isCachedOrElseAddButton(cur_context.getCoordinate(), flow)) {
                 //    p("Data is cached");
-                if (curvePanel.getBoxAllWells().isSelected() && nr > 100 ) {
+                if (curvePanel.getBoxAllWells().isSelected() && nr > 100) {
                     GuiUtils.showNonModalMsg("Computing average raw signal for all " + nr + " wells");
                     LoadRawDataTask task = new LoadRawDataTask(this, manager, flow);
                     task.execute();
@@ -987,6 +1089,7 @@ public final class TorrentScoutAcqViewTopComponent extends TopComponent
                         }
 
                     }
+
                     afterLoadedRawData(data, flow);
                 }
             }
@@ -995,21 +1098,22 @@ public final class TorrentScoutAcqViewTopComponent extends TopComponent
 
     public boolean isCachedOrElseAddButton(WellCoordinate coord, int flow) {
         DataAccessManager manager = DataAccessManager.getManager(cur_context);
-        if (!manager.isCached(cur_context, coord, flow, filetype)) {
-            if (loadrawdatatask != null) {
-                this.setStatus("I am already reading a raw .data file for flow " + loadrawdatatask.getFlow() + "...");
-                addCancelBtn(loadrawdatatask.getFlow());
-                return false;
-            } else {
-                int secs = cur_context.esimateSecs();
-                this.addBtn("Need to read/cache raw .dat file for flow " + flow + " (ca " + secs + " secs)<br>"
-                        + "<font color='bb0000'>Please use the TorrentScout plugin to do that</font>");
-                return false;
-            }
-        } else {
-            //   p("Data is cached for "+coord+":"+curflow);
-            return true;
-        }
+//        if (!manager.isCached(cur_context, coord, flow, filetype)) {
+//            if (loadrawdatatask != null) {
+//                this.setStatus("I am already reading a raw .data file for flow " + loadrawdatatask.getFlow() + "...");
+//                addCancelBtn(loadrawdatatask.getFlow());
+//                return false;
+//            } else {
+//                int secs = cur_context.esimateSecs();
+//                this.addBtn("Need to read/cache raw .dat file for flow " + flow + " (ca " + secs + " secs)<br>"
+//                        + "<font color='bb0000'>Please use the TorrentScout plugin to do that</font>");
+//                return false;
+//            }
+//        } else {
+//            //   p("Data is cached for "+coord+":"+curflow);
+//            return true;
+//        }
+        return true;
     }
 
     private class LoadRawDataTask extends Task {
@@ -1035,7 +1139,7 @@ public final class TorrentScoutAcqViewTopComponent extends TopComponent
         @Override
         public Void doInBackground() {
             data = manager.getFlowData(filter, curvePanel.getBoxAllWells().isSelected());
-          
+
             return null;
         }
 
@@ -1069,7 +1173,7 @@ public final class TorrentScoutAcqViewTopComponent extends TopComponent
                 return;
             }
         } else {
-            p("Got well data for coord " + cur_context.getCoordinate() + ":" + data);
+            //p("Got well data for coord " + cur_context.getCoordinate() + ":" + data);
         }
 
         nnresult = null;
@@ -1187,6 +1291,10 @@ public final class TorrentScoutAcqViewTopComponent extends TopComponent
 
             this.setStatus("Raw data loading done");
             afterLoadedRawData(loadrawdatatask.getData(), loadrawdatatask.getFlow());
+            if (loadrawdatatask.getData() == null) {
+                GuiUtils.showNonModalMsg("Could not load flow "+loadrawdatatask.getFlow());
+                addFinalResultToChart(null, loadrawdatatask.getFlow());
+            }
             loadrawdatatask = null;
         } else if (t instanceof WellAlgorithmTask) {
             WellAlgorithmTask task = (WellAlgorithmTask) t;
@@ -1199,12 +1307,13 @@ public final class TorrentScoutAcqViewTopComponent extends TopComponent
             }
             if (res == null) {
                 err("Got no result from " + task.getAlgorithm());
+                
                 return;
             } else {
                 p("Got result for " + task.getAlgorithm().getName());
             }
             if (acqPanel != null && acqPanel.getCoord() == task.getCoord()) {
-                acqPanel.addResults(res, task.getFlow());
+                addFinalResultToChart(res, task.getFlow());
                 p("AFTER WELL ALG TASK: Adding results " + res);
                 GuiUtils.showNonModalMsg("Added result of " + task.getAlgorithm().getName() + " to panel");
                 //  p("repaingint panel");
@@ -1257,24 +1366,9 @@ public final class TorrentScoutAcqViewTopComponent extends TopComponent
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        topPanel = new javax.swing.JPanel();
-
-        topPanel.setOpaque(false);
-        topPanel.setLayout(new java.awt.BorderLayout());
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(topPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 666, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(topPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE)
-        );
+        setLayout(new java.awt.BorderLayout());
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel topPanel;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -1283,6 +1377,7 @@ public final class TorrentScoutAcqViewTopComponent extends TopComponent
             filetype = RawType.ACQ;
             typePanel.setType(filetype);
         }
+        this.getLatestContext();
         this.getLatestCoordinate();
     }
 

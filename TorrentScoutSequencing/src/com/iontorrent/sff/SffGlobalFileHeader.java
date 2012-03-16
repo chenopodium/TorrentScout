@@ -226,7 +226,7 @@ public class SffGlobalFileHeader {
     }
 
     private void p(String msg) {
-        System.out.println("SffGlobalFileHeader: " + msg);
+//  System.out.println("SffGlobalFileHeader: " + msg);
         //Logger.getLogger( SffGlobalFileHeader.class.getName()).log(Level.INFO, msg, ex);
     }
 }

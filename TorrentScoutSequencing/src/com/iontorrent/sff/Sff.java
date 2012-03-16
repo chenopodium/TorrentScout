@@ -1,19 +1,19 @@
 /*
-*	Copyright (C) 2011 Life Technologies Inc.
-*
-*   This program is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 2 of the License, or
-*   (at your option) any later version.
-*
-*   This program is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ *	Copyright (C) 2011 Life Technologies Inc.
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 2 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -64,17 +64,21 @@ public class Sff {
             err("SFF File " + file + " not found");
             return null;
         }
-        
+
         in = FileUtils.openFileOrUrl(file);
         return in;
     }
+
     public void closeFile() {
-        if (in == null) return;
+        if (in == null) {
+            return;
+        }
         try {
             in.close();
+        } catch (Exception e) {
         }
-        catch (Exception e) {}
     }
+
     public RandomAccessFile openRAFile() {
         readcount = 0;
 
@@ -88,14 +92,27 @@ public class Sff {
     }
 
     public String getFlowOrder() {
-        if (gheader != null) return gheader.flow;
-        else return "";
+        if (gheader != null) {
+            return gheader.flow;
+        } else {
+            return "";
+        }
     }
+
     public long readHeader() {
         gheader = new SffGlobalFileHeader();
+
         if (rin != null) {
             filepointer += gheader.read(rin);
         } else {
+            if (in == null) {
+                in = in = FileUtils.openFileOrUrl(file);
+            }
+            if (in == null) {
+                err("Can't read file " + file);
+                return -1;
+
+            }
             filepointer += gheader.read(in);
         }
 
@@ -134,6 +151,14 @@ public class Sff {
             if (rin != null) {
                 res = curheader.read(rin);
             } else {
+                if (in == null) {
+                    in = in = FileUtils.openFileOrUrl(file);
+                }
+                if (in == null) {
+                    err("readNextRead: Can't read file " + file);
+                    return null;
+
+                }
                 res = curheader.read(in);
             }
         } catch (EOFException e) {
@@ -145,7 +170,7 @@ public class Sff {
         }
         filepointer += res;
         if (curheader == null || res < 0) {
-          //  err("Could not read read header");
+            //  err("Could not read read header");
             return null;
         }
         curread = new SffRead(gheader, curheader);
@@ -176,7 +201,7 @@ public class Sff {
     }
 
     private void p(String msg) {
-        System.out.println("Sff: " + msg);
+//  System.out.println("Sff: " + msg);
         //Logger.getLogger( Sff.class.getName()).log(Level.INFO, msg, ex);
     }
 

@@ -1091,19 +1091,18 @@ public class Alignment {
         //int[] q_score_vec = new int[nrvals];
         for (int i = 0; i < nrvals; i++) {
             double q = (double) Qvalues[i];
+            
             double err = Math.pow(10.0, (q / (-10.0)));
+            if (q >=100) {
+                // only perfect reads
+                err = 0;
+            }
             max_error_value[i] = err;
         }
         int prev_nr_mismatches = 0;
         int prev_loc_len = 0;
 
-        /*
-        tDna => pad_source 
-        match => pad_match
-        qdna => pad_target
-         */
-        //coord_t equiv_counter = 0;
-
+     
         String ref_alignment = al.getRefAlign1().toSequenceString();
         String seq_alignment = al.getSeqAlign2().toSequenceString();
         String match_string = al.getMarkupLineString();
@@ -1164,9 +1163,6 @@ public class Alignment {
             }
 
         }
-//        for (int k = 0; k < Q.length; k++) {
-//            p("Q="+Qvalues[k]+"-> "+Q[k]+", len="+q_len_vec[k]);
-//        }
         return q_len_vec;
     }
 
@@ -1184,7 +1180,7 @@ public class Alignment {
     }
 
     private void p(String msg) {
-        System.out.println("Alignment: " + msg);
+       // System.out.println("Alignment: " + msg);
         //Logger.getLogger( Alignment.class.getName()).log(Level.INFO, msg, ex);
     }
 }

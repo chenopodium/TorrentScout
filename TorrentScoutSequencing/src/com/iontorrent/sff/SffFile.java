@@ -64,7 +64,7 @@ public class SffFile {
     }
 
     private void p(String msg) {
-        System.out.println("SffFile: " + msg);
+//  System.out.println("SffFile: " + msg);
         //Logger.getLogger( SffFile.class.getName()).log(Level.INFO, msg, ex);
     }
 }

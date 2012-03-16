@@ -30,7 +30,8 @@ import java.util.logging.Logger;
  * chantal.roth@lifetech.com
  */
 public class MaskCommandParser {
-  ExplorerContext cont;
+
+    ExplorerContext cont;
     /** Creates new form MaskCommandPanel */
     ArrayList<BitMask> tmpmasks;
     ArrayList<BitMask> masks;
@@ -38,7 +39,7 @@ public class MaskCommandParser {
     ArrayList<String> errors;
     BitMask res;
     String message;
-    
+
     public MaskCommandParser(ExplorerContext cont) {
         this.cont = cont;
     }
@@ -55,7 +56,9 @@ public class MaskCommandParser {
             err += "\nErrors:\n" + errors.toString();
         }
         if (res != null) {
-           if (err.length()>0) msg = "result is in: " + res + err;
+            if (err.length() > 0) {
+                msg = "result is in: " + res + err;
+            }
         } else {
             msg = "Got no reslt" + err;
         }
@@ -173,7 +176,7 @@ public class MaskCommandParser {
         if (cont == null) {
             return null;
         }
-        
+
         if (cmd == null || cmd.length() < 1) {
             return null;
         }
@@ -198,6 +201,7 @@ public class MaskCommandParser {
                 p("creating new result mask with name " + left);
                 res = new BitMask(template);
                 res.setName(left);
+                cont.masAdded(res);
                 masks.add(res);
             }
             execute(res, right);
@@ -208,7 +212,6 @@ public class MaskCommandParser {
         // now parse recursively...
         return res;
     }
-    
 
     private BitMask parseOtherCommand(String cmd) {
         res = null;
@@ -321,7 +324,6 @@ public class MaskCommandParser {
         return s.equals("-");
     }
 
- 
     public String normalize(String cmd) {
         cmd = cmd.toLowerCase().trim();
 
@@ -348,7 +350,7 @@ public class MaskCommandParser {
         cmd = cmd.replace("!", " ! ");
         cmd = cmd.replaceAll("  ", " ");
         p("Normalized command: " + cmd);
-      
+
         return cmd;
     }
 
@@ -361,11 +363,9 @@ public class MaskCommandParser {
             }
         } else {
             for (BitMask m : masks) {
-                if (m.getName()==null) {
-                    err("Mask has no name: "+m);
-                }
-                
-                else if (m.getName().equalsIgnoreCase(name)) {
+                if (m.getName() == null) {
+                    err("Mask has no name: " + m);
+                } else if (m.getName().equalsIgnoreCase(name)) {
                     return m;
                 }
             }
@@ -420,26 +420,28 @@ public class MaskCommandParser {
         return null;
 
     }
+
     private void addError(String err) {
-        errors.add(err);        
+        errors.add(err);
     }
+
     public ArrayList<String> getErrors() {
         return errors;
     }
-     
+
     /** ================== LOGGING ===================== */
     private static void err(String msg, Exception ex) {
         Logger.getLogger(MaskCommandParser.class.getName()).log(Level.SEVERE, msg, ex);
     }
-    
+
     private static void err(String msg) {
         Logger.getLogger(MaskCommandParser.class.getName()).log(Level.SEVERE, msg);
     }
-    
+
     private static void warn(String msg) {
         Logger.getLogger(MaskCommandParser.class.getName()).log(Level.WARNING, msg);
     }
-    
+
     private static void p(String msg) {
         //System.out.println("MaskCommandParser: " + msg);
         Logger.getLogger(MaskCommandParser.class.getName()).log(Level.INFO, msg);

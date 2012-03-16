@@ -62,9 +62,9 @@ public final class ProcessAction implements ActionListener {
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
-                close((TopComponent) WindowManager.getDefault().findTopComponent("TorrentScoutIonogramTopComponent"));
-                close((TopComponent) WindowManager.getDefault().findTopComponent("TorrentScoutAlignmentTopComponent"));
-                close((TopComponent) WindowManager.getDefault().findTopComponent("WellTableTopComponent"));
+               // close((TopComponent) WindowManager.getDefault().findTopComponent("TorrentScoutIonogramTopComponent"));
+               // close((TopComponent) WindowManager.getDefault().findTopComponent("TorrentScoutAlignmentTopComponent"));
+                //close((TopComponent) WindowManager.getDefault().findTopComponent("WellTableTopComponent"));
                 close((TopComponent) WindowManager.getDefault().findTopComponent("TorrentScoutScoresViewTopComponent"));
                 close((TopComponent) WindowManager.getDefault().findTopComponent("ExperimentViewerTopComponent"));
                 close((TopComponent) WindowManager.getDefault().findTopComponent("OfflineTopComponent"));

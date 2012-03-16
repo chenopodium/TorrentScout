@@ -27,9 +27,11 @@ import com.iontorrent.guiutils.GuiUtils;
 import com.iontorrent.guiutils.NavigableImagePanel;
 import com.iontorrent.guiutils.heatmap.ColorModel;
 import com.iontorrent.guiutils.heatmap.GradientPanel;
+import com.iontorrent.guiutils.wells.SingleCoordSelectionPanel;
 import com.iontorrent.rawdataaccess.wells.BitMask;
 import com.iontorrent.torrentscout.explorer.ExplorerContext;
 import com.iontorrent.guiutils.widgets.Widget;
+import com.iontorrent.rawdataaccess.pgmacquisition.RawType;
 import com.iontorrent.utils.LookupUtils;
 import com.iontorrent.utils.stats.Stats;
 import com.iontorrent.wellmodel.RasterData;
@@ -52,6 +54,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import org.openide.util.lookup.InstanceContent;
@@ -70,16 +75,16 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
     private BufferedImage[] bimages;
     private static int BX = 30;
     private static int BY = 30;
-  //  boolean showignmore;
- //   boolean showbg;
-  //  boolean showuse;
+    //  boolean showignmore;
+    //   boolean showbg;
+    //  boolean showuse;
     BitMask showmask;
     private int offx;
     private int offy;
 //    private transient final InstanceContent wellContextContent = LookupUtils.getPublisher(WellContext.class);
 //    private transient final InstanceContent wellSelectionContent = LookupUtils.getPublisher(WellSelection.class);
     private int IMAGE_SIZE;
-    private int flow;
+  //  private int flow;
     GradientPanel gradient;
     private WellCoordinate relcoord;
     private WellCoordinate abscoord;
@@ -97,6 +102,7 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
     private ColorModel[] colormodel;
     private Stats stats;
     private boolean log;
+    private CoordWidget popwidget;
     private int frame;
     private ExperimentContext exp;
     protected static ToolTipManager tipmanager = ToolTipManager.sharedInstance();
@@ -108,8 +114,17 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
     CoordWidget mainwidget;
     private boolean dominmax[];
     private int nrwidgets;
-
+    private JPopupMenu rightMenu;
+    private MouseAdapter popAdapter;
+    private WellCoordinate popcoord;
+    private static final int PIX_PER_WELL = 4;
+    
+    
+    
     public SubregionView(ExplorerContext maincont) {
+        this(maincont, PIX_PER_WELL);
+    }
+    public SubregionView(ExplorerContext maincont, int pix_per_well) {
         super();
 
         gradient = new GradientPanel(null);
@@ -123,7 +138,7 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
         widgets = maincont.getWidgets();
 
         RASTER_SIZE = data.getRaster_size();
-        IMAGE_SIZE = RASTER_SIZE * 4 + BX * 2;
+        IMAGE_SIZE = RASTER_SIZE * pix_per_well + BX * 2;
         this.setZoomIncrement(0.25);
         this.frame = maincont.getFrame();
         // this.setBackground(Color.black);
@@ -134,7 +149,7 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
         this.abscoord = maincont.getAbsDataAreaCoord();
         this.exp = maincont.getExp();
 
-        this.flow = maincont.getFlow();
+//        this.flow = maincont.getFlow();
 
         int startc = data.getRelStartcoord().getCol();
         int startr = data.getRelStartcoord().getRow();
@@ -210,6 +225,95 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
 
         update(true);
         checkWidgets(false);
+        makePopup();
+        this.addPopup("Enter coordinates for widget");
+        
+        this.addPopup("Flip bit at widget coordinate");
+        addMouseListener(popAdapter);
+    }
+
+    protected void addPopup(String cmd) {
+        rightMenu.add(makeMenuItem(cmd));
+    }
+
+    private void makePopup() {
+        rightMenu = new JPopupMenu("Actions");
+        popAdapter = new MouseAdapter() {
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    showPopupMenu(e);
+                }
+            }
+            // And on other platforms, mousePressed sets PopupTrigger.
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    showPopupMenu(e);
+                }
+            }
+
+            // Get the component over which the right button click
+            // occurred and show the menu there.
+            public void showPopupMenu(MouseEvent e) {
+                popcoord = getCoord(e.getPoint());
+                popwidget = (CoordWidget) Widget.getClosest(e.getX(), e.getY(), widgets, 100, true);
+                p("Got popupcoord=" + popcoord+", closest popwidget: "+curwidget);
+                if (popwidget != null) rightMenu.show(SubregionView.this, e.getX(), e.getY());
+                else {
+                    GuiUtils.showNonModalMsg("Right click on a widget to see the popup menu");
+                    p("Got no popwidget widget");
+                }
+            }
+        }; // anonymous MouseAdapter subclass
+
+    } // makePopup
+
+    /** A utility method for making menu items. **/
+    private JMenuItem makeMenuItem(String label) {
+        JMenuItem item = new JMenuItem(label);
+        item.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String cmd = e.getActionCommand().toLowerCase().trim();
+                WellCoordinate coord = popcoord;
+                p("Got popup command:" + cmd + " at " + coord);
+                processPopupCommand(cmd, coord);
+            }
+        });
+        return item;
+    } // 
+
+    protected void processPopupCommand(String cmd, WellCoordinate coord) {
+        p("Got popup command: " + cmd + ", no handler implemented");
+        
+        if (cmd.startsWith("enter")) {
+            SingleCoordSelectionPanel sel = new SingleCoordSelectionPanel();
+            sel.setCoord1(popwidget.getAbsoluteCoord());
+            int ans =JOptionPane.showConfirmDialog(this, sel, "Enter coordinate", JOptionPane.OK_CANCEL_OPTION);
+            if (ans == JOptionPane.OK_OPTION) {
+                WellCoordinate abs = sel.getCoord1();
+                exp.makeAbsolute(abs);
+                popwidget.setAbsoluteCoords(abs);
+                checkWidgets(false);
+                this.repaint();
+            }
+            
+        }
+        else if (cmd.startsWith("flip")) {
+            if (this.getSnapMask() != null) {
+                BitMask mask = this.getSnapMask();     
+                WellCoordinate maskcoord = popwidget.getAbsoluteCoord();
+                int x = maskcoord.getX() - mask.getRelCoord().getX() - exp.getColOffset();
+                int y = maskcoord.getY() - mask.getRelCoord().getY() - exp.getRowOffset();
+                mask.invert(x, y);
+                GuiUtils.showNonModalMsg("Bit at "+popcoord+":"+mask.get(x, y));
+                this.redrawImages(false);
+            }
+            else GuiUtils.showNonModalMsg("No mask displayed");
+        }
     }
 
     public void checkWidgets(boolean snap) {
@@ -233,43 +337,7 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
         return showmask;
     }
 
-    private boolean snapWidgetToMask(CoordWidget w, BitMask mask) {
-        WellCoordinate c = w.getAbsoluteCoord();
-        int x = c.getX() - offx - data.getRelStartcoord().getCol();
-        int y = c.getY() - offy - data.getRelStartcoord().getRow();
-        int size = data.getRaster_size();
-        for (int j = 0; j < size; j++) {
-            for (int i = 0; i < size; i++) {
-                x++;
-                if (x >= size) {
-                    x = 0;
-                    y++;
-                    if (y >= size) {
-                        y = 0;
-                    }
-                }
-                if (mask.get(x, y)) {
-                    c = new WellCoordinate(x + offx + data.getRelStartcoord().getCol(), y + offy + data.getRelStartcoord().getRow());
-                    // p("Moving main widget to " + c);
-                    w.setAbsoluteCoords(c);
-                    maincont.coordChanged(c);
-                    Point imagep = getMiddleImageCoord(c);
-                    w.setX(imagep.x);
-                    w.setY(imagep.y);
-                    if (w == mainwidget) {
-                        publishCoord(c);
-                    }
-                    repaint();
-                    return true;
-                }
-            }
-            y++;
-            if (y >= size) {
-                y = 0;
-            }
-        }
-        return false;
-    }
+   
 
     private void snapWidgets() {
 
@@ -286,8 +354,13 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
         }
         p("Snapping widgets to mask " + mask);
         for (Widget w : widgets) {
-            if (!w.isMainWidget())  snapWidgetToMask((CoordWidget) w, mask);
+            if (!w.isMainWidget()) {
+                maincont.snapWidgetToMask((CoordWidget) w, mask);
+                
+            }
         }
+        updateLocationOfWidgets();
+        repaint();
     }
 
     @Override
@@ -298,7 +371,7 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
 
     public void addOrRemoveWidgets(int nrwidgets) {
         // adding main widget
-        if (nrwidgets <1 ) {
+        if (nrwidgets < 1) {
             p("Not adding or removing widgets");
             return;
         }
@@ -396,12 +469,12 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
             c.setY(imagep.y);
         }
     }
-
+    
     public Widget addWidget(WellCoordinate abscoord, Color color, int nr) {
         Point imagep = getMiddleImageCoord(abscoord);
         //   Coords nav=this.panelToImageCoords(imagep);
         //     p(coord.toString() + "-> image " + imagep);
-     //   p("Creating and adding widget "+nr);
+        //   p("Creating and adding widget "+nr);
         CoordWidget w = new CoordWidget(color, imagep.x, imagep.y, nr);
         w.setAbsoluteCoords(abscoord);
         widgets.add(w);
@@ -415,7 +488,7 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
         int ex = w.getX();
         int ey = w.getY();
 
-       WellCoordinate c= getWellCoordinate(ex, ey);
+        WellCoordinate c = getWellCoordinate(ex, ey);
         w.setAbsoluteCoords(c);
 
         maincont.coordChanged(c);
@@ -477,8 +550,9 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
         if (mask == null) {
             return;
         }
-        snapWidgetToMask(mainwidget, mask);
-
+        maincont.snapWidgetToMask(mainwidget, mask);
+        this.updateLocationOfWidgets();
+        repaint();
 
     }
 
@@ -539,7 +613,7 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
         if (x < 0 || y < 0) {
             return null;
         }
-        float val = data.getValue(x, y, flow, frame);
+        float val = data.getValue(x, y, 0, frame);
 
         String s = "Well " + (x + offx) + "/" + (y + offy) + ":  value=" + val;
 
@@ -608,7 +682,7 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
     public void redrawImages(BitMask showmask, boolean dominmax) {
         bimages = null;
         this.showmask = showmask;
-       
+
 
         update(dominmax);
     }
@@ -792,14 +866,12 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
         fromCoord = new WellCoordinate(startc, startr);
         toCoord = new WellCoordinate(startc + RASTER_SIZE, startr + RASTER_SIZE);
 
-        BitMask ignoremask = maincont.getIgnoreMask();
-        BitMask bgmask = maincont.getBgMask();
-        BitMask usemask = maincont.getSignalMask();
+       
         for (int c = startc; c < startc + RASTER_SIZE; c++) {
             int x = BX + (c - startc) * pixpercol;
             for (int r = startr; r < startr + RASTER_SIZE; r++) {
                 int starty = (r - startr) * pixperrow;
-                float count = data.getValue(c, r, flow, frame);
+                float count = data.getValue(c, r, 0, frame);
                 if (log) {
                     count = getLog((int) count);
                 }
@@ -845,23 +917,40 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
         g.setColor(Color.lightGray);
 
 
-        g.drawString(maincont.getFiletype().getFilename() + " flow " + maincont.getFlow() + ", " + data.getAbsStartCol() + "/" + data.getAbsStartRow() + ", frame " + frame, BX, 15);
+        // get base!
+        String base = "?";
+        if (maincont.getFiletype() == RawType.ACQ) base = maincont.getExp().getBase(maincont.getFlow());
+        g.drawString(maincont.getFiletype().getFilename() + " flow " + maincont.getFlow()+"="+base + ", " + data.getAbsStartCol() + "/" + data.getAbsStartRow() + ", frame " + frame, BX, 15);
         g.dispose();
     }
-
     public Point getMiddleImageCoord(WellCoordinate abscoord) {
+        return getMiddleImageCoord(abscoord, false);
+    }
+    public Point getMiddleImageCoord(WellCoordinate abscoord, boolean debug) {
         if (pixperrow < 1) {
             pixpercol = Math.max(1, (int) Math.max(1.0, (double) (getWidth() - 2 * BX) / 100.0));
             pixperrow = pixpercol;
         }
-
+        
         int c = abscoord.getCol() - offx - data.getRelStartcoord().getCol();
-
         int r = abscoord.getRow() - offy - data.getRelStartcoord().getRow();
+        if (debug) {
+            p("getMiddleImageCoord");
+            p("offx="+offx+", offy="+offy+", data REL start="+data.getRelStartcoord());
+            p("Got coord: "+abscoord+", -> c="+c+", r="+r);
+            p("Pixpercol="+pixpercol+", pixperrow="+pixperrow);
+            
+        }
         c = Math.max(0, c);
         r = Math.max(0, r);
         c = Math.min(c, data.getRaster_size() - 1);
         r = Math.min(r, data.getRaster_size() - 1);
+        
+        if (debug) {
+            p("rastersize: "+data.getRaster_size()+", -> c="+c+", r="+r);
+            p("Pixpercol="+pixpercol+", pixperrow="+pixperrow);
+            p(" maxy="+maxy+", BX="+BX+", BY="+BY);
+        }
         int px = BX + (c) * pixpercol + pixpercol / 2;
         int py = Math.max(BY, (r) * pixperrow + pixperrow / 2);
         return new Point(px, Math.max(BY, maxy - py));
@@ -887,6 +976,11 @@ public class SubregionView extends NavigableImagePanel implements ActionListener
     protected void drawCoords(Graphics2D g, int cols, int maxy, int rows, int maxx) {
 
         int COORDDELTA = 20;
+        
+        if (data.getRaster_size()<=25)COORDDELTA = 5;
+        else if (data.getRaster_size()<=100)COORDDELTA = 10;
+        else if (data.getRaster_size()>=400) COORDDELTA = 50;
+        
         //if (cols/BUCKET)
         g.setStroke(new BasicStroke(1));
 

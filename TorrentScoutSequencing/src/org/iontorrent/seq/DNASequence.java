@@ -110,12 +110,12 @@ public class DNASequence extends AbstractByteSequence implements SequenceIF {
             while (j < seqlen && i + j < sequencelen
                     && (seq.getBasecharPositionCode(j) == getBaseCode(i + j))) {
                 if (debug) {
-                    System.out.println(seq.getBaseChar(j) + "(" + j + ")=" + getBaseChar(i + j) + "(" + (i + j) + ")");
+            //  System.out.println(seq.getBaseChar(j) + "(" + j + ")=" + getBaseChar(i + j) + "(" + (i + j) + ")");
                 }
                 j++;
             }
             if (debug) {
-                System.out.println("\nj=" + j + ">= seqlen=" + seqlen + " or sequencelen=" + sequencelen + ">=i+j=" + (i + j));
+        //  System.out.println("\nj=" + j + ">= seqlen=" + seqlen + " or sequencelen=" + sequencelen + ">=i+j=" + (i + j));
             }
             if (j >= seqlen) {
                 if (debug) {
@@ -314,7 +314,7 @@ public class DNASequence extends AbstractByteSequence implements SequenceIF {
     }
 
     private static void p(String msg) {
-        System.out.println("DNASequence: " + msg);
+//  System.out.println("DNASequence: " + msg);
         //Logger.getLogger( DNASequence.class.getName()).log(Level.INFO, msg, ex);
     }
 
