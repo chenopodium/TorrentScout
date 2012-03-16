@@ -79,7 +79,7 @@ public class RundbLocation implements Serializable {
     }
 
     private void p(String msg) {
-        System.out.println("RundbLocation: " + msg);
+//  System.out.println("RundbLocation: " + msg);
         //Logger.getLogger( RundbLocation.class.getName()).log(Level.INFO, msg, ex);
     }
 

@@ -76,7 +76,7 @@ public class RundbChip implements Serializable {
     }
 
     private void p(String msg) {
-        System.out.println("RundbChip: " + msg);
+//  System.out.println("RundbChip: " + msg);
         //Logger.getLogger( RundbChip.class.getName()).log(Level.INFO, msg, ex);
     }
 

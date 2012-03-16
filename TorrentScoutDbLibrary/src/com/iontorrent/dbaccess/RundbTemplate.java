@@ -82,7 +82,7 @@ public class RundbTemplate implements Serializable {
     }
 
     private void p(String msg) {
-        System.out.println("RundbTemplate: " + msg);
+//  System.out.println("RundbTemplate: " + msg);
         //Logger.getLogger( RundbTemplate.class.getName()).log(Level.INFO, msg, ex);
     }
 

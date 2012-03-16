@@ -326,7 +326,7 @@ openMasterLaunch:function(initialheap, maxheap){
     location.href=url;
 },
 openTSL:function(){
-    var url='http://localhost:8080/TSL';
+    var url='http://localhost:8080/TSL?restartApplication';
     location.href=url;
 },
 processSelection:function(v) {

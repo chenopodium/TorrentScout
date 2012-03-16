@@ -218,18 +218,18 @@ public class SAMTextHeaderCodec {
 
     private void reportErrorParsingLine(String reason, final SAMValidationError.Type type, final Throwable nestedException) {
         reason = "Error parsing SAM header. " + reason + ". Line:\n" + mCurrentLine;
-        if (validationStringency != SAMFileReader.ValidationStringency.STRICT) {
+      //  if (validationStringency != SAMFileReader.ValidationStringency.STRICT) {
             final SAMValidationError error = new SAMValidationError(type, reason, null, mReader.getLineNumber());
             error.setSource(mSource);
             mFileHeader.addValidationError(error);
-        } else {
-            String fileMessage = "";
-            if (mSource != null) {
-                fileMessage = "File " + mSource;
-            }
-            throw new SAMFormatException(reason + "; " + fileMessage +
-                    "; Line number " + mReader.getLineNumber(), nestedException);
-        }
+//        } else {
+//            String fileMessage = "";
+//            if (mSource != null) {
+//                fileMessage = "File " + mSource;
+//            }
+//            throw new SAMFormatException(reason + "; " + fileMessage +
+//                    "; Line number " + mReader.getLineNumber(), nestedException);
+//        }
     }
 
     private enum HeaderRecordType {

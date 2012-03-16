@@ -282,8 +282,8 @@ public class NearestNeighbor extends WellAlgorithm {
 
     @Override
     public ArrayList<WellFlowDataResult> compute() {
-        p("======================");
-        p("Computing nn for " + getCoord() + " and flow " + getFlow() + ", all: " + this.allWells);
+      // p("======================");
+     //   p("Computing nn for " + getCoord() + " and flow " + getFlow() + ", all: " + this.allWells);
 
 
         WellFlowDataResult nnBg = (WellFlowDataResult) this.getCachedResult(getKey() + ":nn");

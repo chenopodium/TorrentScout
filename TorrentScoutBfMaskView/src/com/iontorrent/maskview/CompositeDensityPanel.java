@@ -61,22 +61,20 @@ public class CompositeDensityPanel extends GeneralDensityPanel implements WellMo
     private BfMaskFlag scoremaskflag;
     private BfHeatMap mask;
     private String fileOrUrl;
-    private transient final InstanceContent wellSelectionContent = LookupUtils.getPublisher(WellSelection.class);
-    private transient final InstanceContent wellCoordContent = LookupUtils.getPublisher(WellCoordinate.class);
     private transient final InstanceContent expContent = LookupUtils.getPublisher(ExperimentContext.class);
     private transient final InstanceContent wellContextContent = LookupUtils.getPublisher(WellContext.class);
     private int MAX_COORDS = 10000;
     private CompositeExperiment compexp;
-    private Font fblock = new Font(Font.SANS_SERIF, Font.BOLD, 18);
+    private Font fblock = new Font(Font.SANS_SERIF, Font.BOLD, 16);
     ExperimentLoader loader;
     private DatBlock curblock;
     int min;
     int max;
 
     public CompositeDensityPanel(CompositeExperiment exp, ExperimentLoader loader) {
-        super(exp.getRootContext());
+        super(exp.getRootContext(), -1);
         this.loader = loader;
-        this.setNrWidgets(-1);
+        
         this.compexp = exp;
         setBorder(50);
     }
@@ -135,7 +133,7 @@ public class CompositeDensityPanel extends GeneralDensityPanel implements WellMo
 
         }
         //  wellDensity = new CompositeWellDensity(mask, bucketsize, scoremaskflag);
-        wellDensity = new CompositeWellDensity(getCompExp(), filetype, flow, frame);
+        wellDensity = new CompositeWellDensity(getCompExp(), filetype, flow, frame, bucketsize);
         ((CompositeWellDensity) wellDensity).setMask(mask);
 //        if (nrflags == 1) scoremaskflag = BfMaskFlag.RAW;
         wellDensity.setFlag(scoremaskflag);
@@ -212,7 +210,7 @@ public class CompositeDensityPanel extends GeneralDensityPanel implements WellMo
             int startx = (int) (realc / getCoordscale() / BUCKET * pixpercol + BORDER);
             //int startx = (int) (BORDER + (c * pixpercol));
 
-            g.drawLine(startx, BORDER + (int) pixpercol, startx, maxy + (int) pixpercol);
+            g.drawLine(startx, BORDER +(int)pixpercol, startx, maxy - (int) pixpercol);
             int ziffern = (int) Math.log10(realc + 1);
             int value = realc;
             g.drawString("" + value, startx - fblock.getSize() * ziffern / 2, maxy + fblock.getSize() + 20);
@@ -220,7 +218,7 @@ public class CompositeDensityPanel extends GeneralDensityPanel implements WellMo
         }
         for (int realr = 0; realr <= getCompExp().getNrrows(); realr += blockheight) {
             int starty = (int) (realr / BUCKET / getCoordscale() * pixperrow);
-            g.drawLine(BORDER, maxy - starty, maxx, maxy - starty);
+            g.drawLine(BORDER, maxy - starty, maxx-2, maxy - starty);
             int ziffern = (int) Math.log10(realr + 1);
             int x = Math.max(1, BORDER - 30 - (int) (fblock.getSize() * ziffern));
             x = Math.min(x, BORDER - 30);
@@ -263,6 +261,7 @@ public class CompositeDensityPanel extends GeneralDensityPanel implements WellMo
                 imagePanel.setWellSelection(new WellSelection(curblock.getStart(), curblock.getEnd()));
                 p("got block with raw dir "+context.getRawDir());
                 publishExpContext(context, block);
+                repaint();
             }
 
         } else {
@@ -281,6 +280,7 @@ public class CompositeDensityPanel extends GeneralDensityPanel implements WellMo
                 publishExpContext(context, block);
                 curblock = block;
                 imagePanel.setWellSelection(new WellSelection(curblock.getStart(), curblock.getEnd()));
+                repaint();
             }
             //     LookupUtils.publish(wellCoordContent, coord);
 
@@ -305,7 +305,7 @@ public class CompositeDensityPanel extends GeneralDensityPanel implements WellMo
                 JOptionPane.showMessageDialog(this, "Got no expreiment loader, could not load block");
             }
              if (wellcontext != null) {
-                wellcontext.setCoordinate(new WellCoordinate(0, 0));
+                wellcontext.setCoordinate(new WellCoordinate(exp.getNrcols()/2, exp.getNrcols()/2));
                 LookupUtils.publish(wellContextContent, wellcontext);
             } else {
                 p("I was unable to crate well context");

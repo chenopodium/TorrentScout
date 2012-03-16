@@ -76,7 +76,7 @@ public class ScoreMaskGenerator implements SamHandler {
         String msg = "";
         if (flag.isIn(flag.SAM_FLAGS)) {
             try {
-                msg = processBamFile(true);
+                msg = processBamFile(false);
                 if (mask.hasImage(flag)) {
                     return null;
                 }
@@ -443,7 +443,7 @@ public class ScoreMaskGenerator implements SamHandler {
             else if (secs > 10) {
                 secs = (int)(secs/10)*10;
             }
-            if (secs > 20) GuiUtils.showNonModalMsg("Processing BAM file, this could take more than " + time + unit , true, secs);
+            if (secs > 20 && gui) GuiUtils.showNonModalMsg("Processing BAM file, this could take more than " + time + unit , true, secs);
         }
 
         SamUtils sam = loader.getSamUtils();
@@ -457,7 +457,7 @@ public class ScoreMaskGenerator implements SamHandler {
         double[][][] data = new double[NR_BAM_FLAGS][mask.getNrCols()][mask.getNrRows()];
         int count = 0; 
         //SAMTextHeaderCodec
-       // SAMFileReader.setValidationStringency(SAMFileReader.ValidationStringency.SILENT);
+        SAMFileReader.setDefaultValidationStringency(SAMFileReader.ValidationStringency.SILENT);
         final SAMFileReader inputSam = new SAMFileReader(loader.getBamFile());
         
         inputSam.setValidationStringency(SAMFileReader.ValidationStringency.SILENT);
@@ -566,6 +566,37 @@ public class ScoreMaskGenerator implements SamHandler {
         }
 
         return msg;
+    }
+    public int filterFlag(ScoreMaskFlag flag, ScoreMaskFlag custom, double start, double end) {
+        p("filterFlag for range "+start+"-"+end+", storing in flag "+custom);
+        
+        start = start * flag.multiplier();
+        end = end * flag.multiplier();
+        String filename = mask.getImageFile(custom);
+        File cf = new File(filename);
+        if (cf.exists()) {
+            p("Deleting cached file  " + cf);
+            cf.delete();
+        }
+        int count = 0;
+        double[][] src = mask.readData(flag);
+        double[][] data = new double[src.length][src[0].length];
+        for (int i = 0; i < data.length; i++) {
+             for (int j = 0; j < data[0].length; j++) {
+                 double val = src[i][j];
+                 if (val < start || val > end) {
+                     val = 0;
+                 }
+                 else count++;
+                 data[i][j] = val/(double)flag.multiplier();
+             }                
+        }
+        p("======================================= Done filtering flag " + flag);
+       
+        String res = createImageFile(custom, data);
+         p("now reading file for  " + custom);
+        this.mask.readData(custom);
+       return count;
     }
 
     public String processBamFileForCustomFlag(boolean gui, ScoreMaskCalculatorIF compute) throws IOException {

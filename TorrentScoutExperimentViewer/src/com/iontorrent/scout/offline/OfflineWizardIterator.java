@@ -191,6 +191,6 @@ public final class OfflineWizardIterator implements WizardDescriptor.Iterator {
     }
 
     private void p(String string) {
-        System.out.println("OfflineWizIt: " + string);
+//  System.out.println("OfflineWizIt: " + string);
     }
 }

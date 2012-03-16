@@ -59,7 +59,7 @@ public abstract class NodeSorter implements Comparator {
     }
 
     private void p(String msg) {
-        System.out.println("NodeSorter: " + msg);
+//  System.out.println("NodeSorter: " + msg);
         //Logger.getLogger( NodeFilter.class.getName()).log(Level.INFO, msg, ex);
     }
 }

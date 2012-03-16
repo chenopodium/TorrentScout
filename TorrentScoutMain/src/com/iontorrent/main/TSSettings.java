@@ -72,7 +72,7 @@ public class TSSettings {
     }
 
     private static void p(String msg) {
-        System.out.println("TSSettings: " + msg);
+//  System.out.println("TSSettings: " + msg);
         //Logger.getLogger( TSSettings.class.getName()).log(Level.INFO, msg, ex);
     }
 

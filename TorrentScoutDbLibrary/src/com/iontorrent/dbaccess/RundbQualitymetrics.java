@@ -135,7 +135,7 @@ public class RundbQualitymetrics implements Serializable {
     }
 
     private void p(String msg) {
-        System.out.println("RundbQualitymetrics: " + msg);
+//  System.out.println("RundbQualitymetrics: " + msg);
         //Logger.getLogger( RundbQualitymetrics.class.getName()).log(Level.INFO, msg, ex);
     }
 

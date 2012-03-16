@@ -49,6 +49,11 @@ public class RunNamesNodeFilter extends NodeFilter {
         runname = runname.toLowerCase().trim();
     }
 
+      @Override
+    public String getRelevantValue(Object node) {
+        MyResult n = (MyResult) node;
+        return  ""+n.getResultsName();
+    }
     @Override
     public boolean passes(Object node) {
         MyResult n = (MyResult) node;

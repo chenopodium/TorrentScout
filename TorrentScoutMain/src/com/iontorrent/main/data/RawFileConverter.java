@@ -188,7 +188,7 @@ public class RawFileConverter {
     }
 
     private void p(String msg) {
-        System.out.println("RawFileConverter: " + msg);
+//  System.out.println("RawFileConverter: " + msg);
         //Logger.getLogger( RawFileConverter.class.getName()).log(Level.INFO, msg, ex);
     }
 }

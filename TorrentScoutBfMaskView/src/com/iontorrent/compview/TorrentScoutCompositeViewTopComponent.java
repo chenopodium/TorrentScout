@@ -560,7 +560,7 @@ public final class TorrentScoutCompositeViewTopComponent extends TopComponent im
             }
             WellContext wellcontext = exp.createWellContext();
             if (wellcontext != null) {
-                wellcontext.setCoordinate(new WellCoordinate(0, 0));
+                wellcontext.setCoordinate(new WellCoordinate(exp.getNrcols()/2, exp.getNrrows()/2));
                 LookupUtils.publish(wellContextContent, wellcontext);
             } else {
                 p("I was unable to crate well context");
@@ -755,10 +755,10 @@ public final class TorrentScoutCompositeViewTopComponent extends TopComponent im
         /// XXX SET FRAME
         int flow = 0;
         //XXX SELECT FLOW
-        CompositeWellDensity gen = new CompositeWellDensity(this.expContext, getType(), flow, frame);
+        CompositeWellDensity gen = new CompositeWellDensity(this.expContext, getType(), flow, frame, 4);
         String msg = null;
         try {
-            msg = gen.createCompositeImages(progress, mask.getImageFile("composite", currentflag, flow, type, frame));
+            msg = gen.createCompositeImages(progress, mask.getImageFile("composite", currentflag, flow, type, frame), currentflag);
         } catch (Exception e) {
             msg = e.getMessage();
 
@@ -842,7 +842,7 @@ public final class TorrentScoutCompositeViewTopComponent extends TopComponent im
     }
 
     private void p(String msg) {
-        System.out.println("TorrentScoutCompositeViewTopComponent: " + msg);
+//  System.out.println("TorrentScoutCompositeViewTopComponent: " + msg);
     }
 
     private void err(String msg, Exception e) {

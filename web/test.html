@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+
+<head>
+  <title>Launch Torrent Scout</title>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
+</head>
+<style type="text/css">
+a:link { color: orange; }
+a:visited { color: orange; }
+</style>
+<body style="background-color: rgb(0, 0, 0); color: #FFFFFF">
+
+<script type="text/javascript" src="deployJava.js">
+</script>
+
+<script type="text/javascript">
+function getServer(){
+   var url = document.URL;
+   var pos =  url.indexOf('/', 8 );
+   if (  pos != -1) {
+		url = url.substring(0, pos);
+   }
+   return url;
+}
+</script>
+
+<img alt="startup" src="startup.png">
+ <br>
+ 
+<select id="memory" name="Open Torrent Scout with " size="1" value="0"  
+onchange="deployJava.processSelection(this.value);" style="background-color: rgb(0, 0, 0); color: #DDDD00">
+<option value="0"><script type="text/javascript">
+document.write(getServer());
+</script> </option>
+<option value="2">1.2 GB memory (Java 32 bit) (cropped data)</option>
+<option value="3">2 GB memory (Java 64 bit) (314 chips) (default)</option>
+<option value="4">3 GB memory (Java 64 bit) (316 chips)</option>
+<option value="5">4 GB memory (Java 64 bit) (316 chips)</option>
+<option value="6">5 GB memory (Java 64 bit) (318+ chips)</option>
+<option value="7">6 GB memory (Java 64 bit) (318+ chips)</option>
+</select>
+<br>
+<br>
+*To launch TorrentScout, you will need <b><font color="DDDD00">
+<a href="http://www.java.com/en/download/manual.jsp">Sun Java</a></font></b>. For 1.5+ GB memory and 316+ chips, you will need 
+<b><font color="DDDD00"><a href="http://www.java.com/en/download/manual.jsp">Java 64 bit</a></font></b><br>
+<hr>
+<font size="2"><i>
+Please go to the <a href="http://lifetech-it.hosted.jivesoftware.com/docs/DOC-1885">Community</a> or 
+<a href="https://github.com/iontorrent/TorrentScout">GitHub</a> page for documentation and source,
+or send an email to <a href="mailto:chantal.roth@lifetech.com?subject=Torrent%20Scout%20Feedback&amp;body=Hi%20Chantal,%0D%0A%0D%0AI would like to report something about Torrent Scout:">Chantal Roth</a> for help or feedback.
+<script type="text/javascript">
+document.write(getServer());
+</script>
+</i></font> 
+<p></p>
+</body>
+
+</html>
+

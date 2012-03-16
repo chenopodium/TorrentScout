@@ -239,7 +239,7 @@ public class IndexPanel extends javax.swing.JPanel {
         progress = ProgressHandleFactory.createHandle("Creating index files...");
         JComponent comp = ProgressHandleFactory.createProgressComponent(progress);
         frame = GuiUtils.showNonModalMsg(comp, "Creating index files...");
-        frame.setSize(300, 50);
+        frame.setSize(500, 50);
         //      frame.setLocation(800, 600);
         frame.setLocationRelativeTo(this);
         //  frame.setl

@@ -99,7 +99,7 @@ public class ConvRenderer extends JLabel implements TableCellRenderer {
     }
 
     private void p(String msg) {
-        System.out.println("ConvRenderer: " + msg);
+//  System.out.println("ConvRenderer: " + msg);
         //Logger.getLogger( ConvRenderer.class.getName()).log(Level.INFO, msg, ex);
     }
 }

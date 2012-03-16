@@ -107,7 +107,7 @@ public class Ionogram {
     public float getMax(boolean raw) {
         float values[] = getValues(raw);
         if (values == null) {
-            return -1;
+            return 0;
         }
         float max = 0;
         for (int i = 0; i < values.length; i++) {
@@ -162,7 +162,7 @@ public class Ionogram {
     }
 
     private void p(String msg) {
-        System.out.println("Ionogram: " + msg);
+//  System.out.println("Ionogram: " + msg);
         //Logger.getLogger( Ionogram.class.getName()).log(Level.INFO, msg, ex);
     }
 

@@ -29,7 +29,7 @@ import org.junit.Test;
  */
 public class PGMAcquisitionTest {
 
-    static String raw_dir = "S:\\data\\corners\\reg\\";
+    static String raw_dir = "S:\\data\\314a\\raw\\";
     static String test_dir = "S:\\data\\corners\\orig\\";
     PGMAcquisition pgm;
     PGMAcquisition pgmcheck;
@@ -40,7 +40,7 @@ public class PGMAcquisitionTest {
         p("Testing file " + raw_dir + file);
         pgm = new PGMAcquisition(raw_dir + file, startflow);
 
-        pgmcheck = new PGMAcquisition(test_dir + file, startflow);
+//        pgmcheck = new PGMAcquisition(test_dir + file, startflow);
     }
 
 //    @Test
@@ -117,19 +117,19 @@ public class PGMAcquisitionTest {
     @Test
     public void testReadFile_0args() {
         p("readFile new ");
-        pgm.readFile(0, 0, 100, 100, true);
-        p(pgm.toString());
+        pgm.readFile(0, 0, 100, 100, false);
+    //    p(pgm.toString());
 
-        pgmcheck.readFile(0, 0, 100, 100, true);
-        p(pgmcheck.toString());
-        int dx = 50;
-        int dy = 50;
+     //   pgmcheck.readFile(0, 0, 100, 100, true);
+    //    p(pgmcheck.toString());
+        int dx = 5;
+        int dy = 5;
         for (int xx = 0; xx < 2; xx += 1) {
             for (int yy = 0; yy < 2; yy += 1) {
                 int x = xx + dx;
                 int y = yy + dy;
                 p("v3 corner: x=" + x + ", y=" + y + ":" + Arrays.toString(pgm.getDataForPos(x, y)));
-                p("orig     : x=" + x + ", y=" + y + ":" + Arrays.toString(pgmcheck.getDataForPos(x, y)));
+            //    p("orig     : x=" + x + ", y=" + y + ":" + Arrays.toString(pgmcheck.getDataForPos(x, y)));
                 p("");
             }
         }

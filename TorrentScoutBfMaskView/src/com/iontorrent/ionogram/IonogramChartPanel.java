@@ -46,7 +46,7 @@ public class IonogramChartPanel extends JPanel {
 
     private Ionogram ionogram;
     private DefaultCategoryDataset dataset;
- //   private WellContext context;
+    //   private WellContext context;
     private WellCoordinate coord;
     private String chart_type;
     private Color cg;
@@ -131,7 +131,7 @@ public class IonogramChartPanel extends JPanel {
         this.ionogram = ionogram;
 
         this.coord = ionogram.getContext().getAbsoluteCoordinate();
-       
+
         repaint();
 
     }
@@ -163,7 +163,7 @@ public class IonogramChartPanel extends JPanel {
         // find max value
         float max = ionogram.getMax(raw);
         max = max + 0.5f;
-        p("max: "+max);
+        p("max: " + max);
         max = Math.min(max, global_max);
         float dy = (float) h / max;
 
@@ -171,47 +171,44 @@ public class IonogramChartPanel extends JPanel {
         g.setFont(titleFont);
         String s = "";
         if (ionogram.getExpContext() != null) {
-            s += " of "+ionogram.getExpContext().getResultsName();
+            s += " of " + ionogram.getExpContext().getResultsName();
         }
         float values[] = ionogram.getValues(raw);
         if (values == null) {
-            raw= !raw;
-            norm = !norm;
-        }
-        ionogram.getValues(raw);
-        if (values == null) {
-            p("Got no flow values!");
+//            raw= !raw;
+//            norm = !norm;
+//            values =ionogram.getValues(raw);
+//        }
+//        
+//        if (values == null) {
+//            p("Got no flow values!");
             return;
         }
         if (norm && raw) {
-            g.drawString("Ionogram from sff and 1.wells file " + coord+s, x0 + 5, 20);
+            g.drawString("Ionogram from sff and 1.wells file " + coord + s, x0 + 5, 20);
         } else if (norm) {
-            g.drawString("Ionogram from sff file at " + coord+s, x0 + 5, 20);
+            g.drawString("Ionogram from sff file at " + coord + s, x0 + 5, 20);
         } else {
-            g.drawString("Raw Ionogram from 1.wells file at " + coord+s, x0 + 5, 20);
+            g.drawString("Raw Ionogram from 1.wells file at " + coord + s, x0 + 5, 20);
         }
 
 
 
         g.setFont(labelFont);
         g.setColor(Color.black);
+
+        for (int i = 0; i < max; i++) {
+            int y = (int) (y0 - i * dy);
+            gg.setColor(cline);
+            gg.setStroke(dotted);
+            g.drawLine(x0, y, x0 + w, y);
+            g.drawString("" + i, x0 - 18, y + 2);
+        }
         for (float i = 0.0f; i < max; i += 0.5f) {
             int y = (int) (y0 - i * dy);
+            gg.setColor(Color.black);
             gg.setStroke(line);
-            g.setColor(Color.black);
-            g.drawLine(x0, y, x0 + 2, y);
-            if (i == Math.floor(i) || max < 6) {
-
-                if (i != Math.floor(i)) {
-                    gg.setColor(cline);
-                    gg.setStroke(dotted);
-                    g.drawLine(x0, y, x0 + w, y);
-                } else {
-                    g.drawString("" + i, x0 - 18, y + 2);
-                }
-                //  else gg.setColor(cline.brighter());
-
-            }
+            g.drawLine(x0, y, x0 + 2, y);           
         }
 
         g.setFont(medFont);
@@ -219,7 +216,7 @@ public class IonogramChartPanel extends JPanel {
         g.drawString("PPF: " + f.format(ionogram.computePpf(raw)), x0 + 5, BORDER + 25);
         g.drawString("SSQ: " + f.format(ionogram.computeSSQ(raw)), x0 + 5, BORDER + 40);
 
-       
+
         for (int i = 0; i < ionogram.nrFlows(); i++) {
             g.setColor(Color.black);
             int x = (int) (i * dx) + x0;
@@ -239,7 +236,7 @@ public class IonogramChartPanel extends JPanel {
                 g.drawLine(x, y0, x, y0 - h);
 
             }
-            
+
             char base = seq.charAt(i % seq.length());
 
             if (i % 4 == 0) {
@@ -282,7 +279,7 @@ public class IonogramChartPanel extends JPanel {
     }
 
     private void p(String msg) {
-        System.out.println("IonogramChartPanel: " + msg);
+//  System.out.println("IonogramChartPanel: " + msg);
         //Logger.getLogger( IonogramChartPanel.class.getName()).log(Level.INFO, msg, ex);
     }
 

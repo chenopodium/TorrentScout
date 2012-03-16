@@ -49,10 +49,11 @@ public class WellContextFilter {
         this.rawtype = rawtype;
         this.flow = flow;
         this.coord = coord;
+        if (coord == null) this.coord = context.getCoordinate();
     }
 
     public String getKey() {
-        String key= flow+":"+rawtype.name()+":r="+context.getResultsDirectory()+":s="+context.getSelection()+":#="+context.getNrWells();
+        String key= ""+coord+flow+":"+rawtype.name()+":r="+context.getResultsDirectory()+":s="+context.getSelection()+":#="+context.getNrWells();
         if (context.getSelection()!=null && context.getSelection().getFilters()!=null) {
            key += ":f="+ context.getSelection().getFilters();
         }

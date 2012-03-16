@@ -597,7 +597,7 @@ public class RundbLibmetrics implements Serializable {
     }
 
     private void p(String msg) {
-        System.out.println("RundbLibmetrics: " + msg);
+//  System.out.println("RundbLibmetrics: " + msg);
         //Logger.getLogger( RundbLibmetrics.class.getName()).log(Level.INFO, msg, ex);
     }
 

@@ -68,7 +68,6 @@ com.iontorrent.expmodel.ExperimentContext
 com.iontorrent.sff.SffRead
 com.iontorrent.utils.ErrorHandler
 com.iontorrent.wellmodel.WellCoordinate
-com.iontorrent.rawdataaccess.pgmacquisition.RawType
 com.iontorrent.sequenceloading.SequenceLoader$WellToSffIndexTask
 org.iontorrent.seq.Read
 com.iontorrent.sff.index.KmerSffIndex
@@ -169,15 +168,12 @@ javax.swing.JOptionPane
 java.util.logging.Level
 com.iontorrent.results.scores.ScoreMask
 ||:com.iontorrent.heatmaps.WellStatsCalculator
-java.lang.StringBuilder
 java.lang.Math
 [I
 java.lang.Class
 [D
 com.iontorrent.heatmaps.WellStatsCalculator
 java.util.logging.Level
-java.lang.System
-java.io.PrintStream
 java.util.logging.Logger
 com.iontorrent.sff.SffRead
 java.lang.Object

@@ -43,14 +43,14 @@ public enum ScoreMaskFlag {
     // default.samp.parsed flags  
     Q7LEN(3, "Q7 len" ),
     QLEN(4, "qlen"),        
-    MATCH(5, "matches", "Nr matches"),    
+    MATCH(5, "matches"),    
     TLEN(6, "tlen"),
     IDENTITY(7, "identity"),
     Q10LEN(8, "Q10 len" ),
     Q17LEN(9, "Q17 len"),
     Q20LEN(10, "Q20 len"),
     Q47LEN(11, "Q47 len"),
-    INDEL(12, "indels", "Nr of indels"),
+    INDEL(12, "indels"),
     
     CUSTOM1(13, "Custom 1" ),
     CUSTOM2(14, "Custom 2" ),
@@ -161,6 +161,10 @@ public enum ScoreMaskFlag {
            if (this.code == flags[i].code) return true;
        }
        return false;
+    }
+
+    public void setMultiplier(int multiplier) {
+        this.mult = multiplier;
     }
 
 }

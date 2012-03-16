@@ -45,6 +45,7 @@ import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.JScrollPane;
 import org.iontorrent.seq.Read;
+import org.iontorrent.seq.sam.SamUtils;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.util.NbBundle;
@@ -169,6 +170,7 @@ public final class TorrentScoutGenomeToChipTopComponent extends TopComponent imp
         Read read = model.getRead(row);
         WellCoordinate coord = new WellCoordinate(read.getCol(), read.getRow());
 
+        wellcontext = this.expContext.getWellContext();
         wellcontext.setCoordinate(coord);
         wellcontext.loadMaskData(coord);
         p("Sending coordinate of context: " + coord);
@@ -177,6 +179,22 @@ public final class TorrentScoutGenomeToChipTopComponent extends TopComponent imp
         DOACTIONS = true;
     }
 
+    private String getSelectedRef() {
+        Object s =boxref.getSelectedItem();
+        if (s == null) return null;
+        else return s.toString();
+    }
+    private void getReferences() {
+        SequenceLoader loader = SequenceLoader.getSequenceLoader(this.expContext);
+        
+        SamUtils sam = loader.getSamUtils();
+        ArrayList<String> refs = sam.getReferenceNames();
+        this.boxref.removeAllItems();;
+        for (String ref: refs) {
+            boxref.addItem(ref);
+        }
+
+    }
     private void update() {
         if (global == null) {
             return;
@@ -217,7 +235,7 @@ public final class TorrentScoutGenomeToChipTopComponent extends TopComponent imp
             }
             return;
         } else {
-            String msg = "GenomeToChip: finding reads for position" + genomepos + "....";
+            String msg = "GenomeToChip: finding reads for position " + genomepos + "....";
             //    progress = ProgressHandleFactory.createHandle(msg);
             GuiUtils.showNonModalMsg(msg);
         }
@@ -235,6 +253,19 @@ public final class TorrentScoutGenomeToChipTopComponent extends TopComponent imp
         p("Created well selection " + sel + " with " + coords.size() + "  coords");
         ArrayList<Read> reads = loader.getReadForCoords(coords);
 
+        String ref = this.getSelectedRef();
+        if (ref != null && ref.length()>0) {
+            p("Filtering for ref name "+ref);;
+             ArrayList<Read> filtered = new  ArrayList<Read>();
+             for (Read r: reads) {
+                 String name = r.getReferenceName();
+                 if (name == null || name.equalsIgnoreCase(ref)) {
+                     filtered.add(r);
+                 }
+             }
+             reads = filtered;
+        }
+        else p("Not filtering for ref name "+ref);
         error = loader.getMsg();
         if (error != null) {
             this.setStatusError(error);
@@ -289,7 +320,7 @@ public final class TorrentScoutGenomeToChipTopComponent extends TopComponent imp
 
     private void updateTableModel(ArrayList<Read> reads, long genomepos) {
         p("Updating table model with " + reads.size() + "  reads for genome pos " + genomepos);
-        model = new ReadlTableModel(reads, genomepos);
+        model = new ReadlTableModel(this.expContext, reads, genomepos);
         //  TableRowSorter sorter = new TableRowSorter(model);
         //  wellsTable.setRowSorter(sorter);
         table.setModel(model);
@@ -351,6 +382,7 @@ public final class TorrentScoutGenomeToChipTopComponent extends TopComponent imp
         if (global == null) {
             global = GlobalContext.getContext();
         }
+        this.getReferences();
 
 
     }
@@ -373,6 +405,7 @@ public final class TorrentScoutGenomeToChipTopComponent extends TopComponent imp
 
         jToolBar1 = new javax.swing.JToolBar();
         btnExport = new javax.swing.JButton();
+        boxref = new javax.swing.JComboBox();
         jLabel1 = new javax.swing.JLabel();
         spinGenome = new javax.swing.JSpinner();
         jButton1 = new javax.swing.JButton();
@@ -394,6 +427,8 @@ public final class TorrentScoutGenomeToChipTopComponent extends TopComponent imp
             }
         });
         jToolBar1.add(btnExport);
+
+        jToolBar1.add(boxref);
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(TorrentScoutGenomeToChipTopComponent.class, "TorrentScoutGenomeToChipTopComponent.jLabel1.text")); // NOI18N
         jToolBar1.add(jLabel1);
@@ -434,6 +469,7 @@ public final class TorrentScoutGenomeToChipTopComponent extends TopComponent imp
         doExportAction();
     }//GEN-LAST:event_btnExportActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox boxref;
     private javax.swing.JButton btnExport;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
@@ -498,6 +534,6 @@ public final class TorrentScoutGenomeToChipTopComponent extends TopComponent imp
     }
 
     private void p(String msg) {
-        System.out.println("TorrentScoutGenomeToChipTopComponent: " + msg);
+//  System.out.println("TorrentScoutGenomeToChipTopComponent: " + msg);
     }
 }

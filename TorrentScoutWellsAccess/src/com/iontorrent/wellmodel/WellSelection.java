@@ -96,6 +96,9 @@ public class WellSelection implements Serializable {
     public void createCoordsForEntireArea() {
         allWells = new ArrayList<WellCoordinate>();
         int count = 0;
+        if (coord1 == null) return;
+        if (getCoord2() == null) coord2 = new WellCoordinate(coord1);
+        
         for (int c = getCoord1().getCol(); c <= getCoord2().getCol(); c++) {
             for (int r = getCoord1().getRow(); r <= getCoord2().getRow(); r++) {
                 //if (!mask.getDataPointAt(c, r).hasFlag(BfMaskFlag.EMPTY)) {

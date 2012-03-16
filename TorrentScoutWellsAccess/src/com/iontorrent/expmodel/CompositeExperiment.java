@@ -103,8 +103,8 @@ public class CompositeExperiment {
         be.setRowOffset(offsety);
         be.setBlock(true);
         be.setDatblock(block);
-        p("Got exp context with block :"+block);
-        p("block exp is: "+be);
+      //  p("Got exp context for block :"+block);
+       // p("block exp is: "+be);
         showBlockHelp(offerHelp);
         return be;
     }
@@ -170,31 +170,31 @@ public class CompositeExperiment {
         }
     }
 
-    public ExperimentContext getThumbnailsContext(boolean help) {
-        ExperimentContext be = exptemplate.deepClone();
-        be.setRawDir(rootexp.getRawDir() + THUMB);
-        be.setThumbnails(true);
-        if (!FileUtils.exists(be.getRawDir())) {
-            err(THUMB + " raw dir " + be.getRawDir() + " not found");
-            //return null;
-        }
-
-        be.setResultsDirectory(rootexp.getResultsDirectory() + "block_" + THUMB);
-        if (!FileUtils.exists(be.getResultsDirectory())) {
-            p("Thumbnails results dir " + be.getResultsDirectory() + " not found, using RAW dir");
-            be.setResultsDirectory(be.getRawDir());
-        }
-        be.setCacheDir(rootexp.getCacheDir() + "cache_" + THUMB);
-        int offsetx = 0;
-        int offsety = 0;
-        be.setColOffset(offsetx);
-        be.setRowOffset(offsety);
-        be.getWellContext();
-        p("Got thumbnails experiment context: " + be);
-        //p("Dirs: "+be.toString());
-        showBlockHelp(help);
-        return be;
-    }
+//    public ExperimentContext getThumbnailsContext(boolean help) {
+//        ExperimentContext be = exptemplate.deepClone();
+//        be.setRawDir(rootexp.getRawDir() + THUMB);
+//        be.setThumbnails(true);
+//        if (!FileUtils.exists(be.getRawDir())) {
+//            err(THUMB + " raw dir " + be.getRawDir() + " not found");
+//            //return null;
+//        }
+//
+//        be.setResultsDirectory(rootexp.getResultsDirectory() + "block_" + THUMB);
+//        if (!FileUtils.exists(be.getResultsDirectory())) {
+//            p("Thumbnails results dir " + be.getResultsDirectory() + " not found, using RAW dir");
+//            be.setResultsDirectory(be.getRawDir());
+//        }
+//        be.setCacheDir(rootexp.getCacheDir() + "cache_" + THUMB);
+//        int offsetx = 0;
+//        int offsety = 0;
+//        be.setColOffset(offsetx);
+//        be.setRowOffset(offsety);
+//        be.getWellContext();
+//        p("Got thumbnails experiment context: " + be);
+//        //p("Dirs: "+be.toString());
+//        showBlockHelp(help);
+//        return be;
+//    }
 
     public DatBlock findBlock(WellCoordinate coord) {
         return findBlock(coord.getCol(), coord.getRow());
@@ -263,7 +263,7 @@ public class CompositeExperiment {
           //  warn("Dir not found: " + d + ", using default dir");
             d = b.getDefaultResultsBlockDir(dir);
         } else {
-            p("Using results block dir " + d);
+          //  p("Using results block dir " + d);
         }
         return d;
     }
@@ -297,7 +297,7 @@ public class CompositeExperiment {
        //     warn("Dir not found: " + d + ", using default dir");
             d = b.getDefaultRawBlockDir(dir);
         } else {
-            p("Using raw block dir " + d);
+           // p("Using raw block dir " + d);
         }
         return d;
     }

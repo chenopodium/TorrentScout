@@ -76,7 +76,7 @@ public class ScoreValueRenderer extends JLabel implements TableCellRenderer {
     }
 
     private void p(String msg) {
-        System.out.println("FlagRenderer: " + msg);
+//  System.out.println("FlagRenderer: " + msg);
         //Logger.getLogger( FlagRenderer.class.getName()).log(Level.INFO, msg, ex);
     }
 

@@ -131,6 +131,7 @@
                 </dependency>
             </module-dependencies>
             <public-packages>
+                <package>com.iontorrent.chipview</package>
                 <package>com.iontorrent.compview</package>
                 <package>com.iontorrent.ionogram</package>
                 <package>com.iontorrent.ionogram.options</package>

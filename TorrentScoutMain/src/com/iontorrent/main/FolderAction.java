@@ -132,7 +132,7 @@ public class FolderAction extends BasicAction implements HyperlinkListener {
     }
 
     private static void p(String msg) {
-        System.out.println("FolderAction: " + msg);
+//  System.out.println("FolderAction: " + msg);
         //Logger.getLogger( FolderAction.class.getName()).log(Level.INFO, msg);
     }
 

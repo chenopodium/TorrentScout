@@ -40,7 +40,7 @@ A common question about the wells format is how to tell the total number of rows
 
  * @author Chantal Roth
  */
-public class BfMask implements Serializable{
+public class BfMask implements Serializable {
 
     /** the associated fileOrUrl */
     private String fileOrUrl;
@@ -53,16 +53,25 @@ public class BfMask implements Serializable{
     private int[][] alldata;
     private String name;
 
-    public BfMask(){
-        
+    public BfMask() {
     }
+
     public BfMask(String file) {
         this.fileOrUrl = file;
         if (!FileUtils.exists(fileOrUrl)) {
             err("File " + file + " does not exist");
         }
-        in = FileUtils.openFileOrUrl(file);
+        else in = FileUtils.openFileOrUrl(file);
 
+    }
+
+    public void close() {
+        if (in != null) {
+            try {
+                in.close();
+            } catch (Exception e) {
+            }
+        }
     }
 
     public BfMask(int cols, int rows) {
@@ -81,10 +90,10 @@ public class BfMask implements Serializable{
         BitMask bead = null;
         BitMask keypass = null;
         WellCoordinate relcoord = new WellCoordinate(x0, y0);
-        p("Creating masks from bfmask at REL coord of this block/chip "+x0+"/"+y0);
-        if (this.getNrCols()<1) {
+        p("Creating masks from bfmask at REL coord of this block/chip " + x0 + "/" + y0);
+        if (this.getNrCols() < 1) {
             err("Cannot fill mask... got no columsn...???");
-                    
+
         }
         for (BfMaskFlag flag : BfMaskFlag.DEFAULT_MASKS) {
             BitMask bit = new BitMask(relcoord, dx, dy);
@@ -105,7 +114,7 @@ public class BfMask implements Serializable{
                 for (int y = y0; y < y0 + dy && y < this.getNrRows(); y++) {
                     int c = x - x0;
                     int r = y - y0;
-                    BfMaskDataPoint p=this.getDataPointAt(x, y);
+                    BfMaskDataPoint p = this.getDataPointAt(x, y);
                     if (p != null && p.hasFlag(flag)) {
                         bit.set(c, r, true);
                     }
@@ -156,9 +165,7 @@ public class BfMask implements Serializable{
         return b;
     }
 
-    
     /* 1 - 1 = 0; 1 - 0=1, 0 - 1 = 0, 0 - 0 =0 -> bitwise a &(~b) */
-
     public boolean shift(BfMask m1, int dx, int dy) {
         if (!compatible(m1)) {
             return false;
@@ -175,14 +182,14 @@ public class BfMask implements Serializable{
                     int v = m1.getMaskAt(c1, r1);
                     //  p(v1 +"- "+ v2 +"= "+v3);
                     this.setMaskAt(c, r, v);
+                } else {
+                    this.setMaskAt(c, r, 0);
                 }
-                 else this.setMaskAt(c, r, 0);
             }
-        }       
+        }
         return true;
     }
 
-   
     public boolean copyFrom(BfMask m1) {
         if (!compatible(m1)) {
             return false;
@@ -196,8 +203,6 @@ public class BfMask implements Serializable{
         return true;
     }
 
-  
-
     public void readHeader() {
         header = new Header();
         header.read();
@@ -210,6 +215,13 @@ public class BfMask implements Serializable{
     }
 
     public int[][] readAllData() {
+        if (in == null) {
+            in = FileUtils.openFileOrUrl(fileOrUrl);
+        }
+        if (in == null) {
+            err("readAllData: Cannot read file " + fileOrUrl);
+            return null;
+        }
         alldata = new int[header.nCols][header.nRows];
         for (int y = 0; y < header.nRows; y++) {
             for (int x = 0; x < header.nCols; x++) {
@@ -217,6 +229,7 @@ public class BfMask implements Serializable{
                 alldata[x][y] = mask;
             }
         }
+        close();
         //p("Read bfmask read");
         return alldata;
     }
@@ -356,12 +369,19 @@ public class BfMask implements Serializable{
         this.name = name;
     }
 
-    protected class Header implements Serializable{
+    protected class Header implements Serializable {
 
         int nRows; // uint32
         int nCols; //uint32
 
         protected void read() {
+            if (in == null) {
+                in = FileUtils.openFileOrUrl(fileOrUrl);
+            }
+            if (in == null) {
+                err("Cannot read file " + fileOrUrl);
+                return;
+            }
             try {
                 nRows = (int) FileUtils.getUInt32(in);
                 nCols = (int) FileUtils.getUInt32(in);

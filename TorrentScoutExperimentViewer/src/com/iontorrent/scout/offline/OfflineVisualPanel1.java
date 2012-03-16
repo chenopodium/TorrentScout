@@ -77,6 +77,10 @@ public final class OfflineVisualPanel1 extends JPanel implements WizPanel {
         exp.setResultsDirectory(txtResults.getText());
         exp.setRawDir(txtRaw.getText());
 
+        if (exp.isThumbnails()) {
+            exp.setThumbnailsRaw();
+            
+        }
         //exp.setCacheDir(txtCache.getText());
         exp.expandCacheDir(txtCache.getText());
         exp.createWellContext();

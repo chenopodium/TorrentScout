@@ -77,7 +77,7 @@ public class ReadTable extends ETable {
     }
 
     private static void p(String msg) {
-        System.out.println("WellTable: " + msg);
+//  System.out.println("WellTable: " + msg);
         //Logger.getLogger( WellTable.class.getName()).log(Level.INFO, msg);
     }
      public String toCsv() {

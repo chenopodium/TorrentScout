@@ -43,7 +43,11 @@ public class ExpChiptypeNodeFilter extends NodeFilter {
             description = "Only accept experiments with chip type NOT " + type;
         }
     }
-
+ @Override
+    public String getRelevantValue(Object node) {
+        RundbExperiment n = (RundbExperiment) node;
+        return  n.getChipType();        
+    }
     @Override
     public boolean passes(Object node) {
         RundbExperiment n = (RundbExperiment) node;

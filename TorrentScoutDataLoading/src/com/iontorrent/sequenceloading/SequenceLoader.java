@@ -105,14 +105,11 @@ public final class SequenceLoader implements TaskListener {
         this.cache_dir = context.getCacheDir();
         this.plugin_dir = context.getPluginDir();
         this.interactive = true;
-        if (cache_dir == null) {
-            err("Got no cache dir in sequence loader");
-        }
-
-        if (context.getNrcols()<1 || context.getNrrows()<1) {
-            warn("unknown rows, cols");
-            context.findColsRows(0, RawType.ACQ);
-        }
+       
+//        if (context.getNrcols()<1 || context.getNrrows()<1) {
+//            warn("unknown rows, cols");
+//            context.findColsRows(0, RawType.ACQ);
+//        }
         //   p("Locating sff " + context.getSffFileName());
         this.checkAndFindSffFile(context.getSffFileName(), getFiles);
         //   p("Locating sff tf " + context.getSfftffilename());
@@ -129,7 +126,7 @@ public final class SequenceLoader implements TaskListener {
 
     public boolean maybeCreateSffIndex(TaskListener listener) {
         if (welltosffindextask != null) {
-            msg = ("There is alreay an indexing task for index " + welltosffindex);
+            msg = ("There is already an indexing task for index " + welltosffindex);
             return false;
         }
         if (listener != null) {
@@ -621,7 +618,7 @@ public final class SequenceLoader implements TaskListener {
             boolean exists = welltosfftfindexfile.exists();
             if (!exists) {
                 if (welltosfftfindextask != null) {
-                    msg = ("There is alreay an indexing task for TF index " + welltosfftfindex);
+                    msg = ("There is already an indexing task for TF index " + welltosfftfindex);
                     return null;
                 }
                 if (listener != null) {
@@ -691,12 +688,12 @@ public final class SequenceLoader implements TaskListener {
             if (!exists && subseq.length() >= kmersffindex.getKmerSize()) {
                 p("No index, and " + subseq + " is >= " + kmersffindex.getKmerSize() + "  long, so need to create index");
                 if (kmertosffindextask != null) {
-                    msg = "There is alreay an indexing task for creating kmer index";
+                    msg = "There is already an indexing task for creating kmer index";
                     p(msg);
                     return null;
                 }
                 if (listener != null) {
-                    msg("Staring indexing task for kmer index file");
+                    msg("Starting indexing task for kmer index file");
                     kmertosffindextask = new KmerToSffIndexTask(listener, kmersffindex);
                     kmertosffindextask.execute();
                     GuiUtils.showNonModalMsg("I am creating a SFF KMER index... ");
@@ -727,24 +724,24 @@ public final class SequenceLoader implements TaskListener {
     }
 
     private String findFile(String ex, boolean ask, String not) {
-        String f = findFile(ex, results_path, ask, not);
+        String f = findFile(ex, results_path, ask, not, interactive);
         if (f != null) {
             return f;
         }
-        f = findFile(ex, cache_dir, ask, not);
+        f = findFile(ex, cache_dir, ask, not, interactive);
         if (f != null) {
             return f;
         }
-        f = findFile(ex, plugin_dir, ask, not);
+        f = findFile(ex, plugin_dir, ask, not, interactive);
         return f;
 
     }
 
     private String findFile(String ex, String path, boolean ask) {
-        return findFile(ex, path, ask, null);
+        return findFile(ex, path, ask, null, interactive);
     }
 
-    private String findFile(String ex, String path, boolean ask, String not) {
+    public static String findFile(String ex, String path, boolean ask, String not, boolean interactive) {
         if (path == null || FileUtils.isUrl(path)) {
             return null;
         }
@@ -766,9 +763,7 @@ public final class SequenceLoader implements TaskListener {
         }
         if (nr > 1) {
             if (interactive && ask) {
-                file = FileTools.getFile("I don't know which the right " + ex + " file is, please tell me", ex, path);
-            } else {
-                file = null;
+                file = FileTools.getFile("I don't know which the right " + ex + " file is, please tell me", ex, path);            
             }
         } else if (nr == 1) {
             //if (ask) file = FileTools.getFile("I assume this is the right " + ex + " file?", ex, file);

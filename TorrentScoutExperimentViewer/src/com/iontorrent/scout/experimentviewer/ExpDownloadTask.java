@@ -115,7 +115,7 @@ public class ExpDownloadTask extends Task implements Cancellable {
     }
 
     private void p(String msg) {
-        System.out.println("ExpDownloadTask: " + msg);
+//  System.out.println("ExpDownloadTask: " + msg);
         Logger.getLogger(ExpDownloadTask.class.getName()).log(Level.INFO, msg);
     }
 

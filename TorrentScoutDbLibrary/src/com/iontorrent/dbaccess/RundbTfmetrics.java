@@ -174,7 +174,7 @@ public class RundbTfmetrics implements Serializable {
     }
 
     private void p(String msg) {
-        System.out.println("RundbTfmetrics: " + msg);
+//  System.out.println("RundbTfmetrics: " + msg);
         //Logger.getLogger( RundbTfmetrics.class.getName()).log(Level.INFO, msg, ex);
     }
 

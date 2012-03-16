@@ -162,7 +162,7 @@ public class RundbAnalysismetrics implements Serializable {
     }
 
     private void p(String msg) {
-        System.out.println("RundbAnalysismetrics: " + msg);
+//  System.out.println("RundbAnalysismetrics: " + msg);
         //Logger.getLogger( RundbAnalysismetrics.class.getName()).log(Level.INFO, msg, ex);
     }
 

@@ -49,6 +49,8 @@ public abstract class NodeFilter {
 
     public abstract boolean passes(Object node);
 
+    public abstract String getRelevantValue(Object node);
+    
     public abstract Class getNodeClass();
 
     public static boolean passes(Object node, ArrayList<NodeFilter> filters) {
@@ -85,7 +87,7 @@ public abstract class NodeFilter {
     }
 
     protected void p(String msg) {
-        System.out.println("NodeFilter: " + msg);
+//  System.out.println("NodeFilter: " + msg);
         //Logger.getLogger( NodeFilter.class.getName()).log(Level.INFO, msg, ex);
     }
 

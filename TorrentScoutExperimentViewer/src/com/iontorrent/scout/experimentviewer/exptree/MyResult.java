@@ -32,6 +32,9 @@ import com.iontorrent.expmodel.ExperimentContext;
 import com.iontorrent.utils.ToolBox;
 import com.iontorrent.utils.io.FileTools;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 
 
 /**
@@ -45,7 +48,7 @@ public final class MyResult  {
     private String experimentName;
     private String fastqLink;
     private String status;
-    
+    private Date date;
     private File report_directory;
     private File wellsFile;
     private File acquisitionPath;
@@ -85,6 +88,7 @@ public final class MyResult  {
         path = findPath(path);
         acquisitionPath = new File(path);
         this.nrFlows = ex.getFlows();
+        this.date = r.getRundbExperiment().getDate();
         this.libraryKey = ex.getLibraryKey();
         this.flowOrder = ex.getFlowsInOrder();
         this.chipType = ex.getChipType();
@@ -120,6 +124,64 @@ public final class MyResult  {
         }        
     }
     
+    public static long getTopQ17Bases(ArrayList<MyResult> list, int top) {
+        ArrayList<Long> bases = new ArrayList<Long>();
+        for (MyResult res: list) {
+            if (res.getQaulityMetrics() != null) {
+            long val = res.getQaulityMetrics().getQ17Bases();
+            bases.add(val);
+            }
+        }
+        // from small to large, so best are at the END
+        Collections.sort(bases);
+        // now get the top value
+        int nr = bases.size();
+        if (nr == 0) return 0;
+        
+        if (nr > top) {
+            return bases.get(nr - top);
+        }
+        else return bases.get(0);               
+    }
+     public static long getTopQ17MaxReadLen(ArrayList<MyResult> list, int top) {
+        ArrayList<Long> values = new ArrayList<Long>();
+        for (MyResult res: list) {
+            if (res.getQaulityMetrics() != null) {
+                long val = res.getQaulityMetrics().getQ17MaxReadLength();
+                values.add(val);
+            }
+        }
+        // from small to large, so best are at the END
+        Collections.sort(values);
+        // now get the top value
+        int nr = values.size();
+        if (nr == 0) return 0;
+        
+        if (nr > top) {
+            return values.get(nr - top);
+        }
+        else return values.get(0);               
+    }
+      public static double getTopQ17MeanReadLen(ArrayList<MyResult> list, int top) {
+        ArrayList<Double> values = new ArrayList<Double>();
+        for (MyResult res: list) {
+            if (res.getQaulityMetrics() != null) {
+            double val = res.getQaulityMetrics().getQ17MeanReadLength();
+            values.add(val);
+            }
+        }
+        // from small to large, so best are at the END
+        Collections.sort(values);
+        // now get the top value
+        int nr = values.size();
+        if (nr == 0) return 0;
+        
+        if (nr > top) {
+            return values.get(nr - top);
+        }
+        else return values.get(0);               
+    }
+    
    public ExperimentContext createContext() {
        MyResult result = this;
         ExperimentContext exp = new ExperimentContext();
@@ -138,7 +200,7 @@ public final class MyResult  {
         exp.setSffFilename(name + ".sff");
         exp.setSfftffilename(name + "-tf.sff");
         exp.setExpDir(result.getAcquisitionPath().toString());
-
+        
         String report = result.getReportLink();
         report = ToolBox.replace(report, "\\", "/");
         int s = report.lastIndexOf("/");
@@ -153,6 +215,11 @@ public final class MyResult  {
         exp.setRawDir("/"+exp.getExpDir());
         exp.setResultsDirectory(exp.getResDirFromDb());
         exp.setCacheDir(exp.getResultsDirectory()+"/plugin_out/torrentscout/");
+        if (exp.isThumbnails()) {
+            
+            exp.setThumbnailsRaw();
+            p("Experiment is thumbnails, using thumbnails raw: "+exp.getRawDir());
+        }
         return exp;
    }
     private String findPath(String url) {
@@ -280,7 +347,7 @@ public final class MyResult  {
     }
 
     private void p(String string) {
-        System.out.println("MyResults: "+string);
+//  System.out.println("MyResults: "+string);
     }
 
     /**
@@ -352,6 +419,32 @@ public final class MyResult  {
     public String getChipType() {
         return chipType;
     }
+    public boolean isBB() {
+        String t = getChipType();
+        if (t == null) t = "";
+        t = t.replaceAll("\"", "");
+        
+        return (t.toLowerCase().startsWith("bb") ||  t.toLowerCase().startsWith("9"));
+    }
+    public boolean isTN() {
+        String t = this.getResultsName();
+        if (t == null) t = "";
+       
+        return (t.toLowerCase().indexOf("_tn_")>0);
+    }
 
+    /**
+     * @return the date
+     */
+    public Date getDate() {
+        return date;
+    }
+
+    /**
+     * @param date the date to set
+     */
+    public void setDate(Date date) {
+        this.date = date;
+    }
       
 }

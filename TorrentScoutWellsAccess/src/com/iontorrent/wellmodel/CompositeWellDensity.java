@@ -54,8 +54,8 @@ public class CompositeWellDensity extends GeneralWellDensity {
     private int flow;
     private int frame;
     
-    public CompositeWellDensity(CompositeExperiment compexp, RawType type, int flow, int frame) {
-        super(4);
+    public CompositeWellDensity(CompositeExperiment compexp, RawType type, int flow, int frame, int bucketsize) {
+        super(bucketsize);
         this.compexp = compexp;
         this.type = type;
         this.flow = flow;
@@ -66,7 +66,8 @@ public class CompositeWellDensity extends GeneralWellDensity {
         return nrflags;
     }
 
-    public String createCompositeImages(ProgressListener progress, String rawfile) {
+    public String createCompositeImages(ProgressListener progress, String rawfile, BfMaskFlag currentflag) {
+        
         compexp.setCurblock(null);
         int totcols = compexp.getNrcols();
         int totrows = compexp.getNrrows();
@@ -75,12 +76,9 @@ public class CompositeWellDensity extends GeneralWellDensity {
         int bucketsize = mask.GRID;
         int compcols = totcols / bucketsize;
         int comprows = totrows / bucketsize;
-p("************************ createCompositeImages Tot rows/cols="+totrows+"/"+totcols+" ********************");
-        
-
+p("************************ createCompositeImage, bucket="+bucketsize+" Tot rows/cols="+totrows+"/"+totcols+" flag "+currentflag +"********************");        
         DatBlock first = compexp.findBlock(0, 0);
-        p("First block: " + first);
-        nrflags = 1;
+        p("First block: " + first);       
         boolean hasallmasks = true;
          for (DatBlock block : compexp.getBlocks()) {
             ExperimentContext exp = compexp.getContext(block,false);
@@ -89,22 +87,16 @@ p("************************ createCompositeImages Tot rows/cols="+totrows+"/"+to
             if (blockmask == null) hasallmasks = false;
          }
          
-        if (!hasallmasks) {
-            p("Do NOT have all masks, probably just raw .dat files, so just using ONE flag RAW");
-            //String imageFileOrUrl = mask.getImageFile(BfMaskFlag.RAW);
+       
             if (FileUtils.exists(rawfile)) {
                 p("Already created file "+rawfile);
                 if (progress != null) progress.setProgressValue(100);
                 return null;
             }
-            else p("Could NOT find file "+rawfile);
-        } else {
-            p("I have ALL block bfmask files will create ALL heat maps :-)");
-            nrflags = BfMaskFlag.getNrFlags();
-        }
-
+            else p("Could NOT find file yet: "+rawfile);
+        
         p("Creating heat map data structure for " + compcols + "/" + comprows + "  composite cols and rows, bucket=" + bucketsize + ", tot cols/rows=" + totcols + "/" + totrows);
-        int[][][] fullimage = new int[nrflags][compcols][comprows];
+        int[][] fullimage = new int[compcols][comprows];
 
         if (first == null) {
             return "Got no blocks";
@@ -120,14 +112,14 @@ p("************************ createCompositeImages Tot rows/cols="+totrows+"/"+to
         for (DatBlock block : compexp.getBlocks()) {
             int startcol = block.getStart().getCol() / bucketsize;
             int startrow = block.getStart().getRow() / bucketsize;
-            p("=========== Processing block: " + block + ", composite start col/row=" + startcol + "/" + startrow+", nrflags="+nrflags);
+            p("=========== Processing block: " + block + ", composite start col/row=" + startcol + "/" + startrow+", flag="+currentflag);
             compexp.setCurblock(block);
             if (progress != null) progress.setProgressValue((int) prog);
 
             ExperimentContext exp = compexp.getContext(block, false);
             WellContext context = exp.getWellContext();
             BfMask blockmask = context.getMask();
-            if (nrflags == 1) {
+            if (currentflag == BfMaskFlag.RAW) {
                 createRawHeatMap(0, exp, bucketsize, w, h, startcol, compcols, startrow, comprows, fullimage);
             } else {
                 if (blockmask != null) {
@@ -138,24 +130,24 @@ p("************************ createCompositeImages Tot rows/cols="+totrows+"/"+to
                     int maxr = Math.min(wellDensity.getNrRows(), h / bucketsize);
                 //    p("maxc/maxr=" + maxc + "/" + maxr);
                     // LAST FLAG IS RAW
-                    for (int f = 0; f+1 < nrflags; f++) {
-                        BfMaskFlag flag = BfMaskFlag.get(f);
+                //    for (int f = 0; f+1 < nrflags; f++) {
+                 //       BfMaskFlag flag = BfMaskFlag.get(f);
                      //   p("Processing flag: "+flag);
-                        wellDensity.setFlag(flag);
+                        wellDensity.setFlag(currentflag);
                         for (int c = 0; c < maxc; c++) {
                             for (int r = 0; r < maxr; r++) {
                                 int nr = wellDensity.getCount(c, r);
                                 if (startcol + c < compcols && startrow + r < comprows) {
-                                    fullimage[f][startcol + c][startrow + r] = nr;
+                                    fullimage[startcol + c][startrow + r] = nr;
                                 } else {
                                    if (errors <10) p("out of bounds " + (startcol + c) + "/" + (startrow + r)+", max is: "+comprows+"/"+comprows);
                                    errors++;
                                 }
                             }
                         }
-                    }
+                  //  }
                     // ALSO DO RAW
-                    createRawHeatMap(BfMaskFlag.RAW.getCode(), exp, bucketsize, w, h, startcol, compcols, startrow, comprows, fullimage);
+                   // createRawHeatMap(BfMaskFlag.RAW.getCode(), exp, bucketsize, w, h, startcol, compcols, startrow, comprows, fullimage);
                 }
                 else p("Found no mask for this block");
             }
@@ -163,24 +155,16 @@ p("************************ createCompositeImages Tot rows/cols="+totrows+"/"+to
             prog += inc;
         }
         compexp.setCurblock(null);
-        if (nrflags > 1) {
-            for (int f = 0; f < nrflags; f++) {
-                BfMaskFlag flag = BfMaskFlag.get(f);
-               // p("Writing image for flag " + flag);
-                createImageFile(flag, fullimage[f], rawfile);
-            }
-        } else {
-            p("Just creating dAT image file");
-            createImageFile(BfMaskFlag.RAW, fullimage[0], rawfile);
-        }
+       
+       createImageFile(currentflag, fullimage, rawfile);
         prog += inc;
         if (progress != null) progress.setProgressValue((int) prog);
-        p("Done creating composite heat maps");
+        p("Done creating composite heat map for flag "+currentflag);
         return null;
     }
 
-    protected void createRawHeatMap(int arraypos, ExperimentContext exp, int bucketsize, int w, int h, int startcol, int compcols, int startrow, int comprows, int[][][] fullimage) {
-        p("No bfmask, will use .dat files");
+    protected void createRawHeatMap(int arraypos, ExperimentContext exp, int bucketsize, int w, int h, int startcol, int compcols, int startrow, int comprows, int[][] fullimage) {
+    //    p("No bfmask, will use .dat files");
 
         DatWellDensity wellDensity = new DatWellDensity(exp, bucketsize, type,flow, frame);
         try {
@@ -192,17 +176,17 @@ p("************************ createCompositeImages Tot rows/cols="+totrows+"/"+to
         } catch (Exception e) {
             err("Could not compute well density for exp " + exp, e);
         }
-        p("DatWellDensity block size=" + wellDensity.getNrCols() + "/" + wellDensity.getNrRows() + ", should be =" + w / bucketsize + "/" + h / bucketsize);
+   //     p("DatWellDensity block size=" + wellDensity.getNrCols() + "/" + wellDensity.getNrRows() + ", should be =" + w / bucketsize + "/" + h / bucketsize);
         int maxc = Math.min(wellDensity.getNrCols(), w / bucketsize);
         int maxr = Math.min(wellDensity.getNrRows(), h / bucketsize);
-        p("maxc/maxr=" + maxc + "/" + maxr);
+     //   p("maxc/maxr=" + maxc + "/" + maxr);
         // wellDensity.setFlag(flag);
         int errors = 0;
         for (int c = 0; c < maxc; c++) {
             for (int r = 0; r < maxr; r++) {
                 int nr = wellDensity.getCount(c, r);
                 if (startcol + c < compcols && startrow + r < comprows) {
-                    fullimage[arraypos][startcol + c][startrow + r] = nr;
+                    fullimage[startcol + c][startrow + r] = nr;
                 } else {
                   if (errors <10)  p("out of bounds " + (startcol + c) + "/" + (startrow + r));
                   errors++;
@@ -216,7 +200,7 @@ p("************************ createCompositeImages Tot rows/cols="+totrows+"/"+to
         String imageFileOrUrl = null;
         if (flag == BfMaskFlag.RAW) imageFileOrUrl = rawfile;
         else imageFileOrUrl = mask.getImageFile(flag);
-        p("Creating image file " + imageFileOrUrl);
+    //    p("Creating image file " + imageFileOrUrl);
         // saves the data to an image file
         if (FileUtils.isUrl(imageFileOrUrl)) {
             return "<br>The file " + imageFileOrUrl + " is an URL, but I have to store the image in a file";
@@ -270,12 +254,9 @@ p("************************ createCompositeImages Tot rows/cols="+totrows+"/"+to
     }
 
     public void initDensityPlot() {
-        int nr_col_buckets = mask.getNrCols() / bucket_size + 1;
-        
+        int nr_col_buckets = mask.getNrCols() / bucket_size + 1;        
         int nr_row_buckets = mask.getNrRows() / bucket_size + 1;
-        
-        
-        int nrflags = 1;
+        nrflags = 1;
 //        nrflags = 1;
 //        if (compexp.getContext(0).getWellContext() == null) {
 //            p("First block got no well context, probably just raw .dat files, so just using ONE flag RAW");
@@ -283,7 +264,7 @@ p("************************ createCompositeImages Tot rows/cols="+totrows+"/"+to
 //            nrflags = BfMaskFlag.getNrFlags() - 1;
 //        }
         nrflags = BfMaskFlag.getNrFlags();
-        p("initDensityPlot: bucket: " + bucket_size + ", nr cols: " + nr_col_buckets+"/"+nr_row_buckets + ", nrwells: " + bucket_size * nr_col_buckets);
+  //      p("initDensityPlot: bucket: " + bucket_size + ", nr cols: " + nr_col_buckets+"/"+nr_row_buckets + ", nrwells: " + bucket_size * nr_col_buckets);
         well_density = new int[nr_col_buckets][nr_row_buckets][nrflags];
         maxvalues = new int[nrflags];
         minvalues = new int[nrflags];
@@ -313,8 +294,6 @@ p("************************ createCompositeImages Tot rows/cols="+totrows+"/"+to
             smflag = BfMaskFlag.RAW;
             code = 0;
         }
-
-
         if (done[code]) {
             return null;
         }
@@ -338,7 +317,7 @@ p("************************ createCompositeImages Tot rows/cols="+totrows+"/"+to
         }
         maxvalues[code] = max;
         minvalues[code] = min;
-        p("max: " + max);
+   //     p("max: " + max);
         done[code] = true;
         //  }
         return null;
@@ -359,6 +338,7 @@ p("************************ createCompositeImages Tot rows/cols="+totrows+"/"+to
         return maxvalues[curflag.getCode()];
     }
 
+    @Override
     public int getMin() {
         return minvalues[curflag.getCode()];
     }
@@ -423,7 +403,7 @@ p("************************ createCompositeImages Tot rows/cols="+totrows+"/"+to
     }
 
     private static void p(String msg) {
-        //System.out.println("CompositeWellDensity: " + msg);
+    //    System.out.println("CompositeWellDensity: " + msg);
         Logger.getLogger(CompositeWellDensity.class.getName()).log(Level.INFO, msg);
     }
 }

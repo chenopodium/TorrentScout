@@ -76,7 +76,7 @@ public class RundbReportstorage implements Serializable {
     }
 
     private void p(String msg) {
-        System.out.println("RundbReportstorage: " + msg);
+//  System.out.println("RundbReportstorage: " + msg);
         //Logger.getLogger( RundbReportstorage.class.getName()).log(Level.INFO, msg, ex);
     }
 

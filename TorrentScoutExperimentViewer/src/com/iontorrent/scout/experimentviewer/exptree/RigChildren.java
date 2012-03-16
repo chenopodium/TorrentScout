@@ -42,7 +42,7 @@ public class RigChildren extends Index.ArrayChildren {
     }
 
     private void p(String s) {
-        System.out.println("RigChildren: " + s);
+//  System.out.println("RigChildren: " + s);
     }
 
     @Override

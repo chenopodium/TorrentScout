@@ -55,6 +55,6 @@ public class TimeChannel {
             mappedOffset += mappedSize;
             mappedSize = Math.min(fileSize - totalBytesRead, maxToMapAtATime);
         }
-        System.out.println("Total bytes: " + totalBytesRead);
+//  System.out.println("Total bytes: " + totalBytesRead);
     }
 }

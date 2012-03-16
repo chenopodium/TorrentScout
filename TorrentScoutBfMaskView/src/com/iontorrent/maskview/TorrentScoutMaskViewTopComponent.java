@@ -228,17 +228,17 @@ public final class TorrentScoutMaskViewTopComponent extends TopComponent impleme
             return;
         }
         this.btnReload.setToolTipText("Reload the file " + bfmask_file);
-        p("TRYING TO LOAD MASK:");
+     //   p("TRYING TO LOAD MASK:");
         p("Mask file: " + bfmask_file);
-        p("Exp results dir " + expContext.getResultsDirectory());
-        p("Exp raw     dir " + expContext.getRawDir());
+       // p("Exp results dir " + expContext.getResultsDirectory());
+       // p("Exp raw     dir " + expContext.getRawDir());
         if (FileUtils.isUrl(bfmask_file)) {
             this.setStatusWarning(bfmask_file + " is an url, hit reload if you want to see the data");
             return;
         }
 
         if (!FileUtils.exists(bfmask_file)) {
-            p("Got exp: " + expContext.toString());
+        //    p("Got exp: " + expContext.toString());
             this.setStatusError(bfmask_file + " does not seem to exist!");
             return;
         }
@@ -302,10 +302,11 @@ public final class TorrentScoutMaskViewTopComponent extends TopComponent impleme
             }
 
             densityPanel.setContext(context, currentflag, (Integer) spinBucket.getValue());
-            if (expContext.getNrcols() > 110) {
-                densityPanel.createDefaultSelection(100, 100, 110, 110);
-            } else {
-                densityPanel.createDefaultSelection(50, 50, 60, 60);
+            if (expContext.getWellContext() == null || expContext.getWellContext().getSelection()==null) {
+                int mx = expContext.getNrcols()/2-10;
+                int my = expContext.getNrrows()/2-10;
+                densityPanel.createDefaultSelection(mx, my, mx+20, my+20);
+               
             }
         } else {
             GuiUtils.showNonModalMsg("Loading the bfmask.bin file failed");
@@ -762,6 +763,6 @@ public final class TorrentScoutMaskViewTopComponent extends TopComponent impleme
     }
 
     private void p(String msg) {
-        System.out.println("BfMaskTopComp: " + msg);
+//  System.out.println("BfMaskTopComp: " + msg);
     }
 }

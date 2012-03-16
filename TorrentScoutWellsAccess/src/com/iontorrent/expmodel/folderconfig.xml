@@ -13,6 +13,7 @@
         <name>Offline (no DB)</name>
         <os></os>
         <server></server>
+         <isdefault>true</isdefault>
         <raw_rule>/results6/</raw_rule>
         <cache_rule>/tmp/</cache_rule>
         <results_rule>/output/</results_rule>
@@ -27,6 +28,7 @@
         <server>localhost:5432/iondb</server>
         <raw_rule>${BASE}/raw</raw_rule>
         <cache_rule>${BASE}/cache</cache_rule>
+         <isdefault>false</isdefault>
         <results_rule>${BASE}/results</results_rule>
         <default_base_dir>0</default_base_dir>
          <base_directories>        
@@ -35,42 +37,90 @@
     </localhost>      
     
     <ioneast>
-        <name>Unix Some Server</name>
+        <name>Unix Ion East</name>
         <os>unix</os>
-        <server>some.server.com:5432/iondb</server>
+        <server>ioneast.ite:5432/iondb</server>
         <raw_rule>/${EXP_DIR}</raw_rule>
-        <cache_rule>~/torrentscout/${RESULT_NAME}</cache_rule>
+        <cache_rule>~/${RESULT_NAME}</cache_rule>
         <results_rule>/${RESULT_DIR}</results_rule>
         <default_base_dir>0</default_base_dir>
-        <base_directories> /net/some.drive4/c/results        
-        /net/some.drive1/c/results         /net/some.drive3/c/results  
-        /net/some.drive2/c/results         
+        <base_directories> /net/ion-nas3.itw/c/results        
+        /net/ion-nas4.ite/c/results         /net/ion-nas6.ite/c/results  
+        /net/ion-nas7.ite/c/results         /net/ion-nas10.ite/c/results        /net/ion-nas11.ite/c/results
         </base_directories>
         <fstab>
-some.drive1:/results       /results1       nfs     defaults        0 0
-some.drive2:/results       /results2       nfs     defaults        0 0
-some.drive3:/results       /results6       nfs     defaults        0 0
-some.drive4:/results       /results7       nfs     defaults        0 0
+ion-nas3:/results       /results1       nfs     defaults        0 0
+ion-nas4:/results       /results2       nfs     defaults        0 0
+ion-nas6:/results       /results6       nfs     defaults        0 0
+ion-nas7:/results       /results7       nfs     defaults        0 0
+ion-nas10:/results      /results10      nfs     defaults        0 0
+ion-nas11:/results      /results11      nfs     defaults        0 0    
         </fstab>        
     </ioneast>
     
     <wioneast>
-        <name>Windows Some Server</name>
+        <name>Windows Ion East</name>
         <os>windows</os>
-        <server>some.server.com:5432/iondb</server>
+        <server>ioneast.ite:5432/iondb</server>
         <raw_rule>${BASE}\results\${PGM_NAME}\${EXP_NAME}</raw_rule>
         <cache_rule>C:\tmp\${RESULT_NAME}</cache_rule>
-        <results_rule>${BASE}\results\analysis\output\Home\${RESULT_NAME}</results_rule>
+        <results_rule>${BASE}\results\analysis\output\IonEast\${RESULT_NAME}</results_rule>
         <default_base_dir>1</default_base_dir>        
-        <base_directories>\\some.drive1 \\some.drive2 \\some.drive3 \\some.drive4
+        <base_directories>\\ion-nas3.ite \\ion-nas4.ite \\ion-nas6.ite \\ion-nas7.ite 
+ \\ion-nas10.ite \\ion-nas11.ite
  </base_directories>
         <isdefault>false</isdefault>
         <fstab>
-some.drive1:/results       /results1       nfs     defaults        0 0
-some.drive2:/results       /results2       nfs     defaults        0 0
-some.drive3:/results       /results6       nfs     defaults        0 0
-some.drive4:/results       /results7       nfs     defaults        0 0
+ion-nas3:/results       /results1       nfs     defaults        0 0
+ion-nas4:/results       /results2       nfs     defaults        0 0
+ion-nas6:/results       /results6       nfs     defaults        0 0
+ion-nas7:/results       /results7       nfs     defaults        0 0
+ion-nas10:/results      /results10      nfs     defaults        0 0
+ion-nas11:/results      /results11      nfs     defaults        0 0    
         </fstab>
 </wioneast>
+
+<bbeast>
+        <name>Blackbird.ite Unix </name>
+        <os>unix</os>
+        <server>blackbird.ite:5432/iondb</server>
+         <raw_rule>/net/gs1-nfs/gs1/ion-data/results/${PGM}/${EXP_NAME}</raw_rule>
+        <cache_rule>/tmp/${RESULT_NAME}</cache_rule>
+        <results_rule>/net/gs1-nfs/gs1/ion-analysis/blackbird/analysis/output/Home/${RESULT_NAME}</results_rule>
+        <default_base_dir>0</default_base_dir>
+        <base_directories/>
+        <isdefault>false</isdefault>
+        <fstab>
+        </fstab>
+    </bbeast>
+ <bbwest>
+        <name>Blackbird.itw Unix </name>
+        <os>unix</os>
+        <server>blackbird.itw:5432/iondb</server>
+         <raw_rule>/net/gs1-nfs/gs1/ion-data/results/${PGM_NAME}/${EXP_NAME}</raw_rule>
+        <cache_rule>/tmp/torrentscout/${RESULT_NAME}</cache_rule>
+        <results_rule>/net/gs1-nfs/gs1/ion-analysis/blackbird/analysis/output/Home/${RESULT_NAME}</results_rule>
+        <default_base_dir>0</default_base_dir>        
+        <base_directories>       
+        </base_directories>
+        <isdefault>false</isdefault>
+        <fstab>
+        </fstab>
+    </bbwest>
+
+<bbwest>
+        <name>Blackbird.itw Unix </name>
+        <os>unix</os>
+        <server>blackbird.itw:5432/iondb</server>
+           <raw_rule>/net/gs1-nfs/gs1/ion-data/results/${PGM}/${EXP_NAME}</raw_rule>
+        <cache_rule>/tmp/${RESULT_NAME}</cache_rule>
+        <results_rule>/net/gs1-nfs/gs1/ion-analysis/blackbird/analysis/output/Home/${RESULT_NAME}</results_rule>
+        <default_base_dir>0</default_base_dir>
+        <base_directories/>
+        <isdefault>false</isdefault>
+        <fstab>
+        </fstab>
+    </bbwest>
+
 
 </folderconfig-config>

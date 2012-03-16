@@ -70,7 +70,7 @@ public class MailConfig {
     }
 
     private static void p(String msg) {
-        System.out.println("MailConfig: " + msg);
+//  System.out.println("MailConfig: " + msg);
         //Logger.getLogger( MailConfig.class.getName()).log(Level.INFO, msg);
     }
 }

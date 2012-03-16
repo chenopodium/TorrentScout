@@ -50,6 +50,12 @@ public class ExpNamesNodeFilter extends NodeFilter {
         runname = runname.toLowerCase().trim();
     }
 
+      @Override
+    public String getRelevantValue(Object node) {
+        RundbExperiment n = (RundbExperiment) node;
+        return  n.getExpName();
+    }
+      
     @Override
     public boolean passes(Object node) {
         RundbExperiment n = (RundbExperiment) node;

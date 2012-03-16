@@ -49,16 +49,16 @@ public class SAMTools
     }
 
     private void usage() {
-        System.out.println();
-        System.out.println("SAMTools version 0.1.0");
-        System.out.println("Tools for manipulating SAM/BAM files");
-        System.out.println();
-        System.out.println("Usage: SAMTools <command> <options...>");
-        System.out.println();
-        System.out.println("Commands:");
-        System.out.println("  help");
-        System.out.println("  view        <file>");
-        System.out.println();
+//  System.out.println();
+//  System.out.println("SAMTools version 0.1.0");
+//  System.out.println("Tools for manipulating SAM/BAM files");
+//  System.out.println();
+//  System.out.println("Usage: SAMTools <command> <options...>");
+//  System.out.println();
+//  System.out.println("Commands:");
+//  System.out.println("  help");
+//  System.out.println("  view        <file>");
+//  System.out.println();
     }
 
     private boolean parseArguments(final String[] args) {
@@ -79,12 +79,12 @@ public class SAMTools
             }
             mInputFile = new File(args[1]);
             if (!mInputFile.exists()) {
-                System.out.println("Input file not found: " + mInputFile);
+        //  System.out.println("Input file not found: " + mInputFile);
                 return false;
             }
         } else {
-            System.out.println("Unrecognized command: " + command);
-            System.out.println();
+    //  System.out.println("Unrecognized command: " + command);
+    //  System.out.println();
             usage();
             return false;
         }
@@ -111,7 +111,7 @@ public class SAMTools
         final CloseableIterator<SAMRecord> iterator = reader.iterator();
         while (iterator.hasNext()) {
             final SAMRecord record = iterator.next();
-            System.out.println(record.format());
+    //  System.out.println(record.format());
         }
         iterator.close();
         return 0;

@@ -62,6 +62,6 @@ public class WellsReader {
     }
 
     public void close() {
-        wells.closeFile();
+       if (wells != null) wells.closeFile();
     }
 }

@@ -214,6 +214,28 @@ public class ScoreMask {
         return alldata;
     }
 
+    public double getMin(ScoreMaskFlag flag){
+        double[][] data = readData(flag);
+        double min = Double.MAX_VALUE;
+         for (int i = 0; i < data.length; i++) {
+             for (int j = 0; j < data[0].length; j++) {
+                 double val = data[i][j];
+                 if (val < min) min = val;
+             }                
+        }
+         return min/flag.multiplier();
+    }
+     public double getMax(ScoreMaskFlag flag){
+        double[][] data = readData(flag);
+        double max = Double.MIN_VALUE;
+         for (int i = 0; i < data.length; i++) {
+             for (int j = 0; j < data[0].length; j++) {
+                 double val = data[i][j];
+                 if (val > max) max = val;
+             }                
+        }
+         return max/flag.multiplier();
+    }
     public double[][] readData(ScoreMaskFlag flag) {
         int nrflags = ScoreMaskFlag.getNrFlags();
 
@@ -264,8 +286,8 @@ public class ScoreMask {
                 int b = raster.getSample(x, y, 2);
                 int rgb = r + g * 256 + b * 256 * 256;
 
-
                 double p = (double) rgb;//flag.getRealValue(rgb);               
+                //double p = flag.getRealValue(rgb);
                 data[x][y] = p;
             }
         }

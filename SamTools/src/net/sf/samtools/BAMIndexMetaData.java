@@ -204,13 +204,13 @@ public class BAMIndexMetaData {
                 final int sequenceLength = seq.getSequenceLength();
                 System.out.print(sequenceName + ' ' + "length=\t" + sequenceLength);
                 if (data[i] == null) {
-                    System.out.println();
+            //  System.out.println();
                     continue;
                 }
-                System.out.println("\tAligned= " + data[i].getAlignedRecordCount() +
+          System.out.println("\tAligned= " + data[i].getAlignedRecordCount() +
                         "\tUnaligned= " + data[i].getUnalignedRecordCount());
             }
-            System.out.println("NoCoordinateCount= " + data[0].getNoCoordinateRecordCount());
+    //  System.out.println("NoCoordinateCount= " + data[0].getNoCoordinateRecordCount());
         } catch (IOException e) {
             throw new SAMException("Exception in getting index statistics", e);
         }

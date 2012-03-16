@@ -1,19 +1,19 @@
 /*
-*	Copyright (C) 2011 Life Technologies Inc.
-*
-*   This program is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 2 of the License, or
-*   (at your option) any later version.
-*
-*   This program is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ *	Copyright (C) 2011 Life Technologies Inc.
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 2 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -27,21 +27,31 @@ import com.iontorrent.sff.SffRead;
 import com.iontorrent.threads.Task;
 import com.iontorrent.threads.TaskListener;
 import com.iontorrent.expmodel.ExperimentContext;
+import com.iontorrent.expmodel.FlowListener;
+import com.iontorrent.expmodel.GlobalContext;
 import com.iontorrent.guiutils.GuiUtils;
+import com.iontorrent.guiutils.flow.FlowNrPanel;
 import com.iontorrent.utils.LookupUtils;
 import com.iontorrent.utils.io.FileUtils;
 import com.iontorrent.wellmodel.WellContext;
 import com.iontorrent.wellmodel.WellCoordinate;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -66,7 +76,7 @@ persistenceType = TopComponent.PERSISTENCE_NEVER)
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
 @TopComponent.OpenActionRegistration(displayName = "#CTL_TorrentScoutIonogramAction",
 preferredID = "TorrentScoutIonogramTopComponent")
-public final class TorrentScoutIonogramTopComponent extends TopComponent implements TaskListener {
+public final class TorrentScoutIonogramTopComponent extends TopComponent implements TaskListener, FlowListener {
 
     private transient final Lookup.Result<WellContext> dataClassWellSelection =
             LookupUtils.getSubscriber(WellContext.class, new WellSubscriberListener());
@@ -77,17 +87,59 @@ public final class TorrentScoutIonogramTopComponent extends TopComponent impleme
     private WellContext cur_context;
     private ExperimentContext expContext;
     private IonogramPanel ionopanel;
-    private JScrollPane scroll;
+    private MultiFlowPanel multipanel;
+    private JScrollPane ionoscroll;
+    private JScrollPane multiscroll;
     private boolean DOACTIONS;
+    private JTabbedPane tab;
+    private FlowNrPanel flowpanel;
+    private JTextField txtsub;
     //  private ProgressHandle progress;
     // XXX we we add a tab for multiple ionograms?
+    private MultiFlowLoader loader;
 
     public TorrentScoutIonogramTopComponent() {
         initComponents();
         setName(NbBundle.getMessage(TorrentScoutIonogramTopComponent.class, "CTL_TorrentScoutIonogramTopComponent"));
         setToolTipText(NbBundle.getMessage(TorrentScoutIonogramTopComponent.class, "HINT_TorrentScoutIonogramTopComponent"));
+        flowpanel = new FlowNrPanel(this);
+        flowpanel.setText("0-7");
 
+        jToolBar1.add(flowpanel);
+        JButton btn = new JButton("Compute");
+        btn.addActionListener(new ActionListener() {
 
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (loader != null && multipanel != null) {
+                    try {
+                        multipanel.setSubtract(Integer.parseInt(txtsub.getText()));
+                    } catch (Exception ex) {
+                    }
+                    loader.compute(flowpanel.getFlows(), multipanel);
+                }
+            }
+        });
+
+        txtsub = new JTextField();
+        jToolBar1.add(new JLabel(" subtract flow:"));
+        txtsub.setText("-1");
+        txtsub.setPreferredSize(new Dimension(30, 26));
+        txtsub.setMaximumSize(new Dimension(50, 26));
+        txtsub.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (loader != null && multipanel != null) {
+                    try {
+                        multipanel.setSubtract(Integer.parseInt(txtsub.getText()));
+                    } catch (Exception ex) {
+                    }
+                }
+            }
+        });
+        jToolBar1.add(txtsub);
+        jToolBar1.add(btn);
     }
 
     private class ExpSubscriberListener implements LookupListener {
@@ -98,17 +150,14 @@ public final class TorrentScoutIonogramTopComponent extends TopComponent impleme
         }
     }
 
-    private void getLatestExperimentContext() {
-        final Collection<? extends ExperimentContext> items = expContextResults.allInstances();
-        if (!items.isEmpty()) {
-            ExperimentContext data = null;
-            Iterator<ExperimentContext> it = (Iterator<ExperimentContext>) items.iterator();
-            while (it.hasNext()) {
-                data = it.next();
-            }
-            expContext = data;
-        } else {
-            //  p("No exp context in list");
+    private void getLatestExperimentContext() {        
+       expContext = GlobalContext.getContext().getExperimentContext();        
+    }
+
+    @Override
+    public void flowChanged(ArrayList<Integer> flows) {
+        if (loader != null && multipanel != null) {
+            loader.compute(flowpanel.getFlows(), this.multipanel);
         }
     }
 
@@ -146,26 +195,9 @@ public final class TorrentScoutIonogramTopComponent extends TopComponent impleme
     }
 
     private boolean getLatestContext() {
-        final Collection<? extends WellContext> contexts = dataClassWellSelection.allInstances();
-        if (!contexts.isEmpty()) {
-            Iterator<WellContext> cit = (Iterator<WellContext>) contexts.iterator();
-            while (cit.hasNext()) {
-                cur_context = cit.next();
-                //      p("Got context: " + cur_context);
-            }
-            //  p("SubscriberListener Got WellContext:" + cur_context + ", out of " + contexts.size());
-            // lbl_coords.setText(cur_selection.toString());
-            WellCoordinate coord = cur_context.getCoordinate();
-            if (coord == cur_context.getCoordinate()) {
-                //      p("Same coordinate, returning");
-                return true;
-            } else {
-                cur_context.setCoordinate(coord);
-            }
-            if (scroll != null) {
-                remove(scroll);
-            }
-            update();
+        if (GlobalContext.getContext().getExperimentContext() != null) {
+            cur_context = GlobalContext.getContext().getExperimentContext().getWellContext();
+            update(true);
         }
         return false;
     }
@@ -181,21 +213,9 @@ public final class TorrentScoutIonogramTopComponent extends TopComponent impleme
 
     private void getLatestCoordinate() {
         this.getLatestExperimentContext();
-        final Collection<? extends WellCoordinate> selections = dataClassWellCoordinate.allInstances();
-        if (!selections.isEmpty()) {
-            WellCoordinate coord = null;
-            Iterator<WellCoordinate> cit = (Iterator<WellCoordinate>) selections.iterator();
-            while (cit.hasNext()) {
-                coord = cit.next();
-                //         p("Got coord: " + coord);
-            }
-            //   p("SubscriberListener Got WellCoordinate:" + coord + ", out of " + selections.size());
-            // lbl_coords.setText(cur_selection.toString());
-            if (cur_context == null) {
-                getLatestContext();
-            }
-            cur_context.setCoordinate(coord);
-            update();
+        if (GlobalContext.getContext().getExperimentContext() != null) {
+            cur_context = GlobalContext.getContext().getExperimentContext().getWellContext();
+            update(true);
         }
     }
 
@@ -204,7 +224,7 @@ public final class TorrentScoutIonogramTopComponent extends TopComponent impleme
         p("Task " + t + " is done");
 
         if (t.isSuccess()) {
-            update();
+            update(true);
         }
 
 
@@ -222,13 +242,12 @@ public final class TorrentScoutIonogramTopComponent extends TopComponent impleme
         message.clear(60000);
     }
 
-    private void update() {
-        if (scroll != null) {
-            remove(scroll);
-        }
+    private void update(boolean multiload) {
+        
         if (expContext == null) {
             this.getLatestExperimentContext();
         }
+        cur_context = expContext.getWellContext();
         if (cur_context == null) {
             this.setStatusWarning("Got no WellContext for some reason...");
             return;
@@ -237,19 +256,29 @@ public final class TorrentScoutIonogramTopComponent extends TopComponent impleme
             p("Cache dir does not exist");
             return;
         }
+        if (loader == null || multiload == true) {
+            loader = new MultiFlowLoader(expContext);
+        }
+        if (ionopanel != null) this.ionoscroll.remove(ionopanel);
+        if (multipanel != null) this.multiscroll.remove(multipanel);
         ionopanel = new IonogramPanel(expContext);
+        multipanel = new MultiFlowPanel(expContext, loader);
+
+        if (multiload == true) {
+            loader.compute(flowpanel.getFlows(), this.multipanel);
+        }
 
         WellCoordinate coord = cur_context.getCoordinate();
         if (coord == null) {
             return;
         }
-        SequenceLoader loader = SequenceLoader.getSequenceLoader(this.expContext);
+       SequenceLoader  loader = SequenceLoader.getSequenceLoader(this.expContext);
         boolean norm = radioNorm.isSelected();
 
         if (loader.foundSffFile()) {
             this.expContext.setFlowOrder(loader.getFlowOrder());
         }
-        p("Norm is: "+norm);
+        p("Norm is: " + norm);
         if (norm) {
             String msg = null;
             // GuiUtils.showNonModelMsg(msg, false, 60);
@@ -278,10 +307,21 @@ public final class TorrentScoutIonogramTopComponent extends TopComponent impleme
         int y_max = (Integer) spinMax.getValue();
         ionopanel.setMaxY(y_max);
         ionopanel.setWellContext(cur_context, raw, !raw);
-        scroll = new JScrollPane(ionopanel);
-        add("Center", scroll);
-        invalidate();
-        revalidate();
+        if (ionoscroll == null) ionoscroll = new JScrollPane(ionopanel);
+        else ionoscroll.setViewportView(ionopanel);
+
+        multipanel.setMaxY(y_max);
+        multipanel.setWellContext(cur_context, raw, !raw);
+       if (multiscroll == null) multiscroll = new JScrollPane(multipanel);
+       else multiscroll.setViewportView(multipanel);
+
+        if (tab == null) {
+            tab = new JTabbedPane();
+            tab.add("Ionogram", ionoscroll);
+            tab.add("Ionogram with NN raw data", multiscroll);
+            add("Center", tab);
+        }
+        repaint();
         this.paintImmediately(0, 0, 1000, 800);
         requestActive();
         //  this.requestVisible();
@@ -293,7 +333,7 @@ public final class TorrentScoutIonogramTopComponent extends TopComponent impleme
     }
 
     private void p(String s) {
-        System.out.println("IonogramTopComp:" + s);
+//  System.out.println("IonogramTopComp:" + s);
     }
 
     /** This method is called from within the constructor to
@@ -362,19 +402,19 @@ public final class TorrentScoutIonogramTopComponent extends TopComponent impleme
 
     private void radioRawActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioRawActionPerformed
         if (DOACTIONS) {
-            update();
+            update(false);
         }
     }//GEN-LAST:event_radioRawActionPerformed
 
     private void radioNormActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radioNormActionPerformed
         if (DOACTIONS) {
-            update();
+            update(false);
         }
     }//GEN-LAST:event_radioNormActionPerformed
 
     private void spinMaxStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spinMaxStateChanged
         if (DOACTIONS) {
-            update();
+            update(false);
         }
     }//GEN-LAST:event_spinMaxStateChanged
     // Variables declaration - do not modify//GEN-BEGIN:variables

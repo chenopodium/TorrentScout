@@ -75,7 +75,7 @@ public class RundbRig implements Serializable {
     }
 
     private void p(String msg) {
-        System.out.println("RundbRig: " + msg);
+//  System.out.println("RundbRig: " + msg);
         //Logger.getLogger( RundbRig.class.getName()).log(Level.INFO, msg, ex);
     }
 

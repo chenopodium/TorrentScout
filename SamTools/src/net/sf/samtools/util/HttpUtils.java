@@ -58,7 +58,7 @@ public class HttpUtils {
             conn.setReadTimeout(3000);
 
             for (final String name : conn.getHeaderFields().keySet()) {
-                System.out.println(name + "\t" + conn.getHeaderField(name));
+        //  System.out.println(name + "\t" + conn.getHeaderField(name));
 
             }
         } catch (Exception e) {
@@ -92,9 +92,9 @@ public class HttpUtils {
     public static void main(final String[] args) throws MalformedURLException {
         //printHeaderFields(new URL(
         //        "http://www.broadinstitute.org/igvdata/1KG/DCC_merged/freeze5/NA12891.pilot2.SLX.bam"));
-        System.out.println(getETag(new URL(
+  System.out.println(getETag(new URL(
                  "http://www.broadinstitute.org/igvdata/test/sam/303KY.8.paired1.bam.tdf")));
-        System.out.println(resourceAvailable(new URL(
+  System.out.println(resourceAvailable(new URL(
                 "http://www.broadinstitute.org/igvdata/test/sam/303KY.8.paired1.bam.tdf")));
 
 

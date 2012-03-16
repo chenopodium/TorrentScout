@@ -34,7 +34,7 @@ public class WellStatsCalculator {
             int keypos = 0;
             // just some value large enough!
             keyVec = new int[20];
-            p("lib key="+key+", floworder="+floworder);
+        //    p("lib key="+key+", floworder="+floworder);
             for (int keynr = 0; keynr < key.length(); keynr++) {
                 char keybase = key.charAt(keynr);
                 // such as G
@@ -47,7 +47,7 @@ public class WellStatsCalculator {
                 keypos++;
             }
             nrKeyFlows = keypos - 1;
-            p("WellStatsCalculator: keyVec=" + Arrays.toString(keyVec) + ", nrKeyFlows=" + keypos);
+         //   p("WellStatsCalculator: keyVec=" + Arrays.toString(keyVec) + ", nrKeyFlows=" + keypos);
         }
         else {
             p("Exp has no flow order or library key, not computing all heat maps");
@@ -142,7 +142,7 @@ public class WellStatsCalculator {
     }
 
     private static void p(String msg) {
-        System.out.println("WellStatsCalculator: " + msg);
+       // System.out.println("WellStatsCalculator: " + msg);
         Logger.getLogger( WellStatsCalculator.class.getName()).log(Level.INFO, msg);
     }
 }

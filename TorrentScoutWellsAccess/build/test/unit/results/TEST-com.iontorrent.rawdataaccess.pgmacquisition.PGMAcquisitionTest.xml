@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite errors="0" failures="0" hostname="Pandora" name="com.iontorrent.rawdataaccess.pgmacquisition.PGMAcquisitionTest" tests="1" time="1.892" timestamp="2012-02-29T18:32:48">
+  <properties>
+    <property name="libs.jsp-compiler.javadoc" value="" />
+    <property name="netbeans.autoupdate.country" value="CH" />
+    <property name="release.dir" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess\release" />
+    <property name="nbm.module.author" value="" />
+    <property name="libs.jsf20.maven-pom" value="" />
+    <property name="libs.junit.javadoc" value="S:\NetBeans 7.0\java\docs\junit-3.8.2-api.zip" />
+    <property name="ant.core.lib" value="S:\NetBeans 7.0\java\ant\lib\ant.jar" />
+    <property name="build.compiler.debug" value="true" />
+    <property name="libs.swing-app-framework.src" value="" />
+    <property name="libs.toplink.classpath" value="S:\NetBeans 7.0\java\modules\ext\toplink\toplink-essentials.jar;S:\NetBeans 7.0\java\modules\ext\toplink\toplink-essentials-agent.jar" />
+    <property name="libs.jsp-compilation.javadoc" value="" />
+    <property name="user.dir" value="S:\NetBeans 7.0\bin" />
+    <property name="ant.file.com.iontorrent.scoutwellsaccess" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess\build.xml" />
+    <property name="libs.hibernate-persistence.javadoc" value="" />
+    <property name="java.vm.version" value="19.0-b09" />
+    <property name="libs.jstl11.maven-pom" value="" />
+    <property name="libs.Java-EE-GlassFish-v3.wsimport" value="" />
+    <property name="libs.MySQLDriver.classpath" value="S:\NetBeans 7.0\ide\modules\ext\mysql-connector-java-5.1.13-bin.jar" />
+    <property name="build.test.qa-functional.dir" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess\build\test\qa-functional" />
+    <property name="libs.eclipselinkmodelgen.src" value="" />
+    <property name="libs.jstl11.src" value="" />
+    <property name="netbeans.autoupdate.version" value="1.23" />
+    <property name="libs.EclipseLink-GlassFish-v3.classpath" value="D:\Program Files\glassfish-3.0.1\glassfish\modules\org.eclipse.persistence.antlr.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\org.eclipse.persistence.asm.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\org.eclipse.persistence.core.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\org.eclipse.persistence.jpa.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\org.eclipse.persistence.jpa.modelgen.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\org.eclipse.persistence.oracle.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\javax.persistence.jar" />
+    <property name="libs.javaee-web-api-6.0.classpath" value="S:\NetBeans 7.0\enterprise\modules\ext\javaee-web-api-6.0.jar" />
+    <property name="build.package.index" value="false" />
+    <property name="libs.hibernate-support.maven-pom" value="" />
+    <property name="libs.hibernate-support.javadoc" value="" />
+    <property name="jdk.home" value="S:\java\jdk1.6" />
+    <property name="nbm" value="com-iontorrent-scoutwellsaccess.nbm" />
+    <property name="libs.javac-api.src" value="" />
+    <property name="module.javadoc.packages" value="com.iontorrent.expmodel, com.iontorrent.rawdataaccess.pgmacquisition, com.iontorrent.rawdataaccess.transformation, com.iontorrent.rawdataaccess.wells, com.iontorrent.results.scores, com.iontorrent.wellalgorithms, com.iontorrent.wellmodel" />
+    <property name="javahelp.search" value="JavaHelpSearch" />
+    <property name="sun.os.patch.level" value="" />
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification" />
+    <property name="nb.show.statistics.ui" value="usageStatisticsEnabled" />
+    <property name="netbeans.autoupdate.variant" value="" />
+    <property name="cluster.path.basedir" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess/.." />
+    <property name="org.xml.sax.driver" value="com.sun.org.apache.xerces.internal.jaxp.SAXParserImpl$JAXPSAXParser" />
+    <property name="test.unit.run.cp.short" value="" />
+    <property name="test.unit.dir" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess\test\unit" />
+    <property name="libs.javac-api.javadoc" value="" />
+    <property name="os.name" value="Windows 7" />
+    <property name="public.packages" value="com.iontorrent.expmodel.*, com.iontorrent.rawdataaccess.pgmacquisition.*, com.iontorrent.rawdataaccess.transformation.*, com.iontorrent.rawdataaccess.wells.*, com.iontorrent.results.scores.*, com.iontorrent.wellalgorithms.*, com.iontorrent.wellmodel.*" />
+    <property name="module.files.toString" value="patternSet{ includes: [modules/com-iontorrent-scoutwellsaccess.jar, modules/docs/com-iontorrent-scoutwellsaccess.jar:if-&gt;has.javahelp, config/Modules/com-iontorrent-scoutwellsaccess.xml, config/ModuleAutoDeps/com-iontorrent-scoutwellsaccess.xml:if-&gt;has.module.auto.deps, ant/nblib/com-iontorrent-scoutwellsaccess.jar] excludes: [] }" />
+    <property name="libs.beans-binding.classpath" value="S:\NetBeans 7.0\java\modules\ext\beansbinding-1.2.1.jar" />
+    <property name="test.unit.src.dir" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess\test\unit\src" />
+    <property name="libs.restapi.javadoc" value="S:\NetBeans 7.0\enterprise\docs\jsr311-api-1.1.1-javadoc.zip" />
+    <property name="libs.JWSAntTasks.maven-pom" value="" />
+    <property name="libs.spring-webmvc3.0.src" value="" />
+    <property name="libs.restapi.classpath" value="S:\NetBeans 7.0\enterprise\modules\ext\rest\jsr311-api-1.1.1.jar" />
+    <property name="java.vendor.url.bug" value="http://java.sun.com/cgi-bin/bugreport.cgi" />
+    <property name="buildnumber" value="120229" />
+    <property name="nbplatform.active" value="default" />
+    <property name="libs.jaxb.maven-pom" value="" />
+    <property name="extra.module.files" value="" />
+    <property name="os.arch" value="amd64" />
+    <property name="libs.eclipselink.src" value="" />
+    <property name="user.name" value="Chantal Roth" />
+    <property name="libs.jsf12.javadoc" value="S:\NetBeans 7.0\enterprise\docs\javaee6-doc-api.zip" />
+    <property name="libs.Comet-GlassFish-v3.javadoc" value="" />
+    <property name="libs.spring-webmvc3.0.maven-pom" value="" />
+    <property name="libs.swing-layout.maven-pom" value="" />
+    <property name="build.classes.dir" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess\build\classes" />
+    <property name="netbeans.accept_license_class" value="org.netbeans.license.AcceptLicense" />
+    <property name="libs.Java-EE-GlassFish-v3.wsjwsdp" value="" />
+    <property name="build.sysclasspath" value="ignore" />
+    <property name="libs.jaxws21.javadoc" value="S:\NetBeans 7.0\java\docs\jaxws-api-doc.zip" />
+    <property name="test.run.args" value="-ea -Xms4096m -Xmx6096m" />
+    <property name="extra.test.libs.dir" value="S:\svn\trunk\TorrentScout\build\testdist\extralibs" />
+    <property name="user.country" value="CH" />
+    <property name="libs.jstl11.javadoc" value="S:\NetBeans 7.0\enterprise\docs\javaee6-doc-api.zip" />
+    <property name="libs.jsp-compilation-syscp.src" value="" />
+    <property name="ant.file.type.harness" value="file" />
+    <property name="ant.file.jdk" value="S:\svn\trunk\TorrentScout\harness\jdk.xml" />
+    <property name="dtd.cp" value="S:\NetBeans 7.0\platform\core\org-openide-filesystems.jar" />
+    <property name="disabled.modules" value="org.apache.xml.resolver,org.jdesktop.layout,org.mozilla.rhino.patched,org.netbeans.api.debugger,org.netbeans.api.java.classpath,org.netbeans.api.xml,org.netbeans.core.browser,org.netbeans.core.execution,org.netbeans.core.io.ui,org.netbeans.core.nativeaccess,org.netbeans.core.netigso,org.netbeans.core.osgi,org.netbeans.lib.cvsclient,org.netbeans.lib.terminalemulator,org.netbeans.libs.antlr3.runtime,org.netbeans.libs.bugtracking,org.netbeans.libs.bugzilla,org.netbeans.libs.bytelist,org.netbeans.libs.commons_codec,org.netbeans.libs.commons_logging,org.netbeans.libs.commons_net,org.netbeans.libs.felix,org.netbeans.libs.freemarker,org.netbeans.libs.ini4j,org.netbeans.libs.jakarta_oro,org.netbeans.libs.jaxb,org.netbeans.libs.jna,org.netbeans.libs.jsch,org.netbeans.libs.jsr223,org.netbeans.libs.junit4,org.netbeans.libs.jvyamlb,org.netbeans.libs.jzlib,org.netbeans.libs.lucene,org.netbeans.libs.osgi,org.netbeans.libs.smack,org.netbeans.libs.svnClientAdapter,org.netbeans.libs.svnClientAdapter.javahl,org.netbeans.libs.svnClientAdapter.svnkit,org.netbeans.libs.swingx,org.netbeans.libs.xerces,org.netbeans.modules.applemenu,org.netbeans.modules.autoupdate.services,org.netbeans.modules.autoupdate.ui,org.netbeans.modules.bugtracking,org.netbeans.modules.bugtracking.bridge,org.netbeans.modules.bugzilla,org.netbeans.modules.core.kit,org.netbeans.modules.csl.api,org.netbeans.modules.css.editor,org.netbeans.modules.css.visual,org.netbeans.modules.db,org.netbeans.modules.db.core,org.netbeans.modules.db.dataview,org.netbeans.modules.db.drivers,org.netbeans.modules.db.kit,org.netbeans.modules.db.metadata.model,org.netbeans.modules.db.mysql,org.netbeans.modules.db.sql.editor,org.netbeans.modules.db.sql.visualeditor,org.netbeans.modules.dbapi,org.netbeans.modules.defaults,org.netbeans.modules.derby,org.netbeans.modules.diff,org.netbeans.modules.dlight.nativeexecution,org.netbeans.modules.dlight.terminal,org.netbeans.modules.editor,org.netbeans.modules.editor.actions,org.netbeans.modules.editor.bookmarks,org.netbeans.modules.editor.bracesmatching,org.netbeans.modules.editor.codetemplates,org.netbeans.modules.editor.completion,org.netbeans.modules.editor.deprecated.pre65formatting,org.netbeans.modules.editor.errorstripe,org.netbeans.modules.editor.errorstripe.api,org.netbeans.modules.editor.fold,org.netbeans.modules.editor.guards,org.netbeans.modules.editor.indent,org.netbeans.modules.editor.indent.project,org.netbeans.modules.editor.kit,org.netbeans.modules.editor.lib,org.netbeans.modules.editor.lib2,org.netbeans.modules.editor.macros,org.netbeans.modules.editor.mimelookup.impl,org.netbeans.modules.editor.plain,org.netbeans.modules.editor.plain.lib,org.netbeans.modules.editor.settings,org.netbeans.modules.editor.settings.storage,org.netbeans.modules.editor.structure,org.netbeans.modules.editor.util,org.netbeans.modules.extbrowser,org.netbeans.modules.extexecution,org.netbeans.modules.extexecution.destroy,org.netbeans.modules.glassfish.common,org.netbeans.modules.gototest,org.netbeans.modules.gsf.codecoverage,org.netbeans.modules.gsf.testrunner,org.netbeans.modules.html,org.netbeans.modules.html.editor,org.netbeans.modules.html.editor.lib,org.netbeans.modules.html.lexer,org.netbeans.modules.html.parser,org.netbeans.modules.html.validation,org.netbeans.modules.httpserver,org.netbeans.modules.hudson,org.netbeans.modules.hudson.mercurial,org.netbeans.modules.hudson.subversion,org.netbeans.modules.ide.kit,org.netbeans.modules.image,org.netbeans.modules.javahelp,org.netbeans.modules.javascript.editing,org.netbeans.modules.javascript.hints,org.netbeans.modules.javascript.kit,org.netbeans.modules.javascript.refactoring,org.netbeans.modules.jellytools.ide,org.netbeans.modules.jumpto,org.netbeans.modules.keyring.impl,org.netbeans.modules.languages,org.netbeans.modules.languages.diff,org.netbeans.modules.languages.manifest,org.netbeans.modules.languages.yaml,org.netbeans.modules.lexer,org.netbeans.modules.lexer.nbbridge,org.netbeans.modules.localhistory,org.netbeans.modules.masterfs,org.netbeans.modules.mercurial,org.netbeans.modules.options.editor,org.netbeans.modules.options.keymap,org.netbeans.modules.parsing.api,org.netbeans.modules.parsing.lucene,org.netbeans.modules.print.editor,org.netbeans.modules.project.ant,org.netbeans.modules.project.libraries,org.netbeans.modules.projectapi,org.netbeans.modules.projectui,org.netbeans.modules.projectui.buildmenu,org.netbeans.modules.projectuiapi,org.netbeans.modules.properties,org.netbeans.modules.properties.syntax,org.netbeans.modules.refactoring.api,org.netbeans.modules.schema2beans,org.netbeans.modules.sendopts,org.netbeans.modules.server,org.netbeans.modules.servletapi,org.netbeans.modules.spellchecker,org.netbeans.modules.spellchecker.apimodule,org.netbeans.modules.spellchecker.bindings.htmlxml,org.netbeans.modules.spellchecker.bindings.properties,org.netbeans.modules.spellchecker.dictionary_en,org.netbeans.modules.spellchecker.kit,org.netbeans.modules.spi.actions,org.netbeans.modules.subversion,org.netbeans.modules.swing.validation,org.netbeans.modules.target.iterator,org.netbeans.modules.tasklist.kit,org.netbeans.modules.tasklist.projectint,org.netbeans.modules.tasklist.todo,org.netbeans.modules.tasklist.ui,org.netbeans.modules.terminal,org.netbeans.modules.usersguide,org.netbeans.modules.utilities,org.netbeans.modules.utilities.project,org.netbeans.modules.versioning,org.netbeans.modules.versioning.indexingbridge,org.netbeans.modules.versioning.system.cvss,org.netbeans.modules.versioning.util,org.netbeans.modules.web.client.tools.api,org.netbeans.modules.web.common,org.netbeans.modules.xml,org.netbeans.modules.xml.axi,org.netbeans.modules.xml.catalog,org.netbeans.modules.xml.core,org.netbeans.modules.xml.jaxb.api,org.netbeans.modules.xml.lexer,org.netbeans.modules.xml.multiview,org.netbeans.modules.xml.retriever,org.netbeans.modules.xml.schema.completion,org.netbeans.modules.xml.schema.model,org.netbeans.modules.xml.tax,org.netbeans.modules.xml.text,org.netbeans.modules.xml.tools,org.netbeans.modules.xml.wsdl.model,org.netbeans.modules.xml.xam,org.netbeans.modules.xml.xdm,org.netbeans.modules.xsl,org.netbeans.spi.debugger.ui,org.netbeans.spi.editor.hints,org.netbeans.spi.navigator,org.netbeans.spi.palette,org.netbeans.spi.tasklist,org.netbeans.spi.viewmodel,org.netbeans.swing.dirchooser,org.openide.compat,org.openide.execution,org.openide.options,org.openide.util.enumerations,org.openidex.util" />
+    <property name="netbeans.home" value="S:\NetBeans 7.0\platform" />
+    <property name="build.compiler.emacs" value="true" />
+    <property name="libs.javaee-web-api-6.0.src" value="" />
+    <property name="libs.ejb3-persistence.src" value="" />
+    <property name="libs.Java-EE-GlassFish-v3.javadoc" value="S:\NetBeans 7.0\enterprise\docs\javaee6-doc-api.zip" />
+    <property name="libs.jsp-compilation-syscp.classpath" value="S:\NetBeans 7.0\java\ant\lib\ant.jar;S:\NetBeans 7.0\enterprise\modules\ext\servlet3.0-jsp2.2-api.jar;S:\NetBeans 7.0\enterprise\modules\ext\glassfish-jspparser-3.0.jar;S:\NetBeans 7.0\enterprise\modules\ext\standard.jar;S:\NetBeans 7.0\enterprise\modules\ext\jsf-2_1\jsf-impl.jar" />
+    <property name="java.endorsed.dirs" value="S:\java\jdk1.6\jre\lib\endorsed" />
+    <property name="libs.Comet-GlassFish-v3.maven-pom" value="" />
+    <property name="test.includes" value="com/iontorrent/rawdataaccess/pgmacquisition/PGMAcquisitionTest.java" />
+    <property name="netbeans.dynamic.classpath" value="S:\NetBeans 7.0\platform\core\core.jar;S:\NetBeans 7.0\platform\core\org-openide-filesystems.jar;S:\NetBeans 7.0\platform\core\locale\core_ja.jar;S:\NetBeans 7.0\platform\core\locale\core_pt_BR.jar;S:\NetBeans 7.0\platform\core\locale\core_ru.jar;S:\NetBeans 7.0\platform\core\locale\core_zh_CN.jar;S:\NetBeans 7.0\platform\core\locale\org-openide-filesystems_ja.jar;S:\NetBeans 7.0\platform\core\locale\org-openide-filesystems_pt_BR.jar;S:\NetBeans 7.0\platform\core\locale\org-openide-filesystems_ru.jar;S:\NetBeans 7.0\platform\core\locale\org-openide-filesystems_zh_CN.jar;S:\NetBeans 7.0\nb\core\org-netbeans-upgrader.jar;S:\NetBeans 7.0\nb\core\locale\core_nb.jar;S:\NetBeans 7.0\nb\core\locale\core_nb_ja.jar;S:\NetBeans 7.0\nb\core\locale\core_nb_pt_BR.jar;S:\NetBeans 7.0\nb\core\locale\core_nb_ru.jar;S:\NetBeans 7.0\nb\core\locale\core_nb_zh_CN.jar;S:\NetBeans 7.0\nb\core\locale\org-netbeans-upgrader_ja.jar;S:\NetBeans 7.0\nb\core\locale\org-netbeans-upgrader_pt_BR.jar;S:\NetBeans 7.0\nb\core\locale\org-netbeans-upgrader_ru.jar;S:\NetBeans 7.0\nb\core\locale\org-netbeans-upgrader_zh_CN.jar" />
+    <property name="java.vm.specification.version" value="1.0" />
+    <property name="test.excludes" value="" />
+    <property name="libs.primefaces.classpath" value="S:\NetBeans 7.0\enterprise\modules\ext\primefaces\primefaces-2.2.1.jar" />
+    <property name="libs.javaee-api-6.0.classpath" value="S:\NetBeans 7.0\enterprise\modules\ext\javaee-api-6.0.jar" />
+    <property name="libs.hibernate-persistence.classpath" value="S:\NetBeans 7.0\java\modules\ext\hibernate\antlr-2.7.6.jar;S:\NetBeans 7.0\java\modules\ext\hibernate\asm.jar;S:\NetBeans 7.0\java\modules\ext\hibernate\asm-attrs.jar;S:\NetBeans 7.0\java\modules\ext\hibernate\cglib-2.1.3.jar;S:\NetBeans 7.0\java\modules\ext\hibernate\commons-collections-2.1.1.jar;S:\NetBeans 7.0\ide\modules\ext\commons-logging-1.1.jar;S:\NetBeans 7.0\java\modules\ext\hibernate\dom4j-1.6.1.jar;S:\NetBeans 7.0\java\modules\ext\hibernate\ehcache-1.2.3.jar;S:\NetBeans 7.0\java\modules\ext\hibernate\jdbc2_0-stdext.jar;S:\NetBeans 7.0\java\modules\ext\hibernate\jta.jar;S:\NetBeans 7.0\java\modules\ext\hibernate\hibernate3.jar;S:\NetBeans 7.0\java\modules\ext\hibernate\hibernate-tools.jar;S:\NetBeans 7.0\java\modules\ext\hibernate\hibernate-annotations.jar;S:\NetBeans 7.0\java\modules\ext\hibernate\hibernate-commons-annotations.jar;S:\NetBeans 7.0\java\modules\ext\hibernate\hibernate-entitymanager.jar;S:\NetBeans 7.0\java\modules\ext\hibernate\javassist.jar;S:\NetBeans 7.0\java\modules\ext\hibernate\ejb3-persistence.jar" />
+    <property name="libs.jaxws21.src" value="" />
+    <property name="libs.swing-app-framework.classpath" value="S:\NetBeans 7.0\java\modules\ext\appframework-1.0.3.jar;S:\NetBeans 7.0\java\modules\ext\swing-worker-1.1.jar" />
+    <property name="netbeans.autoupdate.language" value="de" />
+    <property name="cluster.path.final" value="S:\NetBeans 7.0\ide;S:\NetBeans 7.0\platform:S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess/../build/cluster" />
+    <property name="java.vendor" value="Sun Microsystems Inc." />
+    <property name="libs.javaee-api-6.0.javadoc" value="S:\NetBeans 7.0\enterprise\docs\javaee6-doc-api.zip" />
+    <property name="code.name.base.dashes" value="com-iontorrent-scoutwellsaccess" />
+    <property name="file.separator" value="\" />
+    <property name="module.run.classpath" value="S:\svn\trunk\TorrentScout\build\cluster\modules\com-iontorrent-commons.jar:S:\svn\trunk\TorrentScout\Commons\release\modules\ext\commons-cli-1.2.jar:S:\svn\trunk\TorrentScout\Commons\release\modules\ext\commons-logging-1.0.4.jar:S:\svn\trunk\TorrentScout\Commons\release\modules\ext\commons-configuration-1.2.jar:S:\svn\trunk\TorrentScout\Commons\release\modules\ext\commons-lang-2.4.jar:S:\svn\trunk\TorrentScout\Commons\release\modules\ext\commons-collections-3.1.jar:S:\svn\trunk\TorrentScout\build\cluster\modules\com-iontorrent-hdf5.jar:S:\svn\trunk\TorrentScout\HDF5PureJava\release\modules\ext\cisd-jhdf5-batteries_included_lin_win_mac_sol.jar:S:\svn\trunk\TorrentScout\build\cluster\modules\com-iontorrent-utils.jar:S:\svn\trunk\TorrentScout\build\cluster\modules\com-iontorrent-commons.jar:S:\svn\trunk\TorrentScout\TorrentScoutUtils\release\modules\ext\janino.jar:S:\svn\trunk\TorrentScout\build\cluster\modules\com-iontorrent-hdf5.jar:S:\NetBeans 7.0\platform\lib\org-openide-util.jar:S:\NetBeans 7.0\platform\lib\org-openide-util-lookup.jar:S:\svn\trunk\TorrentScout\TorrentScoutUtils\release\modules\ext\janino.jar" />
+    <property name="nbjdk.home.defaulted" value="true" />
+    <property name="libs.restlib_gfv3ee6.classpath" value="D:\Program Files\glassfish-3.0.1\glassfish\modules\jackson-core-asl.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\jersey-gf-bundle.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\jersey-multipart.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\jettison.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\mimepull.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\jsr311-api.jar" />
+    <property name="libs.junit_4.maven-pom" value="" />
+    <property name="libs.Vaadin.maven-pom" value="" />
+    <property name="libs.PersistenceLibrary1.maven-pom" value="" />
+    <property name="build.test.unit.work.dir" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess\build\test\unit\work" />
+    <property name="netbeans.buildnumber" value="201107282000" />
+    <property name="libs.JWSAntTasks.javadoc" value="" />
+    <property name="user.variant" value="" />
+    <property name="libs.eclipselinkmodelgen.classpath" value="S:\NetBeans 7.0\java\modules\ext\eclipselink\eclipselink-jpa-modelgen-2.2.0.jar" />
+    <property name="libs.Java-EE-GlassFish-v3.wscompile" value="" />
+    <property name="nbm.needs.restart" value="false" />
+    <property name="sun.java.launcher" value="SUN_STANDARD" />
+    <property name="libs.junit.classpath" value="S:\NetBeans 7.0\java\modules\ext\junit-3.8.2.jar" />
+    <property name="libs.jaxb.javadoc" value="S:\NetBeans 7.0\ide\docs\jaxb-api-doc.zip" />
+    <property name="libs.struts.classpath" value="S:\NetBeans 7.0\enterprise\modules\ext\struts\antlr-2.7.2.jar;S:\NetBeans 7.0\enterprise\modules\ext\struts\bsf-2.3.0.jar;S:\NetBeans 7.0\enterprise\modules\ext\struts\commons-beanutils-1.7.0.jar;S:\NetBeans 7.0\enterprise\modules\ext\struts\commons-chain-1.1.jar;S:\NetBeans 7.0\enterprise\modules\ext\struts\commons-digester-1.8.jar;S:\NetBeans 7.0\enterprise\modules\ext\struts\commons-fileupload-1.1.1.jar;S:\NetBeans 7.0\enterprise\modules\ext\struts\commons-io-1.1.jar;S:\NetBeans 7.0\enterprise\modules\ext\struts\commons-logging-1.0.4.jar;S:\NetBeans 7.0\enterprise\modules\ext\struts\commons-validator-1.3.1.jar;S:\NetBeans 7.0\enterprise\modules\ext\struts\jstl-1.0.2.jar;S:\NetBeans 7.0\enterprise\modules\ext\struts\oro-2.0.8.jar;S:\NetBeans 7.0\enterprise\modules\ext\struts\standard-1.0.2.jar;S:\NetBeans 7.0\enterprise\modules\ext\struts\struts-core-1.3.8.jar;S:\NetBeans 7.0\enterprise\modules\ext\struts\struts-el-1.3.8.jar;S:\NetBeans 7.0\enterprise\modules\ext\struts\struts-extras-1.3.8.jar;S:\NetBeans 7.0\enterprise\modules\ext\struts\struts-faces-1.3.8.jar;S:\NetBeans 7.0\enterprise\modules\ext\struts\struts-mailreader-dao-1.3.8.jar;S:\NetBeans 7.0\enterprise\modules\ext\struts\struts-scripting-1.3.8.jar;S:\NetBeans 7.0\enterprise\modules\ext\struts\struts-taglib-1.3.8.jar;S:\NetBeans 7.0\enterprise\modules\ext\struts\struts-tiles-1.3.8.jar" />
+    <property name="nbm.executable.files" value="[NOTHING]" />
+    <property name="ant.home" value="S:\NetBeans 7.0\java\ant" />
+    <property name="libs.junit_4.src" value="S:\NetBeans 7.0\java\docs\junit-4.8.2-src.jar" />
+    <property name="test.unit.folder" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess/../build/testdist/unit/cluster/com-iontorrent-scoutwellsaccess" />
+    <property name="libs.absolutelayout.maven-pom" value="" />
+    <property name="ant.java.version" value="1.6" />
+    <property name="java.library.path" value="S:\java\jdk1.6\jre\bin;.;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files (x86)\PC Connectivity Solution\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static;D:\Program Files\QuickTime\QTSystem\;S:\java\jdk1.6\bin;C:\Program Files (x86)\Windows Live\Shared;D:\MATLAB\R2010b\bin;d:\tools\putty;C:\Program Files\TortoiseGit\bin;C:\Program Files (x86)\Microsoft SQL Server\100\Tools\Binn\;C:\Program Files\Microsoft SQL Server\100\Tools\Binn\;C:\Program Files\Microsoft SQL Server\100\DTS\Binn\;d:\tools\ant\bin;d:\tools\git\bin;C:\Program Files\TortoiseSVN\bin;S:\Android\android-sdk\tools;%PROGRAMFILES%\Internet Explorer" />
+    <property name="libs.metro.maven-pom" value="" />
+    <property name="build.test.unit.classes.dir" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess\build\test\unit\classes" />
+    <property name="libs.EclipseLink-GlassFish-v3.src" value="" />
+    <property name="java.util.logging.config.class" value="org.netbeans.core.startup.TopLogging" />
+    <property name="DSTAMP" value="20120229" />
+    <property name="nbjunit.workdir" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess\build\test\unit\work" />
+    <property name="libs.PostgreSQLDriver.src" value="" />
+    <property name="test.qa-functional.data.dir" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess\test\qa-functional\data" />
+    <property name="sun.arch.data.model" value="64" />
+    <property name="basedir" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess" />
+    <property name="libs.Vaadin.src" value="" />
+    <property name="libs.jstl11.classpath" value="S:\NetBeans 7.0\enterprise\modules\ext\standard.jar;S:\NetBeans 7.0\enterprise\modules\ext\jstl.jar" />
+    <property name="path.separator" value=";" />
+    <property name="libs.javaee-web-api-6.0.javadoc" value="S:\NetBeans 7.0\enterprise\docs\javaee6-doc-api.zip" />
+    <property name="ant.junit.enabletestlistenerevents" value="true" />
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle" />
+    <property name="libs.jaxws21.classpath" value="S:\NetBeans 7.0\ide\modules\ext\jaxb\jaxb-impl.jar;S:\NetBeans 7.0\ide\modules\ext\jaxb\jaxb-xjc.jar;S:\NetBeans 7.0\java\modules\ext\jaxws22\FastInfoset.jar;S:\NetBeans 7.0\java\modules\ext\jaxws22\gmbal-api-only.jar;S:\NetBeans 7.0\java\modules\ext\jaxws22\http.jar;S:\NetBeans 7.0\java\modules\ext\jaxws22\jaxws-rt.jar;S:\NetBeans 7.0\java\modules\ext\jaxws22\jaxws-tools.jar;S:\NetBeans 7.0\java\modules\ext\jaxws22\management-api.jar;S:\NetBeans 7.0\java\modules\ext\jaxws22\mimepull.jar;S:\NetBeans 7.0\java\modules\ext\jaxws22\policy.jar;S:\NetBeans 7.0\java\modules\ext\jaxws22\saaj-impl.jar;S:\NetBeans 7.0\java\modules\ext\jaxws22\stax-ex.jar;S:\NetBeans 7.0\java\modules\ext\jaxws22\streambuffer.jar;S:\NetBeans 7.0\java\modules\ext\jaxws22\woodstox.jar;S:\NetBeans 7.0\java\modules\ext\jaxws22\api\jaxws-api.jar;S:\NetBeans 7.0\java\modules\ext\jaxws22\api\jsr181-api.jar;S:\NetBeans 7.0\java\modules\ext\jaxws22\api\jsr250-api.jar;S:\NetBeans 7.0\java\modules\ext\jaxws22\api\saaj-api.jar;S:\NetBeans 7.0\ide\modules\ext\jaxb\activation.jar;S:\NetBeans 7.0\ide\modules\ext\jaxb\api\jaxb-api.jar;S:\NetBeans 7.0\ide\modules\ext\jaxb\api\jsr173_api.jar" />
+    <property name="TSTAMP" value="1932" />
+    <property name="libs.struts.src" value="" />
+    <property name="apple.awt.graphics.UseQuartz" value="true" />
+    <property name="user.language" value="de" />
+    <property name="ant.file.type.com.iontorrent.scoutwellsaccess" value="file" />
+    <property name="libs.spring-framework.classpath" value="S:\NetBeans 7.0\ide\modules\ext\commons-logging-1.1.jar;S:\NetBeans 7.0\java\modules\ext\cglib-2.2.jar;S:\NetBeans 7.0\java\modules\ext\spring\spring-2.5.6.SEC01.jar" />
+    <property name="libs.eclipselink.maven-pom" value="" />
+    <property name="module.classpath" value="S:\svn\trunk\TorrentScout\build\public-package-jars\com-iontorrent-commons.jar:S:\svn\trunk\TorrentScout\build\public-package-jars\com-iontorrent-hdf5.jar:S:\svn\trunk\TorrentScout\build\public-package-jars\com-iontorrent-utils.jar" />
+    <property name="libs.primefaces.javadoc" value="" />
+    <property name="libs.spring-framework300.maven-pom" value="" />
+    <property name="ant.project.invoked-targets" value="test-single" />
+    <property name="build.test.unit.results.dir" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess\build\test\unit\results" />
+    <property name="test-qa-functional-sys-prop.cluster.path.final" value="S:\NetBeans 7.0\ide;S:\NetBeans 7.0\platform:S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess/../build/cluster" />
+    <property name="libs.swing-layout.javadoc" value="S:\NetBeans 7.0\platform\docs\swing-layout-1.0.4-doc.zip" />
+    <property name="nbm.is.global" value="" />
+    <property name="cluster.path.evaluated" value="S:\NetBeans 7.0/ide:S:\NetBeans 7.0/platform" />
+    <property name="libs.swing-app-framework.javadoc" value="S:\NetBeans 7.0\java\docs\appframework-1.0.3-doc.zip" />
+    <property name="libs.ejb3-persistence.maven-pom" value="" />
+    <property name="libs.Vaadin.javadoc" value="" />
+    <property name="libs.PostgreSQLDriver.maven-pom" value="" />
+    <property name="java.class.version" value="50.0" />
+    <property name="libs.javaee-endorsed-api-6.0.src" value="" />
+    <property name="netbeans.system_http_proxy" value="DIRECT" />
+    <property name="libs.eclipselink.javadoc" value="" />
+    <property name="libs.jsp-compilation.maven-pom" value="" />
+    <property name="user.properties.file" value="C:\Users\Chantal Roth\.netbeans\7.0\build.properties" />
+    <property name="libs.spring-framework.src" value="" />
+    <property name="libs.javac-api.maven-pom" value="" />
+    <property name="file.encoding.pkg" value="sun.io" />
+    <property name="sun.cpu.endian" value="little" />
+    <property name="ant.file.type.com.iontorrent.scoutwellsaccess-impl" value="file" />
+    <property name="harness.taskdefs.done" value="true" />
+    <property name="code.name.base" value="com.iontorrent.scoutwellsaccess" />
+    <property name="test.unit.compile.cp" value="S:/NetBeans 7.0/platform/modules/org-netbeans-libs-junit4.jar" />
+    <property name="java.home.parent" value="S:\java\jdk1.6" />
+    <property name="libs.JWSAntTasks.classpath" value="S:\NetBeans 7.0\java\ant\extra\org-netbeans-modules-javawebstart-anttasks.jar" />
+    <property name="libs.spring-framework300.src" value="" />
+    <property name="test.unit.runtime.cp" value="S:/NetBeans 7.0/platform/modules/org-netbeans-libs-junit4.jar" />
+    <property name="test.qa-functional.compile.cp" value="S:/NetBeans 7.0/platform/modules/org-netbeans-libs-junit4.jar" />
+    <property name="test.qa-functional.runtime.cp" value="S:/NetBeans 7.0/platform/modules/org-netbeans-libs-junit4.jar;S:/NetBeans 7.0/platform/lib/org-openide-util.jar" />
+    <property name="test.qa-functional.cp.extra" value="" />
+    <property name="nbplatform.default.harness.dir" value="S:\NetBeans 7.0/harness" />
+    <property name="cp.extra" value="" />
+    <property name="java.home" value="S:\java\jdk1.6\jre" />
+    <property name="libs.jsp-compilation.src" value="" />
+    <property name="libs.spring-webmvc.src" value="" />
+    <property name="javahelp.jar.dir" value="modules/docs" />
+    <property name="libs.javaee-endorsed-api-6.0.classpath" value="S:\NetBeans 7.0\enterprise\modules\ext\javaee6-endorsed\javax.annotation.jar;S:\NetBeans 7.0\enterprise\modules\ext\javaee6-endorsed\jaxb-api-osgi.jar;S:\NetBeans 7.0\enterprise\modules\ext\javaee6-endorsed\webservices-api-osgi.jar" />
+    <property name="libs.javaee-api-6.0.src" value="" />
+    <property name="netbeans.importclass" value="org.netbeans.upgrade.AutoUpgrade" />
+    <property name="ant.project.default-target" value="netbeans" />
+    <property name="ant.file.harness" value="S:\svn\trunk\TorrentScout\harness\build.xml" />
+    <property name="libs.toplink.maven-pom" value="" />
+    <property name="public.package.jar.dir" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess/../build/public-package-jars" />
+    <property name="libs.PostgreSQLDriver.javadoc" value="" />
+    <property name="libs.restlib.classpath" value="S:\NetBeans 7.0\enterprise\modules\ext\rest\asm-3.1.jar;S:\NetBeans 7.0\enterprise\modules\ext\rest\jackson-core-asl-1.1.1.jar;S:\NetBeans 7.0\enterprise\modules\ext\rest\jersey-client-1.3.jar;S:\NetBeans 7.0\enterprise\modules\ext\rest\jersey-core-1.3.jar;S:\NetBeans 7.0\enterprise\modules\ext\rest\jersey-json-1.3.jar;S:\NetBeans 7.0\enterprise\modules\ext\rest\jersey-multipart-1.3.jar;S:\NetBeans 7.0\enterprise\modules\ext\rest\jersey-server-1.3.jar;S:\NetBeans 7.0\enterprise\modules\ext\rest\jersey-spring-1.3.jar;S:\NetBeans 7.0\enterprise\modules\ext\rest\jettison-1.1.jar;S:\NetBeans 7.0\enterprise\modules\ext\rest\mimepull-1.4.jar;S:\NetBeans 7.0\enterprise\modules\ext\rest\oauth-client-1.3.jar;S:\NetBeans 7.0\enterprise\modules\ext\rest\oauth-signature-1.3.jar;S:\NetBeans 7.0\ide\modules\ext\jaxb\activation.jar;S:\NetBeans 7.0\ide\modules\ext\jaxb\api\jaxb-api.jar;S:\NetBeans 7.0\ide\modules\ext\jaxb\api\jsr173_api.jar" />
+    <property name="extra.test.libs.short" value="${extra.test.libs.dir}/org-netbeans-libs-junit4.jar:\&#xa;${extra.test.libs.dir}/com-iontorrent-scoutwellsaccess.jar:\&#xa;${extra.test.libs.dir}/junit-4.8.2.jar:\&#xa;${extra.test.libs.dir}/junit-3.8.2.jar:\&#xa;${extra.test.libs.dir}/com-iontorrent-commons.jar:\&#xa;${extra.test.libs.dir}/commons-cli-1.2.jar:\&#xa;${extra.test.libs.dir}/commons-logging-1.0.4.jar:\&#xa;${extra.test.libs.dir}/commons-configuration-1.2.jar:\&#xa;${extra.test.libs.dir}/commons-lang-2.4.jar:\&#xa;${extra.test.libs.dir}/commons-collections-3.1.jar:\&#xa;${extra.test.libs.dir}/com-iontorrent-hdf5.jar:\&#xa;${extra.test.libs.dir}/cisd-jhdf5-batteries_included_lin_win_mac_sol.jar:\&#xa;${extra.test.libs.dir}/com-iontorrent-utils.jar:\&#xa;${extra.test.libs.dir}/janino.jar:\&#xa;${extra.test.libs.dir}/org-openide-util.jar:\&#xa;${extra.test.libs.dir}/org-openide-util-lookup.jar" />
+    <property name="nbm.distribution" value="" />
+    <property name="libs.MySQLDriver.maven-pom" value="" />
+    <property name="libs.junit_4.javadoc" value="S:\NetBeans 7.0\java\docs\junit-4.8.2-api.zip" />
+    <property name="libs.spring-webmvc.javadoc" value="" />
+    <property name="libs.toplink.src" value="" />
+    <property name="libs.EclipseLink-GlassFish-v3.maven-pom" value="" />
+    <property name="libs.javaee-web-api-6.0.maven-pom" value="" />
+    <property name="libs.hibernate-support.src" value="" />
+    <property name="libs.javaee-endorsed-api-6.0.javadoc" value="S:\NetBeans 7.0\enterprise\docs\javaee6-doc-api.zip" />
+    <property name="module.build.started.time" value="2012-02-29T19:32:46.035+0100" />
+    <property name="libs.spring-webmvc3.0.javadoc" value="" />
+    <property name="test.qa-functional.folder" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess/../build/testdist/qa-functional/cluster/com-iontorrent-scoutwellsaccess" />
+    <property name="build.test.qa-functional.classes.dir" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess\build\test\qa-functional\classes" />
+    <property name="module.dependencies" value="com.iontorrent.commons &gt; 1.0, com.iontorrent.hdf5 &gt; 1.0, com.iontorrent.utils &gt; 1.0" />
+    <property name="libs.restapi.src" value="" />
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Server Compiler" />
+    <property name="sun.java2d.noddraw" value="true" />
+    <property name="libs.jsp-compiler.classpath" value="S:\NetBeans 7.0\enterprise\ant\extra\jspcompile.jar" />
+    <property name="tools.jar" value="S:\java\jdk1.6\lib\tools.jar" />
+    <property name="libs.spring-webmvc.classpath" value="S:\NetBeans 7.0\enterprise\modules\ext\spring\spring-webmvc-2.5.6.SEC01.jar" />
+    <property name="javac.compilerargs" value="-Xlint -Xlint:-serial" />
+    <property name="svnkit.http.methods" value="Basic" />
+    <property name="ant.file" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess\build.xml" />
+    <property name="libs.PersistenceLibrary1.javadoc" value="" />
+    <property name="libs.beans-binding.maven-pom" value="" />
+    <property name="ant.file.projectized-common" value="S:\svn\trunk\TorrentScout\harness\common.xml" />
+    <property name="libs.jsf12.classpath" value="S:\NetBeans 7.0\enterprise\modules\ext\jsf-1_2\commons-beanutils.jar;S:\NetBeans 7.0\enterprise\modules\ext\jsf-1_2\commons-collections.jar;S:\NetBeans 7.0\enterprise\modules\ext\jsf-1_2\commons-digester.jar;S:\NetBeans 7.0\enterprise\modules\ext\jsf-1_2\commons-logging.jar;S:\NetBeans 7.0\enterprise\modules\ext\jsf-1_2\jsf-api.jar;S:\NetBeans 7.0\enterprise\modules\ext\jsf-1_2\jsf-impl.jar" />
+    <property name="nbjdk.home" value="S:\java\jdk1.6" />
+    <property name="test.unit.data.dir" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess\test\unit\data" />
+    <property name="sun.awt.exception.handler" value="org.netbeans.core.startup.TopLogging$AWTHandler" />
+    <property name="libs.Vaadin.classpath" value="C:\Users\Chantal Roth\.netbeans\7.0\libs\vaadin-6.2.3.jar" />
+    <property name="libs.restapi.maven-pom" value="" />
+    <property name="libs.beans-binding.src" value="" />
+    <property name="javahelp.jar.basename" value="com-iontorrent-scoutwellsaccess.jar" />
+    <property name="nbm.homepage" value="" />
+    <property name="java.vm.specification.vendor" value="Sun Microsystems Inc." />
+    <property name="libs.swing-layout.src" value="S:\NetBeans 7.0\platform\docs\swing-layout-1.0.4-src.zip" />
+    <property name="libs.Java-EE-GlassFish-v3.embedabbleejb" value="" />
+    <property name="nbm.release.date" value="" />
+    <property name="test.timeout" value="600000" />
+    <property name="org.openide.major.version" value="IDE/1" />
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM" />
+    <property name="build.javahelp.dir" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess\build\javahelp" />
+    <property name="build.test.unit.dir" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess\build\test\unit" />
+    <property name="build.test.qa-functional.results.dir" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess\build\test\qa-functional\results" />
+    <property name="netbeans.user" value="C:\Users\Chantal Roth\.netbeans\7.0" />
+    <property name="ant.file.type.jdk" value="file" />
+    <property name="java.io.tmpdir" value="C:\Users\CHANTA~1\AppData\Local\Temp\" />
+    <property name="java.vendor.url" value="http://java.sun.com/" />
+    <property name="libs.jsp-compiler.src" value="" />
+    <property name="org.openide.awt.ActionReference.completion" value="org.netbeans.modules.apisupport.project.layers.PathCompletions" />
+    <property name="sun.boot.library.path" value="S:\java\jdk1.6\jre\bin" />
+    <property name="libs.jsf20.classpath" value="S:\NetBeans 7.0\enterprise\modules\ext\jsf-2_1\jsf-api.jar;S:\NetBeans 7.0\enterprise\modules\ext\jsf-2_1\jsf-impl.jar" />
+    <property name="manifest.mf" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess\manifest.mf" />
+    <property name="libs.PersistenceLibrary1.src" value="" />
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment" />
+    <property name="ant.project.name" value="com.iontorrent.scoutwellsaccess" />
+    <property name="javahelp.base" value="com/iontorrent/scoutwellsaccess/docs" />
+    <property name="javahelp.jar" value="modules/docs/com-iontorrent-scoutwellsaccess.jar" />
+    <property name="netbeans.hash.code" value="unique=NB_JAVA_WEBEE0b3d79094-f69e-4987-9195-715f35096452_6f72e9a7-4387-4a72-b6c4-ee098968172b" />
+    <property name="libs.jsp-compilation-syscp.maven-pom" value="" />
+    <property name="sun.cpu.isalist" value="amd64" />
+    <property name="libs.CopyLibs.javadoc" value="" />
+    <property name="test.qa-functional.dir" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess\test\qa-functional" />
+    <property name="netbeans.javadoc.dir" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess\build\javadoc" />
+    <property name="org.openide.specification.version" value="6.2" />
+    <property name="libs.hibernate-support.classpath" value="S:\NetBeans 7.0\java\modules\ext\hibernate\antlr-2.7.6.jar;S:\NetBeans 7.0\java\modules\ext\hibernate\asm.jar;S:\NetBeans 7.0\java\modules\ext\hibernate\asm-attrs.jar;S:\NetBeans 7.0\java\modules\ext\hibernate\cglib-2.1.3.jar;S:\NetBeans 7.0\java\modules\ext\hibernate\commons-collections-2.1.1.jar;S:\NetBeans 7.0\ide\modules\ext\commons-logging-1.1.jar;S:\NetBeans 7.0\java\modules\ext\hibernate\dom4j-1.6.1.jar;S:\NetBeans 7.0\java\modules\ext\hibernate\ehcache-1.2.3.jar;S:\NetBeans 7.0\java\modules\ext\hibernate\jdbc2_0-stdext.jar;S:\NetBeans 7.0\java\modules\ext\hibernate\jta.jar;S:\NetBeans 7.0\java\modules\ext\hibernate\hibernate3.jar;S:\NetBeans 7.0\java\modules\ext\hibernate\hibernate-tools.jar;S:\NetBeans 7.0\java\modules\ext\hibernate\hibernate-annotations.jar;S:\NetBeans 7.0\java\modules\ext\hibernate\hibernate-commons-annotations.jar;S:\NetBeans 7.0\java\modules\ext\hibernate\hibernate-entitymanager.jar;S:\NetBeans 7.0\java\modules\ext\hibernate\javassist.jar" />
+    <property name="ant.file.type.projectized-common" value="file" />
+    <property name="user.home" value="C:\Users\Chantal Roth" />
+    <property name="libs.primefaces.maven-pom" value="" />
+    <property name="libs.javaee-api-6.0.maven-pom" value="" />
+    <property name="suite.build.dir" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess/../build" />
+    <property name="libs.JWSAntTasks.src" value="" />
+    <property name="libs.CopyLibs.maven-pom" value="" />
+    <property name="libs.spring-framework300.javadoc" value="" />
+    <property name="libs.hibernate-persistence.maven-pom" value="" />
+    <property name="libs.absolutelayout.javadoc" value="" />
+    <property name="java.specification.name" value="Java Platform API Specification" />
+    <property name="libs.swing-app-framework.maven-pom" value="" />
+    <property name="test.unit.cp.extra" value="" />
+    <property name="java.specification.vendor" value="Sun Microsystems Inc." />
+    <property name="libs.javac-api.classpath" value="S:\NetBeans 7.0\java\modules\ext\javac-api-nb-7.0-b07.jar" />
+    <property name="jnlp.platform.codebase" value="http://bits.netbeans.org/7.0/jnlp/" />
+    <property name="java.version" value="1.6.0_23" />
+    <property name="test-unit-sys-prop.cluster.path.final" value="S:\NetBeans 7.0\ide;S:\NetBeans 7.0\platform:S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess/../build/cluster" />
+    <property name="libs.MySQLDriver.javadoc" value="" />
+    <property name="org.openide.version" value="deprecated" />
+    <property name="libs.restlib_gfv3ee6.maven-pom" value="" />
+    <property name="libs.eclipselinkmodelgen.maven-pom" value="" />
+    <property name="ant.file.no-testcoverage" value="S:\svn\trunk\TorrentScout\harness\no-testcoverage.xml" />
+    <property name="libs.jsp-compilation-syscp.javadoc" value="" />
+    <property name="libs.junit.maven-pom" value="" />
+    <property name="is.regular" value="true" />
+    <property name="jnlp.servlet.jar" value="S:\java\jnlp\jnlp-servlet.jar" />
+    <property name="libs.eclipselinkmodelgen.javadoc" value="" />
+    <property name="libs.metro.javadoc" value="S:\NetBeans 7.0\enterprise\docs\metro-1.4-doc.zip" />
+    <property name="libs.struts.maven-pom" value="" />
+    <property name="libs.jaxb.src" value="" />
+    <property name="libs.Java-EE-GlassFish-v3.wsgenerate" value="" />
+    <property name="libs.jaxb.classpath" value="S:\NetBeans 7.0\ide\modules\ext\jaxb\jaxb-impl.jar;S:\NetBeans 7.0\ide\modules\ext\jaxb\jaxb-xjc.jar;S:\NetBeans 7.0\ide\modules\ext\jaxb\jaxb1-impl.jar;S:\NetBeans 7.0\ide\modules\ext\jaxb\activation.jar;S:\NetBeans 7.0\ide\modules\ext\jaxb\api\jaxb-api.jar;S:\NetBeans 7.0\ide\modules\ext\jaxb\api\jsr173_api.jar" />
+    <property name="testcoverage.import" value="no-testcoverage.xml" />
+    <property name="libs.swing-layout.classpath" value="S:\NetBeans 7.0\platform\modules\ext\swing-layout-1.0.4.jar" />
+    <property name="libs.spring-webmvc3.0.classpath" value="S:\NetBeans 7.0\java\modules\ext\spring-3.0\spring-webmvc-3.0.2.RELEASE.jar" />
+    <property name="libs.restlib.src" value="" />
+    <property name="javac.source" value="1.6" />
+    <property name="line.separator" value="&#xd;&#xa;" />
+    <property name="libs.hibernate-persistence.src" value="" />
+    <property name="java.specification.version" value="1.6" />
+    <property name="java.vm.info" value="mixed mode" />
+    <property name="libs.jaxws21.maven-pom" value="" />
+    <property name="test.filter.trace" value="true" />
+    <property name="libs.spring-framework.maven-pom" value="" />
+    <property name="sun.boot.class.path" value="S:\java\jdk1.6\jre\lib\resources.jar;S:\java\jdk1.6\jre\lib\rt.jar;S:\java\jdk1.6\jre\lib\sunrsasign.jar;S:\java\jdk1.6\jre\lib\jsse.jar;S:\java\jdk1.6\jre\lib\jce.jar;S:\java\jdk1.6\jre\lib\charsets.jar;S:\java\jdk1.6\jre\lib\modules\jdk.boot.jar;S:\java\jdk1.6\jre\classes" />
+    <property name="javac.target" value="1.6" />
+    <property name="module.jar.basename" value="com-iontorrent-scoutwellsaccess.jar" />
+    <property name="src.dir" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess\src" />
+    <property name="sun.awt.keepWorkingSetOnMinimize" value="true" />
+    <property name="build.compiler.optimize" value="off" />
+    <property name="libs.jsf20.src" value="" />
+    <property name="libs.jsf12.src" value="" />
+    <property name="test.qa-functional.src.dir" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess\test\qa-functional\src" />
+    <property name="nbplatform.default.netbeans.dest.dir" value="S:\NetBeans 7.0" />
+    <property name="nbplatform.active.dir" value="S:\NetBeans 7.0" />
+    <property name="libs.struts.javadoc" value="S:\NetBeans 7.0\enterprise\docs\struts-1.3.8-javadoc.zip" />
+    <property name="libs.Comet-GlassFish-v3.classpath" value="D:\Program Files\glassfish-3.0.1\glassfish\modules\grizzly-comet.jar" />
+    <property name="libs.restlib_gfv3ee6.javadoc" value="S:\NetBeans 7.0\enterprise\docs\jsr311-api-1.1.1-javadoc.zip;S:\NetBeans 7.0\enterprise\docs\jersey-client-1.3-javadoc.zip;S:\NetBeans 7.0\enterprise\docs\jersey-json-1.3-javadoc.zip;S:\NetBeans 7.0\enterprise\docs\jersey-multipart-1.3-javadoc.zip" />
+    <property name="libs.primefaces.src" value="" />
+    <property name="code.name.base.slashes" value="com/iontorrent/scoutwellsaccess" />
+    <property name="ant.file.type.no-testcoverage" value="file" />
+    <property name="TODAY" value="February 29 2012" />
+    <property name="java.awt.printerjob" value="sun.awt.windows.WPrinterJob" />
+    <property name="default.javac.source" value="1.6" />
+    <property name="release.files.extra" value="" />
+    <property name="sun.jnu.encoding" value="Cp1252" />
+    <property name="libs.MySQLDriver.src" value="" />
+    <property name="suite.dir" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess/.." />
+    <property name="build.test.qa-functional.work.dir" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess\build\test\qa-functional\work" />
+    <property name="java.runtime.version" value="1.6.0_23-b05" />
+    <property name="libs.ejb3-persistence.javadoc" value="" />
+    <property name="default.javac.target" value="1.6" />
+    <property name="cluster" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess/../build/cluster" />
+    <property name="libs.junit_4.classpath" value="S:\NetBeans 7.0\platform\modules\ext\junit-4.8.2.jar" />
+    <property name="libs.Java-EE-GlassFish-v3.src" value="" />
+    <property name="user.timezone" value="" />
+    <property name="test.unit.out.folder" value="S:\svn\trunk\TorrentScout\build\testdist\unit\cluster\com-iontorrent-scoutwellsaccess" />
+    <property name="libs.PersistenceLibrary1.classpath" value="D:\java\objectdb-2.1.0_03\bin\objectdb.jar" />
+    <property name="test.dist.dir" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess/../build/testdist" />
+    <property name="release.files" value="" />
+    <property name="ant.file.com.iontorrent.scoutwellsaccess-impl" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess\nbproject\build-impl.xml" />
+    <property name="libs.javaee-endorsed-api-6.0.maven-pom" value="" />
+    <property name="test.qa-functional.out.folder" value="S:\svn\trunk\TorrentScout\build\testdist\qa-functional\cluster\com-iontorrent-scoutwellsaccess" />
+    <property name="netbeans.dirs" value="S:\NetBeans 7.0\nb;S:\NetBeans 7.0\ergonomics;S:\NetBeans 7.0\ide;S:\NetBeans 7.0\java;S:\NetBeans 7.0\xml;S:\NetBeans 7.0\apisupport;S:\NetBeans 7.0\webcommon;S:\NetBeans 7.0\websvccommon;S:\NetBeans 7.0\enterprise;S:\NetBeans 7.0\mobility;S:\NetBeans 7.0\profiler;S:\NetBeans 7.0\ruby;S:\NetBeans 7.0\python;S:\NetBeans 7.0\php;S:\NetBeans 7.0\visualweb;S:\NetBeans 7.0\soa;S:\NetBeans 7.0\identity;S:\NetBeans 7.0\uml;S:\NetBeans 7.0\harness;S:\NetBeans 7.0\cnd;S:\NetBeans 7.0\dlight;S:\NetBeans 7.0\groovy;S:\NetBeans 7.0\extra;S:\NetBeans 7.0\javafx;S:\NetBeans 7.0\javacard" />
+    <property name="test.type" value="unit" />
+    <property name="libs.jsf20.javadoc" value="S:\NetBeans 7.0\enterprise\docs\javaee6-doc-api.zip" />
+    <property name="jar-excludes" value="**/*.java,**/*.form,**/package.html,**/doc-files/" />
+    <property name="java.ext.dirs" value="S:\java\jdk1.6\jre\lib\ext;C:\Windows\Sun\Java\lib\ext" />
+    <property name="libs.restlib_gfv3ee6.src" value="" />
+    <property name="libs.metro.src" value="" />
+    <property name="libs.absolutelayout.classpath" value="S:\NetBeans 7.0\java\modules\ext\AbsoluteLayout.jar" />
+    <property name="cluster.path" value="${nbplatform.active.dir}/ide:${nbplatform.active.dir}/platform" />
+    <property name="libs.metro.classpath" value="S:\NetBeans 7.0\ide\modules\ext\jaxb\activation.jar;S:\NetBeans 7.0\enterprise\modules\ext\metro\webservices-api.jar;S:\NetBeans 7.0\enterprise\modules\ext\metro\webservices-extra-api.jar;S:\NetBeans 7.0\enterprise\modules\ext\metro\webservices-extra.jar;S:\NetBeans 7.0\enterprise\modules\ext\metro\webservices-rt.jar;S:\NetBeans 7.0\enterprise\modules\ext\metro\webservices-tools.jar" />
+    <property name="libs.restlib.maven-pom" value="" />
+    <property name="apple.laf.useScreenMenuBar" value="true" />
+    <property name="java.class.path" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess\build\test\unit\classes;S:\NetBeans 7.0\platform\modules\org-netbeans-libs-junit4.jar;S:\svn\trunk\TorrentScout\build\cluster\modules\com-iontorrent-scoutwellsaccess.jar;S:\NetBeans 7.0\platform\modules\ext\junit-4.8.2.jar;S:\NetBeans 7.0\java\modules\ext\junit-3.8.2.jar;S:\svn\trunk\TorrentScout\build\cluster\modules\com-iontorrent-commons.jar;S:\svn\trunk\TorrentScout\Commons\release\modules\ext\commons-cli-1.2.jar;S:\svn\trunk\TorrentScout\Commons\release\modules\ext\commons-logging-1.0.4.jar;S:\svn\trunk\TorrentScout\Commons\release\modules\ext\commons-configuration-1.2.jar;S:\svn\trunk\TorrentScout\Commons\release\modules\ext\commons-lang-2.4.jar;S:\svn\trunk\TorrentScout\Commons\release\modules\ext\commons-collections-3.1.jar;S:\svn\trunk\TorrentScout\build\cluster\modules\com-iontorrent-hdf5.jar;S:\svn\trunk\TorrentScout\HDF5PureJava\release\modules\ext\cisd-jhdf5-batteries_included_lin_win_mac_sol.jar;S:\svn\trunk\TorrentScout\build\cluster\modules\com-iontorrent-utils.jar;S:\svn\trunk\TorrentScout\TorrentScoutUtils\release\modules\ext\janino.jar;S:\NetBeans 7.0\platform\lib\org-openide-util.jar;S:\NetBeans 7.0\platform\lib\org-openide-util-lookup.jar;S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess;S:\NetBeans 7.0\java\ant\lib\ant-launcher.jar;S:\NetBeans 7.0\java\ant\lib\ant.jar;S:\NetBeans 7.0\java\ant\lib\ant-junit.jar;S:\NetBeans 7.0\java\ant\lib\ant-junit4.jar" />
+    <property name="exists.test.unit.src.dir" value="true" />
+    <property name="have-jdk-1.6" value="true" />
+    <property name="libs.absolutelayout.src" value="" />
+    <property name="have-jdk-1.5" value="true" />
+    <property name="have-jdk-1.4" value="true" />
+    <property name="harness.dir" value="S:\svn\trunk\TorrentScout\harness" />
+    <property name="os.version" value="6.1" />
+    <property name="libs.EclipseLink-GlassFish-v3.javadoc" value="S:\NetBeans 7.0\enterprise\docs\javaee6-doc-api.zip" />
+    <property name="libs.toplink.javadoc" value="" />
+    <property name="sun.desktop" value="windows" />
+    <property name="libs.Comet-GlassFish-v3.src" value="" />
+    <property name="libs.restlib.javadoc" value="S:\NetBeans 7.0\enterprise\docs\jersey-client-1.3-javadoc.zip;S:\NetBeans 7.0\enterprise\docs\jersey-core-1.1.5.1-javadoc.zip;S:\NetBeans 7.0\enterprise\docs\jersey-json-1.3-javadoc.zip;S:\NetBeans 7.0\enterprise\docs\jersey-multipart-1.3-javadoc.zip;S:\NetBeans 7.0\enterprise\docs\jersey-spring-1.3-javadoc.zip;S:\NetBeans 7.0\enterprise\docs\oauth-client-1.3-javadoc.zip;S:\NetBeans 7.0\enterprise\docs\oauth-signature-1.3-javadoc.zip" />
+    <property name="libs.eclipselink.classpath" value="S:\NetBeans 7.0\java\modules\ext\eclipselink\eclipselink-2.2.0.jar;S:\NetBeans 7.0\java\modules\ext\eclipselink\eclipselink-javax.persistence-2.0.jar" />
+    <property name="build.compiler.deprecation" value="true" />
+    <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment" />
+    <property name="libs.beans-binding.javadoc" value="S:\NetBeans 7.0\java\docs\beansbinding-1.2.1-doc.zip" />
+    <property name="libs.Java-EE-GlassFish-v3.classpath" value="D:\Program Files\glassfish-3.0.1\glassfish\modules\bean-validator.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\javax.persistence.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\jsr311-api.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\jstl-impl.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\javax.jms.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\endorsed\jaxb-api-osgi.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\weld-osgi-bundle.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\javax.servlet.jsp.jstl.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\javax.enterprise.deploy.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\javax.servlet.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\endorsed\javax.annotation.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\javax.servlet.jsp.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\javax.resource.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\jsf-impl.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\javax.ejb.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\javax.security.jacc.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\javax.management.j2ee.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\javax.transaction.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\mail.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\javax.security.auth.message.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\endorsed\webservices-api-osgi.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\jsf-api.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\web-core.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\jackson-core-asl.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\jersey-gf-bundle.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\jersey-multipart.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\jettison.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\mimepull.jar;D:\Program Files\glassfish-3.0.1\glassfish\modules\jsr311-api.jar" />
+    <property name="java.vm.vendor" value="Sun Microsystems Inc." />
+    <property name="libs.CopyLibs.classpath" value="S:\NetBeans 7.0\java\ant\extra\org-netbeans-modules-java-j2seproject-copylibstask.jar" />
+    <property name="libs.spring-framework300.classpath" value="S:\NetBeans 7.0\ide\modules\ext\commons-logging-1.1.jar;S:\NetBeans 7.0\java\modules\ext\cglib-2.2.jar;S:\NetBeans 7.0\java\modules\ext\spring-3.0\spring-aop-3.0.2.RELEASE.jar;S:\NetBeans 7.0\java\modules\ext\spring-3.0\spring-asm-3.0.2.RELEASE.jar;S:\NetBeans 7.0\java\modules\ext\spring-3.0\spring-aspects-3.0.2.RELEASE.jar;S:\NetBeans 7.0\java\modules\ext\spring-3.0\spring-beans-3.0.2.RELEASE.jar;S:\NetBeans 7.0\java\modules\ext\spring-3.0\spring-context-3.0.2.RELEASE.jar;S:\NetBeans 7.0\java\modules\ext\spring-3.0\spring-context-support-3.0.2.RELEASE.jar;S:\NetBeans 7.0\java\modules\ext\spring-3.0\spring-core-3.0.2.RELEASE.jar;S:\NetBeans 7.0\java\modules\ext\spring-3.0\spring-expression-3.0.2.RELEASE.jar;S:\NetBeans 7.0\java\modules\ext\spring-3.0\spring-instrument-3.0.2.RELEASE.jar;S:\NetBeans 7.0\java\modules\ext\spring-3.0\spring-instrument-tomcat-3.0.2.RELEASE.jar;S:\NetBeans 7.0\java\modules\ext\spring-3.0\spring-jdbc-3.0.2.RELEASE.jar;S:\NetBeans 7.0\java\modules\ext\spring-3.0\spring-jms-3.0.2.RELEASE.jar;S:\NetBeans 7.0\java\modules\ext\spring-3.0\spring-orm-3.0.2.RELEASE.jar;S:\NetBeans 7.0\java\modules\ext\spring-3.0\spring-oxm-3.0.2.RELEASE.jar;S:\NetBeans 7.0\java\modules\ext\spring-3.0\spring-test-3.0.2.RELEASE.jar;S:\NetBeans 7.0\java\modules\ext\spring-3.0\spring-tx-3.0.2.RELEASE.jar;S:\NetBeans 7.0\java\modules\ext\spring-3.0\spring-web-3.0.2.RELEASE.jar;S:\NetBeans 7.0\java\modules\ext\spring-3.0\spring-webmvc-portlet-3.0.2.RELEASE.jar;S:\NetBeans 7.0\java\modules\ext\spring-3.0\spring-webmvc-3.0.2.RELEASE.jar;S:\NetBeans 7.0\java\modules\ext\spring-3.0\spring-struts-3.0.2.RELEASE.jar" />
+    <property name="libs.jsp-compiler.maven-pom" value="" />
+    <property name="module.jar.dir" value="modules" />
+    <property name="build.package.compress" value="false" />
+    <property name="build.compiler.debuglevel" value="source,lines,vars" />
+    <property name="libs.Java-EE-GlassFish-v3.wsinterop" value="" />
+    <property name="libs.spring-webmvc.maven-pom" value="" />
+    <property name="license.file" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess\build\no-license.txt" />
+    <property name="libs.ejb3-persistence.classpath" value="S:\NetBeans 7.0\java\modules\ext\hibernate\ejb3-persistence.jar" />
+    <property name="libs.spring-framework.javadoc" value="" />
+    <property name="libs.PostgreSQLDriver.classpath" value="S:\NetBeans 7.0\ide\modules\ext\postgresql-8.3-603.jdbc3.jar" />
+    <property name="libs.jsf12.maven-pom" value="" />
+    <property name="module.auto.deps.xml" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess\module-auto-deps.xml" />
+    <property name="libs.junit.src" value="" />
+    <property name="libs.CopyLibs.src" value="" />
+    <property name="build.dir" value="S:\svn\trunk\TorrentScout\TorrentScoutWellsAccess\build" />
+    <property name="test.bootclasspath.prepend.args" value="" />
+    <property name="libs.jsp-compilation.classpath" value="S:\NetBeans 7.0\java\ant\lib\ant.jar;S:\NetBeans 7.0\enterprise\modules\ext\servlet3.0-jsp2.2-api.jar;S:\NetBeans 7.0\enterprise\modules\ext\glassfish-jspparser-3.0.jar;S:\NetBeans 7.0\enterprise\modules\ext\jsf-2_1\jsf-api.jar;S:\NetBeans 7.0\enterprise\modules\ext\jstl.jar;S:\NetBeans 7.0\java\ant\lib\ant-launcher.jar" />
+    <property name="module.jar.verifylinkageignores" value="" />
+    <property name="org.netbeans.core.execution,org.netbeans.core.io.ui,org.netbeans.core.nativeaccess,org.netbeans.core.netigso,org.netbeans.core.osgi,org.netbeans.core.ui,org.netbeans.libs.felix,org.netbeans.libs.jna,org.netbeans.libs.jsr223,org.netbeans.libs.osgi,org.netbeans.modules.applemenu,org.netbeans.modules.autoupdate.services,org.netbeans.modules.autoupdate.ui,org.netbeans.modules.core.kit,org.netbeans.modules.editor.mimelookup.impl,org.netbeans.modules.favorites,org.netbeans.modules.javahelp,org.netbeans.modules.keyring.impl,org.netbeans.modules.masterfs,org.netbeans.modules.options.keymap,org.netbeans.modules.sendopts,org.netbeans.modules.spi.actions,org.openide.compat,org.openide.execution,org.openide.options,org.openide.util.enumerations" value="" />
+    <property name="module.jar" value="modules/com-iontorrent-scoutwellsaccess.jar" />
+    <property name="ant.version" value="Apache Ant(TM) version 1.8.2 compiled on December 20 2010" />
+    <property name="file.encoding" value="Cp1252" />
+    <property name="awt.toolkit" value="sun.awt.windows.WToolkit" />
+  </properties>
+  <testcase classname="com.iontorrent.rawdataaccess.pgmacquisition.PGMAcquisitionTest" name="testReadFile_0args" time="1.823" />
+  <system-out><![CDATA[Test: Testing file S:\data\314a\raw\acq_0000.dat
+Test: readFile new 
+=============== REGION FORMAT, READING FRAMES 0-59
+Test: v3 corner: x=5, y=5:[4818, 4818, 4818, 4818, 4818, 4818, 4818, 4818, 4818, 4818, 4818, 4818, 4818, 4818, 4818, 4818, 4818, 4818, 4818, 4818, 4818, 4818, 4818, 4818, 4665, 4693, 4566, 4636, 4673, 4719, 4703, 4699, 4726, 4724, 4697, 4651, 4707, 4711, 4613, 4697, 4699, 4679, 4708, 4678, 4719, 4642, 4728, 4702, 4755, 4776, 4730, 4752, 4721, 4743, 4815, 4767, 4702, 4686, 4734]
+Test: 
+Test: v3 corner: x=5, y=6:[6134, 6134, 6134, 6134, 6134, 6134, 6134, 6134, 6134, 6134, 6134, 6134, 6134, 6134, 6134, 6134, 6134, 6134, 6134, 6134, 6134, 6134, 6134, 6134, 5987, 5993, 5997, 5925, 6068, 6082, 6010, 6012, 6023, 5973, 5954, 5982, 5980, 5969, 6018, 5986, 5936, 5950, 6112, 6070, 6098, 6118, 6093, 6162, 6101, 6147, 6114, 6103, 6089, 6070, 6046, 6029, 5981, 6020, 5954]
+Test: 
+Test: v3 corner: x=6, y=5:[4541, 4541, 4541, 4541, 4541, 4541, 4541, 4541, 4541, 4541, 4541, 4541, 4541, 4541, 4541, 4541, 4541, 4541, 4541, 4541, 4541, 4541, 4541, 4541, 4448, 4531, 4473, 4447, 4505, 4512, 4492, 4495, 4535, 4398, 4379, 4403, 4524, 4514, 4550, 4448, 4423, 4485, 4441, 4470, 4459, 4430, 4428, 4492, 4441, 4426, 4449, 4474, 4435, 4407, 4402, 4459, 4469, 4452, 4477]
+Test: 
+Test: v3 corner: x=6, y=6:[6080, 6080, 6080, 6080, 6080, 6080, 6080, 6080, 6080, 6080, 6080, 6080, 6080, 6080, 6080, 6080, 6080, 6080, 6080, 6080, 6080, 6080, 6080, 6080, 5957, 6079, 5998, 5988, 5958, 5964, 5985, 6055, 6008, 6063, 6038, 6022, 6004, 6084, 6024, 6049, 6019, 5967, 5990, 5966, 5959, 6024, 6020, 6026, 5975, 5902, 5994, 5943, 5987, 5939, 5898, 6013, 5981, 5902, 6007]
+Test: 
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

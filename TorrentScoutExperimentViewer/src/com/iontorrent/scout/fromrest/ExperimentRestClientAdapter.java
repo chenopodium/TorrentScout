@@ -320,7 +320,7 @@ public class ExperimentRestClientAdapter {
     }
 
     private static void p(String msg) {
-        System.out.println("ExperimentRestClient: " + msg);
+//  System.out.println("ExperimentRestClient: " + msg);
         //Logger.getLogger( ExperimentRestClientAdapter.class.getName()).log(Level.INFO, msg, ex);
     }
 

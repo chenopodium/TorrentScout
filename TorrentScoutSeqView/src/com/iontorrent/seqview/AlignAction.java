@@ -49,6 +49,8 @@ public final class AlignAction implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         TopComponent tc = (TopComponent) WindowManager.getDefault().findTopComponent("TorrentScoutAlignmentTopComponent");       
         openComponent(tc, true);
+          tc = (TopComponent) WindowManager.getDefault().findTopComponent("WellTableTopComponent");       
+        openComponent(tc, false);
     }
     protected static void openComponent(TopComponent tc, boolean attention) {
         if (tc != null) {

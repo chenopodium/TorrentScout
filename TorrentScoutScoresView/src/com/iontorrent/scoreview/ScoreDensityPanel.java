@@ -30,6 +30,8 @@ import com.iontorrent.utils.LookupUtils;
 import com.iontorrent.wellmodel.ScoreWellDensity;
 import com.iontorrent.wellmodel.WellCoordinate;
 import com.iontorrent.wellmodel.WellSelection;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.io.IOException;
 import java.util.ArrayList;
 import org.openide.util.Exceptions;
@@ -54,14 +56,26 @@ public class ScoreDensityPanel extends GeneralDensityPanel implements WellModel 
     int min;
     int max;
     public ScoreDensityPanel( ExperimentContext exp) {
-        super(exp);
-        this.setNrWidgets(3);
+        super(exp, 2);
+        
     }
 
+    
+   @Override
+    protected void drawCoords(Graphics2D g, int cols, int maxy, int rows, int maxx, Color coordcolor) {
+        super.drawCoords(g, cols, maxy, rows, maxx, coordcolor);
+        if (this.expcontext != null && expcontext.getWellContext() != null && expcontext.getWellContext().getCoordinate()!= null) {
+            WellCoordinate rel = new WellCoordinate( expcontext.getWellContext().getCoordinate());
+            expcontext.makeRelative(rel);
+            showWell(rel.getCol(), rel.getRow(), g, Color.yellow, true);
+        }     
+    }
     @Override
     public double getValue(int col, int row) {
         double p = mask.getDataPointAt(scoremaskflag, col, row);
+      // p("Got multiplier "+scoremaskflag.multiplier()+" for "+scoremaskflag.getName());
         return p / (double) scoremaskflag.multiplier();
+       // return p;
     }
 
     @Override
@@ -112,6 +126,13 @@ public class ScoreDensityPanel extends GeneralDensityPanel implements WellModel 
         }
     }
 
+//    @Override
+//    public void repaint() {
+//        p("repaint called");
+//        super.repaint();
+//        if (imagePanel != null) this.imagePanel.repaint();;
+//       
+//    }
     @Override
     protected int getMax() {
        if (max != 0) return max;

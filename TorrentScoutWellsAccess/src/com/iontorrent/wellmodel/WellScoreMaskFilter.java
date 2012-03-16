@@ -68,7 +68,7 @@ public class WellScoreMaskFilter extends WellFilter{
     }
 
     private void p(String msg) {
-        System.out.println("WellFilterIF: " + msg);
+      //  System.out.println("WellFilterIF: " + msg);
         //Logger.getLogger( WellFlagFilter.class.getName()).log(Level.INFO, msg, ex);
     }
 }

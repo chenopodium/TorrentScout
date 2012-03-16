@@ -42,7 +42,7 @@ public class ResultChildren extends Index.ArrayChildren {
        
     }
  private void p(String s) {
-        System.out.println("ResultChildren: "+s);
+//  System.out.println("ResultChildren: "+s);
     }
  
  
@@ -52,10 +52,10 @@ public class ResultChildren extends Index.ArrayChildren {
         try {
             if (exp.isChipBB()) {
                 // ADD BACK ONCE THUMBNAILS RESULTS ARE ALSO THERE
-                BeanNode node = new BeanNode("Thumbnails");            
-                node.setDisplayName("Thumbnails");
-                node.setShortDescription("Thumbnails view of whole chip");
-                childrenNodes.add(node);
+//                BeanNode node = new BeanNode("Thumbnails");            
+//                node.setDisplayName("Thumbnails");
+//                node.setShortDescription("Thumbnails view of whole chip");
+//                childrenNodes.add(node);
             }
             if (res.getTfMetrics() != null) {
                 BeanNode node = new BeanNode(res.getTfMetrics());            

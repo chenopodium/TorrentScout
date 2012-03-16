@@ -281,7 +281,7 @@ public final class TorrentScoutSettingsPanel extends javax.swing.JPanel {
     }
 
     private void p(String string) {
-        System.out.println("TSGeneralSettingsPanel: " + string);
+//  System.out.println("TSGeneralSettingsPanel: " + string);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables

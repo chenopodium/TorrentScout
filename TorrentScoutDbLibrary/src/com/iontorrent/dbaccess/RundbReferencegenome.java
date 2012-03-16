@@ -100,7 +100,7 @@ public class RundbReferencegenome implements Serializable {
     }
 
     private void p(String msg) {
-        System.out.println("RundbReferencegenome: " + msg);
+//  System.out.println("RundbReferencegenome: " + msg);
         //Logger.getLogger( RundbReferencegenome.class.getName()).log(Level.INFO, msg, ex);
     }
 

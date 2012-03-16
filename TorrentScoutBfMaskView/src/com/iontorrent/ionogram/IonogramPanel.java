@@ -22,8 +22,6 @@ package com.iontorrent.ionogram;
 
 import com.iontorrent.rawdataaccess.wells.WellData;
 import com.iontorrent.expmodel.ExperimentContext;
-import com.iontorrent.sequenceloading.SequenceLoader;
-import com.iontorrent.sff.SffRead;
 import com.iontorrent.wellmodel.WellContext;
 import com.iontorrent.wellmodel.WellCoordinate;
 import java.awt.BorderLayout;
@@ -108,8 +106,7 @@ public class IonogramPanel extends JPanel {
 //
 //            add("Center", lbl);
 //        }
-        // repaint();
-        // this.paintImmediately(0,0,1000,1000);
+       
     }
     // Returns a generated image.
 
@@ -176,7 +173,7 @@ public class IonogramPanel extends JPanel {
     }
 
     private void p(String msg) {
-        System.out.println("IonogramPanel: " + msg);
+//  System.out.println("IonogramPanel: " + msg);
         //Logger.getLogger( IonogramPanel.class.getName()).log(Level.INFO, msg, ex);
     }
 

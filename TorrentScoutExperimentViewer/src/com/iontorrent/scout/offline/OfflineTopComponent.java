@@ -292,13 +292,11 @@ public final class OfflineTopComponent extends TopComponent {
             if (context == null) {
                 context = GlobalContext.getContext();
             }
-            if (!context.getManager().getRule().startsWith("offline")) {
-                context.setContext("offlinepc");
-            }
+            exp.setIgnoreRule(true);
             // exp.setCacheDir(context.getResultsDir());
             exp.setResultsDirectory(context.getResultsDir());
             exp.setRawDir(context.getRawDir());
-
+            if (exp.isThumbnails()) exp.setThumbnailsRaw();
             Preferences pref = NbPreferences.forModule(OfflineTopComponent.class);
             if (pref != null) {
                 try {
@@ -405,6 +403,7 @@ public final class OfflineTopComponent extends TopComponent {
             } catch (Exception e) {
             }
         }
+        if (exp.isThumbnails()) exp.setThumbnailsRaw();
         if (exp.doesExplogHaveBlocks()) {
             if (!exp.isChipBB()) {
                 exp.setChipType("900");
@@ -489,8 +488,11 @@ public final class OfflineTopComponent extends TopComponent {
                 //  p("Got result: " + data);
             }
             // p("SubscriberListener Got result:" + data);
-            exp = data;
-            this.updateExpGui();
+            if (data != null) {
+                exp = (ExperimentContext)data.deepClone();
+                this.updateExpGui();
+            }
+            
         }
     }
 
@@ -1095,7 +1097,7 @@ public final class OfflineTopComponent extends TopComponent {
     }
 
     public void setExperimentContext(ExperimentContext exp) {
-        this.exp = exp;
+        this.exp = (ExperimentContext)exp.deepClone();
         updateExpGui();
     }
 
@@ -1124,22 +1126,27 @@ public final class OfflineTopComponent extends TopComponent {
         cacheChanged = false;
         exp = new ExperimentContext();
         exp.setRawDir(txtRaw.getText());
+        
+        exp.setResultsDirectory(txtResults.getText());
+        if (exp.getResultsDirectory() != null) {
+            String c = txtCache.getText();
+            if (c == null || c.length() < 3) {
+                txtCache.setText(txtResults.getText());
+            }
+        }
         exp.setCacheDir(this.txtCache.getText());
         if (txtRaw.getText() != null && txtRaw.getText().length() > 3) {
-            String r = txtResults.getText();
-            if (r == null || r.length() < 3) {
-                txtResults.setText(txtRaw.getText());
-            }
             String c = txtCache.getText();
             if (c == null || c.length() < 3) {
                 txtCache.setText(txtRaw.getText());
             }
         }
-        //exp.setCacheDir(txtCache.getText());
-        exp.setResultsDirectory(txtResults.getText());
-        // offset is always 0!
-
-
+       if (exp.isThumbnails()) {
+           
+           exp.setThumbnailsRaw();
+           p("Got thumbnails, setting raw: "+exp.getRawDir());
+           txtRaw.setText(exp.getRawDir());
+       }
         //exp.setCacheDir(txtCache.getText());
         exp.createWellContext();
         exp.setIgnoreRule(true);

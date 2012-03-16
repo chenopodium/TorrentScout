@@ -45,7 +45,6 @@ import com.iontorrent.wellmodel.ChipWellDensity;
 import com.iontorrent.wellmodel.WellCoordinate;
 import com.iontorrent.wellmodel.WellSelection;
 import java.io.File;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -82,9 +81,12 @@ public class ChipPanel extends javax.swing.JPanel implements FlowListener, Filet
         filetype = exp.getFileType();
         flow = exp.getFlow();
         panMain.add("Center", den);
+
         flowPanel = new FlowNrPanel(this);
         typePanel = new FiletypePanel(this);
         framePanel = new FramePanel(this);
+        frame = 15;
+        framePanel.setFrame(frame);
         typePanel.setType(RawType.ACQ);
         typePanel.setOpaque(false);
         //bar.setLayout(new FlowLayout());
@@ -92,15 +94,15 @@ public class ChipPanel extends javax.swing.JPanel implements FlowListener, Filet
         bar.add(this.flowPanel);
         bar.add(this.typePanel);
 
-      //  update();
+        //  update();
     }
 
     @Override
     public void flowChanged(ArrayList<Integer> flows) {
         int f = flows.get(0);
-      
+
         if (this.flow == f) {
-        //    return;
+            //    return;
         }
         this.flow = f;
         exp.setFlow(f);
@@ -121,7 +123,7 @@ public class ChipPanel extends javax.swing.JPanel implements FlowListener, Filet
     }
 
     public void update(boolean createnewmask) {
-        
+
         if (mask == null || createnewmask) {
             this.exp = GlobalContext.getContext().getExperimentContext();
             if (exp == null) {
@@ -138,29 +140,30 @@ public class ChipPanel extends javax.swing.JPanel implements FlowListener, Filet
 // check if we just did it
         // get flow info
         String base = "?";
-        
-        if (filetype == RawType.ACQ) base = ""+this.exp.getWellContext().getBase(flow);
-        this.flowPanel.setToolTipText("<html>Base for flow "+flow+":"+base+"<br>Flow order: "+exp.getFlowOrder()+"</html>");
-        this.btnReload.setToolTipText("Reload data for flow "+flow+", raw dir="+exp.getRawDir());
+
+        if (filetype == RawType.ACQ) {
+            base = "" + this.exp.getWellContext().getBase(flow);
+        }
+        this.flowPanel.setToolTipText("<html>Base for flow " + flow + ":" + base + "<br>Flow order: " + exp.getFlowOrder() + "</html>");
+        this.btnReload.setToolTipText("Reload data for flow " + flow + ", raw dir=" + exp.getRawDir());
         String file = mask.getImageFile("chip", BfMaskFlag.RAW, flow, filetype, frame);
         if (!mask.hasImage("chip", BfMaskFlag.RAW, flow, filetype, frame)) {
             if (curtask != null) {
-               // GuiUtils.showNonModalMsg("Alreading computing a heat map, please wait");;
-            }
-            else if (this.lastfilewitherror == null || !lastfilewitherror.equals(file)) {
+                // GuiUtils.showNonModalMsg("Alreading computing a heat map, please wait");;
+            } else if (this.lastfilewitherror == null || !lastfilewitherror.equals(file)) {
                 GuiUtils.showNonModalMsg("Creating image for " + filetype + " and flow " + flow);
                 curtask = new CreateHeatMapTask(this);
                 curtask.execute();
             } else {
-                JOptionPane.showMessageDialog(this, "<html>Could not generate heat map for " + filetype+", flow "+flow + 
-                        "<br>raw dir: "+this.exp.getRawDir()+
-                        "<br>The raw file is probably not there - "+
-                        "<br>maybe because this is the root of a bb experiment?"
-                + "<br>(in that case pick a block first in the composite view!)</html>");
-               // Exception e = new Exception("Tracking update");
+                JOptionPane.showMessageDialog(this, "<html>Could not generate heat map for " + filetype + ", flow " + flow
+                        + "<br>raw dir: " + this.exp.getRawDir()
+                        + "<br>The raw file is probably not there - "
+                        + "<br>maybe because this is the root of a bb experiment?"
+                        + "<br>(in that case pick a block first in the composite view!)</html>");
+                // Exception e = new Exception("Tracking update");
                 //p(ErrorHandler.getString(e));
             }
-          //   afterGotHeatMap();
+            //   afterGotHeatMap();
 //            den.clear();
 //            den.repaint();
 //            panMain.repaint();
@@ -172,28 +175,28 @@ public class ChipPanel extends javax.swing.JPanel implements FlowListener, Filet
     }
 
     private void afterGotHeatMap() {
-        if (!mask.hasRead(BfMaskFlag.RAW) ) {            
-            GuiUtils.showNonModalMsg("Loading image " + mask.getImageFile("chip",BfMaskFlag.RAW, flow, filetype, frame));
-            if (this.exp.getNrcols()<1 || exp.getNrrows()<1) {
+        if (!mask.hasRead(BfMaskFlag.RAW)) {
+            GuiUtils.showNonModalMsg("Loading image " + mask.getImageFile("chip", BfMaskFlag.RAW, flow, filetype, frame));
+            if (this.exp.getNrcols() < 1 || exp.getNrrows() < 1) {
                 p("Bad cols rows");
                 exp.findColsRows(flow, filetype);
-                p("cols rows are now: "+exp.getNrcols()+"/"+exp.getNrrows());
+                p("cols rows are now: " + exp.getNrcols() + "/" + exp.getNrrows());
                 mask.updateInfo();
             }
-            mask.readData(BfMaskFlag.RAW, mask.getImageFile("chip",BfMaskFlag.RAW, flow, filetype, frame));
-         
+            mask.readData(BfMaskFlag.RAW, mask.getImageFile("chip", BfMaskFlag.RAW, flow, filetype, frame));
+
         }
-       // p("Mask cols: "+mask.c)
+        // p("Mask cols: "+mask.c)
         den.setScoreMask(mask, 2, flow, filetype, frame);
-     //   p("Sample value at 1 1: "+den.getValue(1, 1));
-     //   p("repainting density panel");
+        if (this.exp.getWellContext() == null || exp.getWellContext().getSelection() == null) {
+            int mx = exp.getNrcols() / 2 - 10;
+            int my = exp.getNrrows() / 2 - 10;
+            den.createDefaultSelection(mx, my, mx + 20, my + 20);
+
+        }
         panMain.repaint();
         den.repaint();
         repaint();
-     //   paintAll(getGraphics());
-      
-     //  den.paintImmediately(0,0,1000,1000);
-        //den.paintAll(getGraphics());
     }
 
     @Override
@@ -203,7 +206,7 @@ public class ChipPanel extends javax.swing.JPanel implements FlowListener, Filet
         if (t.isSuccess()) {
             curtask = null;
             afterGotHeatMap();
-        } else {            
+        } else {
             lastfilewitherror = curtask.getFile();
             curtask = null;
         }
@@ -225,9 +228,10 @@ public class ChipPanel extends javax.swing.JPanel implements FlowListener, Filet
 
         public CreateHeatMapTask(TaskListener tlistener) {
             super(tlistener, ProgressHandleFactory.createHandle("Reading flow " + flow + ", frame " + frame + " of " + filetype + " file"));
-            this.file =  mask.getImageFile("chip",BfMaskFlag.RAW, flow, filetype, frame);
-        
+            this.file = mask.getImageFile("chip", BfMaskFlag.RAW, flow, filetype, frame);
+
         }
+
         public String getFile() {
             return file;
         }
@@ -249,13 +253,13 @@ public class ChipPanel extends javax.swing.JPanel implements FlowListener, Filet
             mask = BfHeatMap.getMask(exp);
             den.setExp(exp);
         }
-        ChipWellDensity gen = new ChipWellDensity(exp, flow, filetype, frame);
+        ChipWellDensity gen = new ChipWellDensity(exp, flow, filetype, frame, 2);
         String msg = null;
         try {
             p("Creating whole whip well density for flow " + flow + "  type " + filetype);
             msg = gen.createHeatMapImages(progress);
             mask.updateInfo();
-          //  p("after generate whole chip image: "+mask.)
+            //  p("after generate whole chip image: "+mask.)
         } catch (Exception e) {
             msg = e.getMessage();
             p("createImageFileFromScoreFlag: Got an error: " + ErrorHandler.getString(e));
@@ -388,9 +392,11 @@ public class ChipPanel extends javax.swing.JPanel implements FlowListener, Filet
 
     private void btnReloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReloadActionPerformed
         // DELETE FILE IF IT EXISTS
-        
+
         this.exp = GlobalContext.getContext().getExperimentContext();
-        if (exp == null) return;
+        if (exp == null) {
+            return;
+        }
         mask = BfHeatMap.getMask(exp);
         den.setExp(exp);
         if (mask == null) {
@@ -398,7 +404,7 @@ public class ChipPanel extends javax.swing.JPanel implements FlowListener, Filet
             return;
         }
 
-        String file = mask.getImageFile("chip",BfMaskFlag.RAW, flow, filetype, frame);
+        String file = mask.getImageFile("chip", BfMaskFlag.RAW, flow, filetype, frame);
         if (file == null) {
             update(true);
         }
@@ -414,12 +420,12 @@ public class ChipPanel extends javax.swing.JPanel implements FlowListener, Filet
     }//GEN-LAST:event_hintActionPerformed
 
     private void doHintAction() {
-        String msg="<html><ul>";
-        msg+="<li>Move the image around with the <b>right</b> mouse button </li>";
-        msg+="<li>Select a coordinate by clicking the <b>left</b> mouse button </li>";
-        msg+="<li>Zoom the image in and out with a <b>mouse wheel</b> </li>";        
+        String msg = "<html><ul>";
+        msg += "<li>Move the image around with the <b>right</b> mouse button </li>";
+        msg += "<li>Select a coordinate by clicking the <b>left</b> mouse button </li>";
+        msg += "<li>Zoom the image in and out with a <b>mouse wheel</b> </li>";
         msg += "</ul></html>";
-        JOptionPane.showMessageDialog(this, msg);    
+        JOptionPane.showMessageDialog(this, msg);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToolBar bar;
@@ -432,7 +438,7 @@ public class ChipPanel extends javax.swing.JPanel implements FlowListener, Filet
     // End of variables declaration//GEN-END:variables
 
     private void p(String msg) {
-        System.out.println("ChipPanel: " + msg);
+//  System.out.println("ChipPanel: " + msg);
         Logger.getLogger(ChipPanel.class.getName()).log(Level.INFO, msg);
     }
 }

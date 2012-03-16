@@ -30,6 +30,8 @@ import com.iontorrent.wellmodel.BfWellDensity;
 import com.iontorrent.utils.LookupUtils;
 import com.iontorrent.wellmodel.WellContext;
 import com.iontorrent.wellmodel.WellCoordinate;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.io.IOException;
 import java.util.ArrayList;
 import org.openide.util.Exceptions;
@@ -55,10 +57,10 @@ public class BfMaskDensityPanel extends GeneralDensityPanel implements WellModel
     int max;
     
     public BfMaskDensityPanel(ExperimentContext exp) {
-        super(exp);
-        this.setNrWidgets(3);
+        super(exp, 2);
     }
 
+    
     @Override
     public double getValue(int col, int row) {
         int d = mask.getMaskAt(col, row);
@@ -82,6 +84,7 @@ public class BfMaskDensityPanel extends GeneralDensityPanel implements WellModel
         //   p("Creating default selection");
         imagePanel.setWellSelection(selection);
         publishSelection(selection);
+        repaint();
     }
 
     @Override
@@ -97,7 +100,15 @@ public class BfMaskDensityPanel extends GeneralDensityPanel implements WellModel
         return coords;
     }
 
-  
+   @Override
+    protected void drawCoords(Graphics2D g, int cols, int maxy, int rows, int maxx, Color coordcolor) {
+        super.drawCoords(g, cols, maxy, rows, maxx, coordcolor);
+        if (this.expcontext != null && expcontext.getWellContext() != null && expcontext.getWellContext().getCoordinate()!= null) {
+            WellCoordinate rel = new WellCoordinate( expcontext.getWellContext().getCoordinate());
+            expcontext.makeRelative(rel);
+            showWell(rel.getCol(), rel.getRow(), g, Color.yellow, true);
+        }     
+    }
     public void setContext(WellContext context, BfMaskFlag bfmaskflag, int bucketsize) {
         this.bfmaskflag = bfmaskflag;
         super.expcontext = context.getExpContext();
@@ -141,7 +152,7 @@ public class BfMaskDensityPanel extends GeneralDensityPanel implements WellModel
             wellcontext.setSelection(sel);
 
             LookupUtils.publish(wellSelectionContent, sel);
-            if (sel.getCoord1().toString().equals(sel.getCoord2().toString())) {
+            if (wellcontext.getCoordinate()== null || sel.getCoord1().toString().equals(sel.getCoord2().toString())) {
                 this.publishCoord(sel.getCoord1());
             }
 

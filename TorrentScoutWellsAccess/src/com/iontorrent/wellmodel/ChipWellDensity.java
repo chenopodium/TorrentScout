@@ -54,13 +54,13 @@ public class ChipWellDensity extends GeneralWellDensity {
     int flow;
     int frame;
 
-    public ChipWellDensity(ExperimentContext compexp, int flow, RawType type, int frame) {
-        super(2);
+    public ChipWellDensity(ExperimentContext compexp, int flow, RawType type, int frame, int bucketsize) {
+        super(bucketsize);
         this.flow = flow;
         this.frame = frame;
         this.type = type;
         this.context = compexp;
-        p("Created chipwelldensity with raw dir " + compexp.getRawDir());
+ //       p("Created chipwelldensity with raw dir " + compexp.getRawDir());
     }
 
     public int getNrFlags() {
@@ -68,7 +68,7 @@ public class ChipWellDensity extends GeneralWellDensity {
     }
 
     public String createHeatMapImages(ProgressListener progress) {
-        p("========================createCompositeImages");
+   //     p("========================createCompositeImages");
         int totcols = context.getNrcols();
         int totrows = context.getNrrows();
         if (totcols == 0 || totcols == 0) {
@@ -78,17 +78,19 @@ public class ChipWellDensity extends GeneralWellDensity {
             totrows = context.getNrrows();
         }
         if (totcols == 0 || totrows == 0) {
-            err("Could not find out cols/rows");
+            err("Could not find out cols/rows");        
         }
-        mask = BfHeatMap.getMask(context);
-        int bucketsize = mask.GRID;
-        int compcols = totcols / bucketsize;
-        int comprows = totrows / bucketsize;
+        int image_bucketsize = 1;
+        if (mask == null) mask = BfHeatMap.getMask(this.context);
+        if (mask != null)image_bucketsize =  mask.GRID;
+        
+        int compcols = totcols / image_bucketsize;
+        int comprows = totrows / image_bucketsize;
 
         nrflags = 1;
 
         String imageFileOrUrl = mask.getImageFile("chip",BfMaskFlag.RAW, flow, type, frame);
-        p("Checking file " + imageFileOrUrl);
+ //       p("Checking file " + imageFileOrUrl);
         if (FileUtils.exists(imageFileOrUrl)) {
             p("Already created file "+imageFileOrUrl);
             if (progress != null) {
@@ -97,7 +99,7 @@ public class ChipWellDensity extends GeneralWellDensity {
             return null;
         }
 
-        p("Creating heat map data structure for " + compcols + "/" + comprows + "  composite cols and rows, bucket=" + bucketsize + ", tot cols/rows=" + totcols + "/" + totrows);
+  //      p("Creating heat map data structure for " + compcols + "/" + comprows + "  composite cols and rows, IMAGE bucket=" + image_bucketsize + ", tot cols/rows=" + totcols + "/" + totrows);
         int[][][] fullimage = new int[nrflags][compcols][comprows];
 
         // for all blocks
@@ -108,7 +110,7 @@ public class ChipWellDensity extends GeneralWellDensity {
         double prog = 0;
 //            
        
-        DatWellDensity wellDensity = new DatWellDensity(context, bucketsize, type, flow, frame);
+        DatWellDensity wellDensity = new DatWellDensity(context, image_bucketsize, type, flow, frame);
         try {
             String errmsg = wellDensity.computeDensityPlot();
             if (errmsg != null) {
@@ -121,9 +123,9 @@ public class ChipWellDensity extends GeneralWellDensity {
         }
         int w = context.getNrcols();
         int h = context.getNrrows();
-        p("DatWellDensity  size=" + wellDensity.getNrCols() + "/" + wellDensity.getNrRows() + ", should be =" + w / bucketsize + "/" + h / bucketsize);
-        int maxc = Math.min(wellDensity.getNrCols(), w / bucketsize);
-        int maxr = Math.min(wellDensity.getNrRows(), h / bucketsize);
+  //      p("DatWellDensity  size=" + wellDensity.getNrCols() + "/" + wellDensity.getNrRows() + ", should be =" + w / image_bucketsize + "/" + h / image_bucketsize);
+        int maxc = Math.min(wellDensity.getNrCols(), w / image_bucketsize);
+        int maxr = Math.min(wellDensity.getNrRows(), h / image_bucketsize);
         if (maxc < 1 || maxr < 1) {
             err("Got illegal rows cols from dat well density");
             return "Got illegal rows cols from dat well density";
@@ -132,7 +134,7 @@ public class ChipWellDensity extends GeneralWellDensity {
             err("Got illegal comprows or compcols from dat well density");
             return "Got illegal comprows or compcols from dat well density";
         }
-        p("maxc/maxr=" + maxc + "/" + maxr);
+     //   p("maxc/maxr=" + maxc + "/" + maxr);
         double inc = 100.0/maxc;
         // wellDensity.setFlag(flag);
         for (int c = 0; c < maxc; c++) {
@@ -149,14 +151,14 @@ public class ChipWellDensity extends GeneralWellDensity {
 
         }
         createImageFile(fullimage[0]);
-        p("Done creating composite heat maps");
+   //     p("Done creating composite heat maps");
         return null;
     }
 
     private String createImageFile(int[][] data) {
 
         String imageFileOrUrl = mask.getImageFile("chip",BfMaskFlag.RAW, flow, type, frame);
-        p("Creating image file " + imageFileOrUrl);
+     //   p("Creating image file " + imageFileOrUrl);
         if (data.length < 1) {
             err("data array too small: " + data.length);
         }
@@ -197,7 +199,7 @@ public class ChipWellDensity extends GeneralWellDensity {
         if (!hasdata) {
             err("No data in image ");
         } else {
-            p("Got " + tot + "  values");
+   //         p("Got " + tot + "  values");
         }
         try {
             //  p("writing buffered image to " + imageFileOrUrl);
@@ -261,7 +263,7 @@ public class ChipWellDensity extends GeneralWellDensity {
         int min = Integer.MAX_VALUE;
         BfMaskFlag scoreflag = BfMaskFlag.get(code);
         int size = this.bucket_size*bucket_size;
-        p("Computing density for flag " + scoreflag.toString() + ", cols/rows=" + well_density.length);
+   //     p("Computing density for flag " + scoreflag.toString() + ", cols/rows=" + well_density.length);
         for (int c = 0; c < well_density.length; c++) {
             for (int r = 0; r < well_density[0].length; r++) {
                 // compute density for this area                
@@ -277,7 +279,7 @@ public class ChipWellDensity extends GeneralWellDensity {
         }
         maxvalues[code] = max;
         minvalues[code] = min;
-        p("max: " + max);
+     //   p("max: " + max);
         done[code] = true;
         return null;
         //  }
@@ -373,7 +375,7 @@ public class ChipWellDensity extends GeneralWellDensity {
     }
 
     private static void p(String msg) {
-        System.out.println("ChipWellDensity: " + msg);
+    //    System.out.println("ChipWellDensity: " + msg);
         Logger.getLogger(ChipWellDensity.class.getName()).log(Level.INFO, msg);
     }
 }

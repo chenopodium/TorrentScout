@@ -68,10 +68,12 @@ public class BfHeatMap {
         //   p("Got expcontext with rows/cols: " + expcontext.getNrrows() + "/" + expcontext.getNrcols());
         if (expcontext.getNrrows() < 1300) {
             GRID = 1;
-        } else if (expcontext.getNrrows() < 2400) {
+        } else if (expcontext.getNrrows() < 2400 && expcontext.getNrcols() < 2400) {
+            GRID = 1;
+        } else if (expcontext.getNrrows() < 4800 && expcontext.getNrcols() <  4800) {
             GRID = 2;
-        } else if (expcontext.getNrrows() < 4800) {
-            GRID = 4;
+        } else if (expcontext.getNrrows() < 9600 && expcontext.getNrcols() <  9600) {
+            GRID = 4;            
         } else {
             GRID = 8;
         }
@@ -100,6 +102,7 @@ public class BfHeatMap {
     }
 
     public String getImageFile(String maptype, BfMaskFlag flag, int flow, RawType type, int frame) {
+        if (flag != BfMaskFlag.RAW) return this.getImageFile(flag);
         String res = maptype + getKey();
         File f = findFileSomewhere(res + type.name() + "_" + flow + "_" + frame + "_" + flag.getImageName());
         if (f != null) {
@@ -125,6 +128,7 @@ public class BfHeatMap {
     }
 
     public boolean hasImage(String maptype, BfMaskFlag flag, int flow, RawType type, int frame) {
+        if (flag != BfMaskFlag.RAW) return this.hasImage(flag);
         File f = findFileSomewhere(maptype + getKey() + type.name() + "_" + flow + "_" + frame + "_" + flag.getImageName());
         if (f == null || !f.exists()) {
             clearData(flag);

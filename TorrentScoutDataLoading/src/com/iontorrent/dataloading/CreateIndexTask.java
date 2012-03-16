@@ -38,7 +38,7 @@ import org.netbeans.api.progress.ProgressHandle;
  * chantal.roth@lifetech.com
  */
 public class CreateIndexTask extends Task {
-
+ 
     private static String lastError;
     private static Exception lastException;
     ExperimentContext exp;

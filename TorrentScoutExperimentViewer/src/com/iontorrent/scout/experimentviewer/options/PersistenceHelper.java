@@ -112,7 +112,7 @@ public class PersistenceHelper {
 
     /** ================== LOGGING ===================== */
     private void err(String msg, Exception ex) {
-         System.out.println("PersistenceHelper: ERR " + msg);
+ //  System.out.println("PersistenceHelper: ERR " + msg);
         Logger.getLogger(PersistenceHelper.class.getName()).log(Level.SEVERE, msg, ex);
     }
 
@@ -125,7 +125,7 @@ public class PersistenceHelper {
     }
 
     private void p(String msg) {
-        System.out.println("PersistenceHelper: " + msg);
+//  System.out.println("PersistenceHelper: " + msg);
         Logger.getLogger(PersistenceHelper.class.getName()).log(Level.INFO, msg);
     }
 

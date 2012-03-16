@@ -49,6 +49,7 @@ public class GlobalContext {
     }
 
     public void setContext(String rulekey) {
+        p("setContext("+rulekey+")");
         manager.setRule(rulekey, false);
     }
 

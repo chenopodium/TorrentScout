@@ -102,7 +102,7 @@ public final class FeedbackAction implements ActionListener {
     }
 
     private static void p(String msg) {
-        System.out.println("FeedbackAction: " + msg);
+//  System.out.println("FeedbackAction: " + msg);
         //Logger.getLogger( FeedbackAction.class.getName()).log(Level.INFO, msg);
     }
 }

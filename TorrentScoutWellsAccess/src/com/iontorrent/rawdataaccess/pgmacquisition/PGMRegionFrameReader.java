@@ -41,8 +41,7 @@ public class PGMRegionFrameReader {
     static final int DAT_FRAME_DATA_MASK = 0x3FFFF;
     static final long SENTINEL_CHECK = 0xDEADBEEFL;
     static final long SKIP = 4294967295l;
-    static final boolean DEBUG = false;
-    
+    boolean DEBUG = false;
     int x_region_size;
     int y_region_size;
     int mincols;
@@ -57,7 +56,7 @@ public class PGMRegionFrameReader {
     int cols;
     int x;
     int y;
-    boolean entireFrame;    
+    boolean entireFrame;
     int realx;
     int realy;
     int state;
@@ -143,9 +142,10 @@ public class PGMRegionFrameReader {
 
         this.start_frame = start_frame;
         this.end_frame = end_frame;
-        //  if (DEBUG) {
-        System.out.println("=============== REGION FORMAT, READING FRAMES " + start_frame + "-" + end_frame);
-        //  }
+        this.DEBUG = DEBUG;
+        if (DEBUG) {
+            p("=============== REGION FORMAT, READING FRAMES " + start_frame + "-" + end_frame);
+        }
         FirstFrame = new int[cols][rows];
         WholeFrame = new int[cols][rows];
         frames = new PGMRegionFrame[end_frame - start_frame];
@@ -163,29 +163,27 @@ public class PGMRegionFrameReader {
         sizeofFrameHdr = FileUtils.UINT32 * 6;
         Val = new int[8];
         for (frame = 0; frame < end_frame; frame++) {
-            SHOW = DEBUG && frame >40 && frame < 45;
+            SHOW = DEBUG && frame > 40 && frame < 45;
             if (!readOneFrame(in)) {
                 return false;
             }
 
         } // read next frame
         if (DEBUG) {
-            System.out.println("Done reading all frames. Frames are: " + frames);
+           p("Done reading all frames. Frames are: " + frames);
         }
         return true;
     }
 
-    
-
     private boolean readOneFrame(DataInputStream in) throws IOException {
         frameoffset = 0;
         if (SHOW) {
-            System.out.println("=========== PROCESSING FRAME " + frame + "============");
-            System.out.println("offset: " + offset + "/" + Long.toHexString(offset) + ", frameoffset=" + frameoffset);
+            p("=========== PROCESSING FRAME " + frame + "============");
+            p("offset: " + offset + "/" + Long.toHexString(offset) + ", frameoffset=" + frameoffset);
         }
         if (frame % 25 == 0) {
             Runtime r = Runtime.getRuntime();
-            System.out.println("Reading frame " + frame + " total memory: " + r.totalMemory() / 1000000 + " M of " + r.maxMemory() / 1000000 + " M");
+            //  System.out.println("Reading frame " + frame + " total memory: " + r.totalMemory() / 1000000 + " M of " + r.maxMemory() / 1000000 + " M");
         }
         readAnyRemainder(in);
         PGMRegionFrame framedata = new PGMRegionFrame(header, mincols, minrows, dx, dy);
@@ -206,20 +204,20 @@ public class PGMRegionFrameReader {
             //     offset += len;
         }
 
-        if (minrows == 0 && mincols == 0 && maxrows + 1 >= rows && maxcols + 1 >= cols) {
-            entireFrame = true;
-            // SHOW = true;
-        } else {
-            //StartCompPtr=-1;
-            entireFrame = false;
-        }
-        if (SHOW && frame == 0) {
-            System.out.println("Entire frame? " + entireFrame + " " + minrows + "/" + mincols + "/" + maxrows + "/" + maxcols);
-            // System.out.println("num region x=" + num_regions_x + ", num_regions_y=" + num_regions_y);
-        }
+        entireFrame = false;
+//        if (minrows == 0 && mincols == 0 && maxrows + 1 >= rows && maxcols + 1 >= cols) {
+//            entireFrame = true;
+//            // SHOW = true;
+//        } else {
+//            //StartCompPtr=-1;
+//            entireFrame = false;
+//        }
+//        if (SHOW && frame == 0) {
+//            System.out.println("Entire frame? " + entireFrame + " " + minrows + "/" + mincols + "/" + maxrows + "/" + maxcols);
+//            // System.out.println("num region x=" + num_regions_x + ", num_regions_y=" + num_regions_y);
+//        }
 
         compPtrIndex = 0;
-        readRegionOffsets(len, in);
 
         total = 0;
         trans = 0;
@@ -230,6 +228,8 @@ public class PGMRegionFrameReader {
         difftoendofframe = framedata.framesize - sizeofFrameHdr - num_regions_x * num_regions_y * 4 + 4;
         offsetendofframe = offset + difftoendofframe + 4;
 
+        readRegionOffsets(len, in);
+
         if (SHOW) {
             System.out.println("offset afterregions: " + Long.toHexString(offset) + ", frameoffset=" + frameoffset + ", sizeofframeheader=" + sizeofFrameHdr);
             System.out.println("framesize: " + framedata.framesize);
@@ -237,7 +237,7 @@ public class PGMRegionFrameReader {
             System.out.println("offsetendofframe: " + Long.toHexString(offsetendofframe));
         }
         if (difftoendofframe <= 0) {
-            System.out.println("difftoendofframe<=0:" + difftoendofframe + ", framesize=" + framedata.framesize + ", sizeofheader: " + sizeofFrameHdr);
+            // System.out.println("difftoendofframe<=0:" + difftoendofframe + ", framesize=" + framedata.framesize + ", sizeofheader: " + sizeofFrameHdr);
             //  SHOW = true;
         }
 //        if (SHOW) {
@@ -265,7 +265,7 @@ public class PGMRegionFrameReader {
         }
         //long lastoffset = reg_offsets[max_y_reg * num_regions_x + max_x_reg + 1];
         endofframe = framedata.framesize - sizeofFrameHdr - num_regions_x * num_regions_y * 4 + 8;
-        regionoffset = 0;
+        regionoffset = 0L;
         // 4 more because if it is a subframe, we are not doing the checksum part
         if (SHOW) {
             System.out.println("mincols=" + mincols + ", miinrows=" + minrows + ", maxcols=" + maxcols + ", maxrows=" + maxrows + ", last xreg/yreg= " + max_x_reg + "/" + max_y_reg);
@@ -297,13 +297,15 @@ public class PGMRegionFrameReader {
                     } else {
                         regionoffset = loadNextRegionIntoCompPtr(regionoffset, offsetendofframe, max_y_reg, max_x_reg, in, framedata);
                     }
+
                     boolean ok = readOneSubregion(false);
                     if (!ok) {
-                        return ok;
+                        return false;
                     }
 
+
                 } else {
-                    System.out.println("SKIPPING Region " + regionNum + ", region nr=" + regionNum + ", storing data from first frame");
+                    if (SHOW) System.out.println("SKIPPING Region " + regionNum + ", region nr=" + regionNum + ", storing data from first frame");
                     boolean ok = readOneSubregion(true);
                     if (!ok) {
                         System.out.println(" NOT ok, return without storing");
@@ -313,7 +315,13 @@ public class PGMRegionFrameReader {
             }
         }
         if (frame >= start_frame && frame <= end_frame) {
-
+            for (int i = 0; i < dx; i++) {
+                for (int j = 0; j < dy; j++) {
+                
+                    if (FrameRegion[i][j] == 0)  {
+                        FrameRegion[i][j] = this.WholeFrame[i+mincols][j+minrows];
+                    }}
+            }
             frames[frame - start_frame] = framedata;
             frames[frame - start_frame].setImageData(FrameRegion);
             //if (skip)
@@ -331,7 +339,7 @@ public class PGMRegionFrameReader {
                 checkTotals(framedata, len);
                 readChecksum(in);
             } else {
-                System.out.println("NOt reading checksum, offsetendofframe=" + offsetendofframe + ", offset=" + offset);
+                //  System.out.println("NOt reading checksum, offsetendofframe=" + offsetendofframe + ", offset=" + offset);
             }
         }
 
@@ -340,6 +348,7 @@ public class PGMRegionFrameReader {
         }
         return true;
     }
+
     private void skipToFrameEnd(long endofframe, long regionoffset, DataInputStream in) throws IOException {
         long bytestoskipatend = Math.max(0, endofframe - regionoffset);
         if (SHOW) {
@@ -351,15 +360,16 @@ public class PGMRegionFrameReader {
         regionoffset += bytestoskipatend;
         in.skipBytes((int) bytestoskipatend);
     }
+
     public long loadNextRegionIntoCompPtr(long regionoffset, long offsetendofframe, int max_y_reg, int max_x_reg, DataInputStream in, PGMRegionFrame framedata) throws IOException {
         long newregionoffset = reg_offsets[regionNum];
         long bytestoskip = newregionoffset - regionoffset;
         if (offset + bytestoskip > offsetendofframe) {
-            err("Should not skip " + bytestoskip + "  from " + offset + "  beyond end of frame " + offsetendofframe);
+            //  err("Should not skip to next region " + bytestoskip + "  from " + offset + "  beyond end of frame " + offsetendofframe
+            //          + "\nnewregionoffset=" + newregionoffset + ", skip is: " + SKIP);
             bytestoskip = offsetendofframe - offset;
         }
         if (bytestoskip >= 0) {
-
             if (SHOW) {
                 System.out.println("newregionoffset: reg_offsets[y_reg * num_regions_x + x_reg]=" + newregionoffset);
                 System.out.println("last region offset: reg_offsets[max_y_reg * num_regions_x + max_x_reg + 1]=" + reg_offsets[max_y_reg * num_regions_x + max_x_reg + 1]);
@@ -373,37 +383,74 @@ public class PGMRegionFrameReader {
             frameoffset += bytestoskip;
             regionoffset += bytestoskip;
             in.skipBytes((int) bytestoskip);
+        } else {
+            System.out.println("NOT skipping bytes: " + bytestoskip + " bytes");
+            System.out.println("newregionoffset: reg_offsets[y_reg * num_regions_x + x_reg]=" + newregionoffset);
+            System.out.println("last region offset: reg_offsets[max_y_reg * num_regions_x + max_x_reg + 1]=" + reg_offsets[max_y_reg * num_regions_x + max_x_reg + 1]);
+            System.out.println("regionoffset=" + regionoffset);
+            System.out.println("bytestoskip = newregionoffset - regionoffset=" + bytestoskip);
+//            for (int i = 0 ; i < reg_offsets.length; i++) {
+//                p("Region offset "+i+":"+reg_offsets[i]);
+//                //XXX TODO HACK remove this system exit after debugging
+//               // if ( reg_offsets[i] < 0) System.exit(0);
+//            }
 
-            int next = y_reg * num_regions_x + x_reg + 1;
-            int tlen = 0;
-            long nextoffset = framedata.framesize - 16;
-            if (next < reg_offsets.length) {
-                nextoffset = reg_offsets[next];
-                tlen = (int) (nextoffset - newregionoffset);
-            }
-            // shouldn't we compute the last region as defined by maxrows/maxcols?
-            //int tlen = 4 * x_region_size * y_region_size;
-            if (tlen + offset > offsetendofframe) {
-                err("Tlen should not be beyond end of frame: " + tlen + ", current offset: " + offset + ", offsetendofframe=" + offsetendofframe);
-                tlen = (int) (offsetendofframe - offset);
-            }
-            if (tlen <= 1) {
-                tlen = (int) (offsetendofframe - offset);
-            }
-            if (SHOW) {
-                System.out.println("nextoffset - newregionoffset=" + (nextoffset - newregionoffset));
-                System.out.println("Now reading " + tlen + " shorts into CompPtr");
-            }
-            CompPtr = new int[tlen];
-            for (int i = 0; i < tlen && offset < offsetendofframe; i++) {
-                CompPtr[i] = FileUtils.getUInt8(in);
-                offset++;
-                frameoffset++;
-                regionoffset++;
-            }
-            //CompPtr = (unsigned char *)GetFileData(fd, offset + loffset, tlen, cksum);
-            compPtrIndex = 0;
         }
+
+        int next = y_reg * num_regions_x + x_reg + 1;
+        int tlen = 0;
+        long nextoffset = framedata.framesize - 16;
+
+        if (next < reg_offsets.length) {
+            nextoffset = reg_offsets[next];
+            tlen = (int) (nextoffset - newregionoffset);
+        }
+        // shouldn't we compute the last region as defined by maxrows/maxcols?
+        //int tlen = 4 * x_region_size * y_region_size;
+
+        if (tlen
+                + offset
+                > offsetendofframe) {
+            if (SHOW) {
+                p("Tlen should not be beyond end of frame: " + tlen + ", current offset: " + offset + ", offsetendofframe=" + offsetendofframe);
+            }
+            tlen = (int) (offsetendofframe - offset);
+        }
+
+        if (tlen
+                <= 1) {
+            tlen = (int) (offsetendofframe - offset);
+        }
+
+        if (SHOW) {
+            System.out.println("nextoffset - newregionoffset=" + (nextoffset - newregionoffset));
+            System.out.println("Now reading " + tlen + " shorts into CompPtr");
+        }
+
+        if (tlen
+                < 0) {
+            err("tlen should always be >= 0:" + tlen);
+            System.out.println("newregionoffset: reg_offsets[y_reg * num_regions_x + x_reg]=" + newregionoffset);
+            System.out.println("last region offset: reg_offsets[max_y_reg * num_regions_x + max_x_reg + 1]=" + reg_offsets[max_y_reg * num_regions_x + max_x_reg + 1]);
+            System.out.println("regionoffset=" + regionoffset);
+            System.out.println("bytestoskip = newregionoffset - regionoffset=" + bytestoskip);
+            System.out.println("skipping " + bytestoskip + " bytes");
+            tlen = 0;
+        }
+        CompPtr = new int[tlen];
+
+        for (int i = 0;
+                i < tlen
+                && offset < offsetendofframe;
+                i++) {
+            CompPtr[i] = FileUtils.getUInt8(in);
+            offset++;
+            frameoffset++;
+            regionoffset++;
+        }
+        //CompPtr = (unsigned char *)GetFileData(fd, offset + loffset, tlen, cksum);
+        compPtrIndex = 0;
+
         return regionoffset;
     }
 
@@ -450,8 +497,8 @@ public class PGMRegionFrameReader {
         int[] cksmPtr = new int[4];
         for (int i = 0; i < 4; i++) {
             cksmPtr[i] = FileUtils.getUInt8(in);
-            offset += 1;
-            frameoffset += 1;
+            offset += 1L;
+            frameoffset += 1L;
         }
         //GetFileData(fd, offset, len, tmpcksum);
         if ((end_frame >= (header.getNrFrames() - 1))) {// && cksmPtr) {
@@ -508,8 +555,8 @@ public class PGMRegionFrameReader {
             return false;
         }
         framedata.compressed = FileUtils.getUInt32(in);
-        offset += 8;
-        frameoffset += 8;
+        offset += 8L;
+        frameoffset += 8L;
         if (SHOW) {
 
             System.out.println("timestamp =" + framedata.timestamp + "  =" + Long.toHexString(framedata.timestamp));
@@ -524,24 +571,35 @@ public class PGMRegionFrameReader {
             System.out.println("Reading " + len + " region offsets");
             System.out.println("offset: " + offset + "/" + Long.toHexString(offset) + ", frameoffset=" + frameoffset);
         }
-        delta = 0;
+        delta = 0L;
         for (int i = 0; i < len; i++) {
-            reg_offsets[i] = FileUtils.getUInt32(in);
-            offset += 4;
-            frameoffset += 4;
-            if (i == 0) {
+            reg_offsets[i] = (long)FileUtils.getUInt32(in);
+            if (reg_offsets[i] < 0) {
+                err("negative region offset < 0:" + reg_offsets[i]);
+            }
+            offset += 4L;
+            frameoffset += 4L;
+            if (delta ==0 && reg_offsets[i] != SKIP)  {
                 delta = reg_offsets[i];
+                //if (i > 0) p("Got delta from region "+i+":"+delta);
 //                if (SHOW) {
 //                    System.out.println("read first delta=" + delta + "/" + Long.toHexString(delta) + ", checking for 0xFFFFFFFF=" + (long) (SKIP) + ", frameoffset=" + frameoffset);
 //                }
 
             }
 
-            if (delta == SKIP) {
-                System.out.println("Got skip: " + SKIP);
-                reg_offsets[i] = delta;
+            if (reg_offsets[i] == SKIP) {
+               // System.out.println("Got skip: " + SKIP);
+                reg_offsets[i] = SKIP;              
+            } else if (reg_offsets[i] - delta > difftoendofframe) {
+                System.out.println("PGMRegion: region diff is " + delta + ", beyond end of frame. Should mean skip!");
+                reg_offsets[i] = SKIP;
             } else {
-                reg_offsets[i] = reg_offsets[i] - delta;
+                long old = reg_offsets[i];
+                reg_offsets[i] = (long)((long)old - (long) delta);
+                if (reg_offsets[i] < 0) {
+                    err("negative region offset < 0 AFTER SUBTRACTING DELTA delta=" + delta + ":" + reg_offsets[i]+", old offset="+old);
+                }
             }
             if (SHOW) {
                 // if (i % 100 == 0 || i + 1 == len || i < 5) {
@@ -562,7 +620,6 @@ public class PGMRegionFrameReader {
             p("Little-endian");
         }
     }
-    
 
     private boolean readCompressedFrameHeader(DataInputStream in, PGMRegionFrame framedata) throws IOException {
         if (SHOW) {
@@ -580,28 +637,35 @@ public class PGMRegionFrameReader {
             System.out.println("headerTotal        =" + framedata.headerTotal + " =" + Long.toHexString(framedata.headerTotal));
             System.out.println("headsentinelrTotal =" + framedata.sentinel + " =" + Long.toHexString(framedata.sentinel));
         }
-        offset += 16;
-        frameoffset += 16;
+        offset += 16L;
+        frameoffset += 16L;
         if (SHOW) {
             System.out.println("offset after reading frame header, including sentinel: off=" + Long.toHexString(offset) + ": " + Long.toHexString(offset) + ", frameoffset=" + frameoffset);
         }
         if (framedata.sentinel != SENTINEL_CHECK) {
+            System.out.println("Corrupt file, sentinel wrong: " + framedata.sentinel);
+            System.out.println("reading a few more 4 bytes to see if deadbeef is there: ");
+            boolean ok = false;
             for (int i = 0; i < 16; i++) {
                 long l = FileUtils.getUInt32(in);
                 System.out.println("Offset=" + Long.toHexString(offset) + ": " + Long.toHexString(l));
-                offset += 4;
-                frameoffset += 4;
-//                if (l == SENTINEL_CHECK) {
-//                    framedata.sentinel = l;
-//                    break;
-//                }
+                offset += 4L;
+                frameoffset += 4L;
+                if (l == SENTINEL_CHECK) {
+                    framedata.sentinel = l;
+                    p("Found sentinel - check code - probably problem with skip!");
+                    ok = true;
+                    DEBUG = true;
+                    SHOW = true;
+                    break;
+                }
 //            }
 //            // testEndian();
 //            if (framedata.sentinel != SENTINEL_CHECK) {
             }
-            System.out.println("Corrupt file, sentinel wrong: " + framedata.sentinel);
-            System.out.println("reading a few more 4 bytes: ");
-            return false;
+            if (!ok) {
+                return false;
+            }
 
         } else if (SHOW) {
             System.out.println("Sentinel check ok");
@@ -658,12 +722,30 @@ public class PGMRegionFrameReader {
             // calculate imagePtr
             realx = x_reg * x_region_size;
             // if (SHOW) System.out.println("y="+y+", realy="+realy+", x=0");
-            for (x = 0; x < (int) nelems_x && (skip || compPtrIndex < CompPtr.length);) {
+            for (x = 0; x < (int) nelems_x && CompPtr != null && (skip || compPtrIndex < CompPtr.length);) {
                 //  if (SHOW) p("x="+x+", y="+y+", compPtrIndex="+compPtrIndex+", CompPtr.len="+CompPtr.length);
+                // SHOW = (frame < 10 && realx == 96 && realy==144);
                 if (skip) {
-                    FrameRegion[realx - mincols][realy - minrows] = WholeFrame[realx][realy];
-                    if (x == 0 && y == 0) {
-                        p("SKIPPING: using: value wholeframe[" + realx + "][" + realy + "]=" + WholeFrame[realx][realy] + "  for frame " + frame);
+                    if (realx >= mincols && realx < maxcols && realy >= minrows && realy < maxrows) {
+                        //p("x=" + x + ", y=" + y + ", realx=" + realx + ", realy=" + realy + ", mincols=" + mincols + ", minrows=" + minrows + ", frame=" + frame);
+                        // if frame 1, use prev = whole frame
+                        // if frame >1, use pref frame
+                        
+                        // this is wrong: [4818, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        if (this.frame < 1) { // remove code
+//                            if (realx == 5 && realy == 5) {
+//                                p("frame=" + frame + ", realx=" + realx + ", realy=" + realy + ", whole frame value=" + WholeFrame[realx][realy]);
+//                            }
+                            FrameRegion[realx - mincols][realy - minrows] = WholeFrame[realx][realy];
+                        } else {
+//                            if (realx == 5 && realy == 5) {
+//                                p("frame=" + frame + ", realx=" + realx + ", realy=" + realy + ", prev value=" + this.frames[frame - 1].getDataAt(realx, realy));
+//                            }
+                            FrameRegion[realx - mincols][realy - minrows] = this.frames[frame - 1].getDataAt(realx, realy);// + WholeFrame[realx][realy];
+                        }
+//                        if (x == 0 && y == 0) {
+//                            p("SKIPPING: using: value wholeframe[" + realx + "][" + realy + "]=" + WholeFrame[realx][realy] + "  for frame " + frame);
+//                        }
                     }
                     x++;
                     realx++;
@@ -679,6 +761,7 @@ public class PGMRegionFrameReader {
     }
 
     private boolean readOneStretchInASubregion() {
+        // read just a few wells
         if (CompPtr[compPtrIndex] == DAT_FRAME_KEY_0) {
             if (CompPtr[compPtrIndex + 1] == DAT_FRAME_KEY_16_1) {
                 state = 16;
@@ -728,72 +811,72 @@ public class PGMRegionFrameReader {
             for (int i = 0; i < state; i++) {
                 curvals[i] = (short) CompPtr[compPtrIndex + i];
             }
- boolean SHOWIT = false;//(frame >41 && frame <44) && realx == 0 && realy == 0;
+            boolean SHOWIT = false;//(frame >41 && frame <44) && realx == 0 && realy == 0;
             if (SHOWIT) {
-                System.out.println("Frame: "+frame+", realx="+realx+", realy="+realy);
-                System.out.println("state: "+state);
-                System.out.println("curvals: "+Arrays.toString(curvals));
+                System.out.println("Frame: " + frame + ", realx=" + realx + ", realy=" + realy);
+                System.out.println("state: " + state);
+                System.out.println("curvals: " + Arrays.toString(curvals));
             }
             switch (state) {
                 case 3:
                     // get 8 values
-                    Val[0] = (short)(curvals[0] >> 5) & 0x7;
-                    Val[1] = (short)(curvals[0] >> 2) & 0x7;
-                    Val[2] = ((short)(curvals[0] << 1) & 0x6) | ((short)(curvals[1] >> 7) & 1);
-                    Val[3] = ((short)(curvals[1] >> 4) & 0x7);
-                    Val[4] = ((short)(curvals[1] >> 1) & 0x7);
-                    Val[5] = ((short)(curvals[1] << 2) & 0x4) | ((short)(curvals[2] >> 6) & 3);
-                    Val[6] = ((short)(curvals[2] >> 3) & 0x7);
-                    Val[7] = ((short)(curvals[2]) & 0x7);
+                    Val[0] = (short) (curvals[0] >> 5) & 0x7;
+                    Val[1] = (short) (curvals[0] >> 2) & 0x7;
+                    Val[2] = ((short) (curvals[0] << 1) & 0x6) | ((short) (curvals[1] >> 7) & 1);
+                    Val[3] = ((short) (curvals[1] >> 4) & 0x7);
+                    Val[4] = ((short) (curvals[1] >> 1) & 0x7);
+                    Val[5] = ((short) (curvals[1] << 2) & 0x4) | ((short) (curvals[2] >> 6) & 3);
+                    Val[6] = ((short) (curvals[2] >> 3) & 0x7);
+                    Val[7] = ((short) (curvals[2]) & 0x7);
 
                     break;
 
                 case 4:
-                    Val[0] = (short)(curvals[0] >> 4) & 0xf;
-                    Val[1] = (short)(curvals[0]) & 0xf;
-                    Val[2] = (short)(curvals[1] >> 4) & 0xf;
-                    Val[3] = (short)(curvals[1]) & 0xf;
-                    Val[4] = (short)(curvals[2] >> 4) & 0xf;
-                    Val[5] = (short)(curvals[2]) & 0xf;
-                    Val[6] = (short)(curvals[3] >> 4) & 0xf;
-                    Val[7] = (short)(curvals[3]) & 0xf;
+                    Val[0] = (short) (curvals[0] >> 4) & 0xf;
+                    Val[1] = (short) (curvals[0]) & 0xf;
+                    Val[2] = (short) (curvals[1] >> 4) & 0xf;
+                    Val[3] = (short) (curvals[1]) & 0xf;
+                    Val[4] = (short) (curvals[2] >> 4) & 0xf;
+                    Val[5] = (short) (curvals[2]) & 0xf;
+                    Val[6] = (short) (curvals[3] >> 4) & 0xf;
+                    Val[7] = (short) (curvals[3]) & 0xf;
 
                     break;
 
                 case 5:
-                    Val[0] = (short)(curvals[0] >> 3) & 0x1f;
-                    Val[1] = ((short)(curvals[0] << 2) & 0x1c) | ((short)(curvals[1] >> 6) & 0x3);
-                    Val[2] = (short)(curvals[1] >> 1) & 0x1f;
-                    Val[3] = ((short)(curvals[1] << 4) & 0x10) | ((short)(curvals[2] >> 4) & 0xf);
-                    Val[4] = ((short)(curvals[2] << 1) & 0x1e) | ((short)(curvals[3] >> 7) & 0x1);
-                    Val[5] = (short)(curvals[3] >> 2) & 0x1f;
-                    Val[6] = ((short)(curvals[3] << 3) & 0x18) | ((short)(curvals[4] >> 5) & 0x7);
-                    Val[7] = (short)(curvals[4]) & 0x1f;
+                    Val[0] = (short) (curvals[0] >> 3) & 0x1f;
+                    Val[1] = ((short) (curvals[0] << 2) & 0x1c) | ((short) (curvals[1] >> 6) & 0x3);
+                    Val[2] = (short) (curvals[1] >> 1) & 0x1f;
+                    Val[3] = ((short) (curvals[1] << 4) & 0x10) | ((short) (curvals[2] >> 4) & 0xf);
+                    Val[4] = ((short) (curvals[2] << 1) & 0x1e) | ((short) (curvals[3] >> 7) & 0x1);
+                    Val[5] = (short) (curvals[3] >> 2) & 0x1f;
+                    Val[6] = ((short) (curvals[3] << 3) & 0x18) | ((short) (curvals[4] >> 5) & 0x7);
+                    Val[7] = (short) (curvals[4]) & 0x1f;
 
                     break;
 
                 case 6:
-                    Val[0] = ((short)curvals[0] >> 2) & 0x3f;
-                    Val[1] = ((short)(curvals[0] << 4) & 0x30) | ((short)(curvals[1] >> 4) & 0xf);
-                    Val[2] = ((short)(curvals[1] << 2) & 0x3c) | ((short)(curvals[2] >> 6) & 0x3);
-                    Val[3] = (short)(curvals[2] & 0x3f);
-                    Val[4] = (short)(curvals[3] >> 2) & 0x3f;
-                    Val[5] = ((short)(curvals[3] << 4) & 0x30) | ((short)(curvals[4] >> 4) & 0xf);
-                    Val[6] = ((short)(curvals[4] << 2) & 0x3c) | ((short)(curvals[5] >> 6) & 0x3);
-                    Val[7] = (short)(curvals[5] & 0x3f);
+                    Val[0] = ((short) curvals[0] >> 2) & 0x3f;
+                    Val[1] = ((short) (curvals[0] << 4) & 0x30) | ((short) (curvals[1] >> 4) & 0xf);
+                    Val[2] = ((short) (curvals[1] << 2) & 0x3c) | ((short) (curvals[2] >> 6) & 0x3);
+                    Val[3] = (short) (curvals[2] & 0x3f);
+                    Val[4] = (short) (curvals[3] >> 2) & 0x3f;
+                    Val[5] = ((short) (curvals[3] << 4) & 0x30) | ((short) (curvals[4] >> 4) & 0xf);
+                    Val[6] = ((short) (curvals[4] << 2) & 0x3c) | ((short) (curvals[5] >> 6) & 0x3);
+                    Val[7] = (short) (curvals[5] & 0x3f);
 
                     break;
 
 
                 case 7:
-                    Val[0] = (short)(curvals[0] >> 1) & 0x7f;
-                    Val[1] = ((short)(curvals[0] << 6) & 0x40) | ((short)(curvals[1] >> 2) & 0x3f);
-                    Val[2] = ((short)(curvals[1] << 5) & 0x60) | ((short)(curvals[2] >> 3) & 0x1f);
-                    Val[3] = ((short)(curvals[2] << 4) & 0x70) | ((short)(curvals[3] >> 4) & 0x0f);
-                    Val[4] = ((short)(curvals[3] << 3) & 0x78) | ((short)(curvals[4] >> 5) & 0x07);
-                    Val[5] = ((short)(curvals[4] << 2) & 0x7c) | ((short)(curvals[5] >> 6) & 0x3);
-                    Val[6] = ((short)(curvals[5] << 1) & 0x7e) | ((short)(curvals[6] >> 7) & 0x1);
-                    Val[7] = ((short)curvals[6] & 0x7f);
+                    Val[0] = (short) (curvals[0] >> 1) & 0x7f;
+                    Val[1] = ((short) (curvals[0] << 6) & 0x40) | ((short) (curvals[1] >> 2) & 0x3f);
+                    Val[2] = ((short) (curvals[1] << 5) & 0x60) | ((short) (curvals[2] >> 3) & 0x1f);
+                    Val[3] = ((short) (curvals[2] << 4) & 0x70) | ((short) (curvals[3] >> 4) & 0x0f);
+                    Val[4] = ((short) (curvals[3] << 3) & 0x78) | ((short) (curvals[4] >> 5) & 0x07);
+                    Val[5] = ((short) (curvals[4] << 2) & 0x7c) | ((short) (curvals[5] >> 6) & 0x3);
+                    Val[6] = ((short) (curvals[5] << 1) & 0x7e) | ((short) (curvals[6] >> 7) & 0x1);
+                    Val[7] = ((short) curvals[6] & 0x7f);
 
                     break;
 
@@ -810,14 +893,14 @@ public class PGMRegionFrameReader {
                     break;
 
                 case 16:
-                    Val[0] = (short)(curvals[0] << 8) | curvals[1];
-                    Val[1] = (short)(curvals[2] << 8) | curvals[3];
-                    Val[2] = (short)(curvals[4] << 8) | curvals[5];
-                    Val[3] = (short)(curvals[6] << 8) | curvals[7];
-                    Val[4] = (short)(curvals[8] << 8) | curvals[9];
-                    Val[5] = (short)(curvals[10] << 8) | curvals[11];
-                    Val[6] = (short)(curvals[12] << 8) | curvals[13];
-                    Val[7] = (short)(curvals[14] << 8) | curvals[15];
+                    Val[0] = (short) (curvals[0] << 8) | curvals[1];
+                    Val[1] = (short) (curvals[2] << 8) | curvals[3];
+                    Val[2] = (short) (curvals[4] << 8) | curvals[5];
+                    Val[3] = (short) (curvals[6] << 8) | curvals[7];
+                    Val[4] = (short) (curvals[8] << 8) | curvals[9];
+                    Val[5] = (short) (curvals[10] << 8) | curvals[11];
+                    Val[6] = (short) (curvals[12] << 8) | curvals[13];
+                    Val[7] = (short) (curvals[14] << 8) | curvals[15];
 
                     break;
 
@@ -837,13 +920,13 @@ public class PGMRegionFrameReader {
                 } // end case
             } // end switch
             compPtrIndex += state;
-            if (SHOWIT)  {
-                System.out.println( "(curvals[0] << 8)= "+ ((curvals[0] << 8) ));
-                System.out.println( "(SHORT)(curvals[0] << 8)= "+ (short)((curvals[0] << 8) ));
-                System.out.println( "curvals[1]= "+ curvals[1]);
-                System.out.println( "(curvals[0] << 8) | curvals[1] = "+ ((curvals[0] << 8) | curvals[1]));
-                System.out.println("val[0] before << (state - 1)="+Val[0]+", 1 << (state-1) = "+ (1 << (state - 1)));
-                
+            if (SHOWIT) {
+                System.out.println("(curvals[0] << 8)= " + ((curvals[0] << 8)));
+                System.out.println("(SHORT)(curvals[0] << 8)= " + (short) ((curvals[0] << 8)));
+                System.out.println("curvals[1]= " + curvals[1]);
+                System.out.println("(curvals[0] << 8) | curvals[1] = " + ((curvals[0] << 8) | curvals[1]));
+                System.out.println("val[0] before << (state - 1)=" + Val[0] + ", 1 << (state-1) = " + (1 << (state - 1)));
+
             }
             if (state != 16) {
                 for (int i = 0; i < 8; i++) {
@@ -866,18 +949,18 @@ public class PGMRegionFrameReader {
                 }
 
                 //  if (DETAIL) p("8 loop: x=l"+x+", y="+y+", val="+Val[i] + WholeFrame[realx][realy]);
-               
+
                 if (SHOWIT) {
-                   
-                    System.out.println("Val["+i+"]="+Val[i]+", WholeFrame[realx][realy]="+WholeFrame[realx][realy]);
-                    
+
+                    System.out.println("Val[" + i + "]=" + Val[i] + ", WholeFrame[realx][realy]=" + WholeFrame[realx][realy]);
+
                 }
                 total += Val[i] + WholeFrame[realx][realy];
                 WholeFrame[realx][realy] = Val[i] + WholeFrame[realx][realy];
-                
+
                 if (SHOWIT) {
-                    System.out.println("WholeFrame[realx][realy] = Val[i] + WholeFrame[realx][realy]= "+WholeFrame[realx][realy]);
-                    System.out.println("FirstFrame[realx][realy] =                                    "+FirstFrame[realx][realy]);
+                    System.out.println("WholeFrame[realx][realy] = Val[i] + WholeFrame[realx][realy]= " + WholeFrame[realx][realy]);
+                    System.out.println("FirstFrame[realx][realy] =                                    " + FirstFrame[realx][realy]);
                 }
                 x++;
                 realx++;
@@ -891,6 +974,8 @@ public class PGMRegionFrameReader {
 
     public PGMRegionFrame[] getFrames() {
         return frames;
+
+
 
 
     }

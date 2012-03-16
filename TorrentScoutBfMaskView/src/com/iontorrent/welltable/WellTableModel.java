@@ -161,7 +161,7 @@ public class WellTableModel extends DefaultTableModel {
     }
 
     private void p(String msg) {
-        System.out.println("WellTableModel: " + msg);
+//  System.out.println("WellTableModel: " + msg);
         //Logger.getLogger( WellTableModel.class.getName()).log(Level.INFO, msg, ex);
     }
 

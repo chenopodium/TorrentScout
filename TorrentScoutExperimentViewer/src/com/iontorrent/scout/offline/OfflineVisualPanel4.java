@@ -105,9 +105,9 @@ public final class OfflineVisualPanel4 extends JPanel implements TaskListener, W
     private void btnCacheDatFilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCacheDatFilesActionPerformed
         
         TorrentScoutStartupTopComponent tc = (TorrentScoutStartupTopComponent) WindowManager.getDefault().findTopComponent("TorrentScoutStartupTopComponent");
-        System.out.println("Wizpage 4: Got exp: "+getExp());
+//  System.out.println("Wizpage 4: Got exp: "+getExp());
         if (tc == null) {
-            System.out.println("Wizpage 4:Could not find startup component");
+    //  System.out.println("Wizpage 4:Could not find startup component");
         }
         else {
             GlobalContext.getContext().setExperimentContext(exp, false);

@@ -49,7 +49,12 @@ public class BitMask extends BfMask implements Serializable {
         super(m.getNrCols(), m.getNrRows());
         this.relcoord = m.relcoord;
     }
-    
+    public boolean get(WellCoordinate coord) {
+        return get(coord.getCol(), coord.getRow()); 
+    }
+    public void set(WellCoordinate coord, boolean flag) {
+         set(coord.getCol(), coord.getRow(), flag);
+    }
     public void set(int c, int r, boolean flag) {
         super.setMaskAt(c, r, flag ? 1 : 0);
     }
@@ -229,7 +234,12 @@ public class BitMask extends BfMask implements Serializable {
     public void setRelCoord(WellCoordinate coord) {
         this.relcoord = coord;
     }
-
+    public void invert( WellCoordinate coord){
+        this.set(coord, !this.get(coord));
+    }
+     public void invert( int x, int y){
+        this.set(x, y, !this.get(x, y));
+    }       
     public BitMask add(BitMask m1) {
         BitMask res = new BitMask(m1);
         res.add(this, m1);
@@ -319,6 +329,7 @@ public class BitMask extends BfMask implements Serializable {
     public boolean not(BitMask m1) {
         return invert(m1);
     }
+    
     
     public boolean invert(BitMask m1) {
         if (!compatible(m1)) {

@@ -4,16 +4,6 @@
 <filesystem>
     <folder name="Actions">
         <folder name="Help">
-            <file name="com-iontorrent-main-FeedbackAction.instance">
-                <!--com.iontorrent.main.FeedbackAction-->
-                <attr
-                    bundlevalue="com.iontorrent.main.Bundle#CTL_FeedbackAction" name="displayName"/>
-                <attr
-                    methodvalue="org.openide.awt.Actions.alwaysEnabled" name="instanceCreate"/>
-                <attr name="delegate" newvalue="com.iontorrent.main.FeedbackAction"/>
-                <attr name="iconBase" stringvalue="com/iontorrent/main/mail-new16.png"/>
-                <attr boolvalue="false" name="noIconInMenu"/>
-            </file>
             <file name="com-iontorrent-main-MainAction.instance">
                 <!--com.iontorrent.main.startup.MainAction-->
                 <attr
@@ -22,6 +12,16 @@
                     methodvalue="org.openide.awt.Actions.alwaysEnabled" name="instanceCreate"/>
                 <attr name="delegate" newvalue="com.iontorrent.main.startup.MainAction"/>
                 <attr name="iconBase" stringvalue="com/iontorrent/main/startup/help-hint.png"/>
+                <attr boolvalue="false" name="noIconInMenu"/>
+            </file>
+            <file name="com-iontorrent-main-FeedbackAction.instance">
+                <!--com.iontorrent.main.FeedbackAction-->
+                <attr
+                    bundlevalue="com.iontorrent.main.Bundle#CTL_FeedbackAction" name="displayName"/>
+                <attr
+                    methodvalue="org.openide.awt.Actions.alwaysEnabled" name="instanceCreate"/>
+                <attr name="delegate" newvalue="com.iontorrent.main.FeedbackAction"/>
+                <attr name="iconBase" stringvalue="com/iontorrent/main/mail-new16.png"/>
                 <attr boolvalue="false" name="noIconInMenu"/>
             </file>
         </folder>
@@ -91,18 +91,6 @@
         </folder>
     </folder>
     <folder name="Shortcuts">
-        <file name="O-H.shadow">
-            <!--com.iontorrent.main.FeedbackAction-->
-            <attr name="originalFile" stringvalue="Actions/Help/com-iontorrent-main-FeedbackAction.instance"/>
-        </file>
-        <file name="D-B.shadow">
-            <!--com.iontorrent.main.FeedbackAction-->
-            <attr name="originalFile" stringvalue="Actions/Help/com-iontorrent-main-FeedbackAction.instance"/>
-        </file>
-        <file name="D-M.shadow">
-            <!--com.iontorrent.main.FeedbackAction-->
-            <attr name="originalFile" stringvalue="Actions/Help/com-iontorrent-main-FeedbackAction.instance"/>
-        </file>
         <file name="C-N.shadow">
             <!--com.iontorrent.main.startup.MainAction-->
             <attr name="originalFile" stringvalue="Actions/Help/com-iontorrent-main-MainAction.instance"/>
@@ -114,6 +102,18 @@
         <file name="F1.shadow">
             <!--com.iontorrent.main.startup.MainAction-->
             <attr name="originalFile" stringvalue="Actions/Help/com-iontorrent-main-MainAction.instance"/>
+        </file>
+        <file name="O-H.shadow">
+            <!--com.iontorrent.main.FeedbackAction-->
+            <attr name="originalFile" stringvalue="Actions/Help/com-iontorrent-main-FeedbackAction.instance"/>
+        </file>
+        <file name="D-B.shadow">
+            <!--com.iontorrent.main.FeedbackAction-->
+            <attr name="originalFile" stringvalue="Actions/Help/com-iontorrent-main-FeedbackAction.instance"/>
+        </file>
+        <file name="D-M.shadow">
+            <!--com.iontorrent.main.FeedbackAction-->
+            <attr name="originalFile" stringvalue="Actions/Help/com-iontorrent-main-FeedbackAction.instance"/>
         </file>
     </folder>
     <folder name="Windows2">

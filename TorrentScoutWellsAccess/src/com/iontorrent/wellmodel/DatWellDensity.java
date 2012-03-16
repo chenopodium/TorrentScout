@@ -70,7 +70,7 @@ public class DatWellDensity extends GeneralWellDensity {
 
     @Override
     public String  computeDensityPlot() {
-        p("Computing Density for flow "+ flow+" dat in "+exp.getRawDir());
+    //    p("Computing Density for flow "+ flow+" dat in "+exp.getRawDir());
        nrflags = 1; 
         
         maxvalues = new int[nrflags];
@@ -86,9 +86,9 @@ public class DatWellDensity extends GeneralWellDensity {
         exp.setNrrows(aq.getNrRows());
         int nr_col_buckets = exp.getNrcols() / bucket_size+1;
         int nr_row_buckets = exp.getNrrows() / bucket_size+1;
-         p("bucket size: "+bucket_size+", nr buckets: "+nr_col_buckets+"/"+nr_row_buckets);
+       //  p("bucket size: "+bucket_size+", nr buckets: "+nr_col_buckets+"/"+nr_row_buckets);
         well_density = new int[nr_col_buckets][nr_row_buckets][nrflags];
-        p("Got aq: "+aq.getFrames().length+" frames, "+aq.getNrRows()+"/"+aq.getNrCols()+" rows and cols");        
+      //  p("Got aq: "+aq.getFrames().length+" frames, "+aq.getNrRows()+"/"+aq.getNrCols()+" rows and cols");        
         PGMFrame frames[] = aq.getFrames();
         if (frames[frame] == null) {
             p("Could not load frame "+frame);
@@ -112,7 +112,7 @@ public class DatWellDensity extends GeneralWellDensity {
             maxvalues[flag] = max;
             minvalues[flag] = min;
         }
-        p("Got max: "+Arrays.toString(maxvalues));
+    //    p("Got max: "+Arrays.toString(maxvalues));
         return null;
         
     }

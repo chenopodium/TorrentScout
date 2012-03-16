@@ -50,6 +50,7 @@ public class PGMAcquisitionGlobalHeader {
     protected void read(DataInputStream in) {
         if (in == null ) {
             err("NO input stream!");
+            return;
         }
         try {
             signature = FileUtils.getUInt32(in);

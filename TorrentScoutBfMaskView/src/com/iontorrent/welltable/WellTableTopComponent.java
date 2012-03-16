@@ -21,6 +21,7 @@
 package com.iontorrent.welltable;
 
 import com.iontorrent.dataloading.WellDataLoadTask;
+import com.iontorrent.expmodel.ExperimentContext;
 import com.iontorrent.expmodel.GlobalContext;
 import com.iontorrent.guiutils.GuiUtils;
 import com.iontorrent.guiutils.netbeans.OpenWindowAction;
@@ -87,8 +88,9 @@ public final class WellTableTopComponent extends TopComponent implements TaskLis
     private transient final Lookup.Result<WellCoordinate> coordSelection =
             LookupUtils.getSubscriber(WellCoordinate.class, new WellCoordListener());
     private transient final InstanceContent coordContent = LookupUtils.getPublisher(WellCoordinate.class);
-    private WellContext cur_context;
+  //  private ExperimentContext exp;
     private WellTableModel model;
+    private WellContext cur_context;
     private ProgressHandle progress;
     private WellCoordinate coord;
     private WellTable wellsTable;
@@ -182,10 +184,13 @@ public final class WellTableTopComponent extends TopComponent implements TaskLis
         //      p("Updating table model");
         // setting filters
         //ScoreMask mask = new ScoreMask.
+        if (GlobalContext.getContext().getExperimentContext() == null) return;
+        cur_context = GlobalContext.getContext().getExperimentContext().getWellContext();
         ScoreMask smask = ScoreMask.getMask(GlobalContext.getContext().getExperimentContext(), cur_context);
         if (smask == null) {
             p("Got no score mask for exp: " + GlobalContext.getContext().getExperimentContext());
         }
+        
         model = new WellTableModel(cur_context, smask);
         //  TableRowSorter sorter = new TableRowSorter(model);
         //  wellsTable.setRowSorter(sorter);
@@ -216,8 +221,8 @@ public final class WellTableTopComponent extends TopComponent implements TaskLis
         //    wellsTable.invalidate();
         //    wellsTable.revalidate();
         selectRandomRow();
-        requestActive();
-        this.requestVisible();
+      //  requestActive();
+       // this.requestVisible();
     }
 
     private class WellContextListener implements LookupListener {
@@ -250,7 +255,7 @@ public final class WellTableTopComponent extends TopComponent implements TaskLis
 //            if (cur_context == context) {
 //                return;
 //            }
-            cur_context = context;
+            if ( GlobalContext.getContext().getExperimentContext() != null)  cur_context = GlobalContext.getContext().getExperimentContext().getWellContext();
             if(cur_context != null) cur_context.setFilters(filters);
            // boolean loadScores = context.getMask().getNrCols() < 1500;
            // this.btnLoadScores.setSelected(loadScores);
@@ -332,9 +337,10 @@ public final class WellTableTopComponent extends TopComponent implements TaskLis
         }
         WellCoordinate coord = model.getWellCoordinate(row);
         WellCoordinate test = model.getWellCoordinate(r);
+        if ( GlobalContext.getContext().getExperimentContext() != null)  cur_context = GlobalContext.getContext().getExperimentContext().getWellContext();
 //         p("Coord "+r+" would have been: "+test);
         cur_context.setCoordinate(coord);
-        p("Sending coordinate of context: " + coord);
+        p("Sending coordinate of context: " + coord+"/"+GlobalContext.getContext().getExperimentContext().getWellContext().getCoordinate());
         DOACTIONS = false;
       //  GuiUtils.showNonModalMsg("WellTable: Loading data for coord "+cur_context.getAbsoluteCoordinate());
         if (coord != null) LookupUtils.publish(coordContent, coord);
@@ -385,11 +391,13 @@ public final class WellTableTopComponent extends TopComponent implements TaskLis
         String file = FileTools.getFile("Exporting table to .csv file", "*.csv", "welltable.csv", true);
         String csv = wellsTable.toCsv();
         FileTools.writeStringToFile(file, csv);
-         JTextArea pane = new JTextArea(50, 40);
-        // pane.setContentType("text");
-        pane.setText(csv);
-        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(csv), null);
-        JOptionPane.showMessageDialog(this, new JScrollPane(pane), "You can copy this to Excel", JOptionPane.INFORMATION_MESSAGE);
+        if (wellsTable.getRowCount()<500) {
+             JTextArea pane = new JTextArea(50, 40);
+            // pane.setContentType("text");
+            pane.setText(csv);
+            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(csv), null);
+            JOptionPane.showMessageDialog(this, new JScrollPane(pane), "You can copy this to Excel", JOptionPane.INFORMATION_MESSAGE);
+        }
     }
 
     private void updateTable(WellContext context) {
@@ -432,7 +440,7 @@ public final class WellTableTopComponent extends TopComponent implements TaskLis
     }
 
     private void p(String s) {
-        System.out.println("WellTableTopComp:" + s);
+//  System.out.println("WellTableTopComp:" + s);
     }
 
     private void setStatus(String msg) {
@@ -633,7 +641,7 @@ public final class WellTableTopComponent extends TopComponent implements TaskLis
 
     private void btnLoadScoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoadScoresActionPerformed
         if (this.btnLoadScores.isSelected()) {
-            GuiUtils.showNonModalMsg("WellTable", "Loading scores for data in table...");
+            GuiUtils.showNonModalMsg("Loading scores for data in table...", "WellTable");
             this.updateTable(cur_context);
         }
     }//GEN-LAST:event_btnLoadScoresActionPerformed
@@ -662,8 +670,9 @@ public final class WellTableTopComponent extends TopComponent implements TaskLis
                 wellSelectionContent.remove(context.getSelection());
             }
             context.setSelection(sel);
-            LookupUtils.publish(wellSelectionContent, sel);
             context.setCoordinate(coord);
+            LookupUtils.publish(wellSelectionContent, sel);
+            
           //  GuiUtils.showNonModalMsg("WellTable: Loading data for coord "+context.getAbsoluteCoordinate());
             LookupUtils.publish(wellCoordContent, coord);
 
@@ -674,6 +683,8 @@ public final class WellTableTopComponent extends TopComponent implements TaskLis
     @Override
     public void componentOpened() {
         // TODO add custom code on component opening
+        getLatestContext();
+        getLatestSelection();
         getLatestCoord();
         updateTable(cur_context);
     }

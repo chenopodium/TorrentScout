@@ -45,6 +45,12 @@ public class ExpStatusNodeFilter extends NodeFilter {
     }
 
     @Override
+    public String getRelevantValue(Object node) {
+        RundbExperiment n = (RundbExperiment) node;
+        return  n.getFtpStatus();        
+    }
+            
+    @Override
     public boolean passes(Object node) {
         RundbExperiment n = (RundbExperiment) node;
         String s = n.getFtpStatus();

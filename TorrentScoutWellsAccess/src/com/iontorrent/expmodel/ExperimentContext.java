@@ -90,6 +90,13 @@ public class ExperimentContext implements Serializable {
         this.resDirFromDb = "";
         list = new Vector<ExpContextChangedListener>();
     }
+    /** closes any files such 1.wells, bfmask etc */
+    public void closeFiles() {
+        BfMask mask = this.getWellContext().getMask();
+        if (mask != null) mask.close();
+        
+        
+    }
     public void makeRelative(WellCoordinate coord) {
                 // check those relative coords...
         if (coord.getCol() >= getColOffset()) {
@@ -121,33 +128,45 @@ public class ExperimentContext implements Serializable {
         return coord;
     }
 
+    public void setThumbnailsRaw() {
+        if (this.rawDir != null) {
+            if (rawDir.indexOf("thumbnail")<0) {
+                rawDir = rawDir + "thumbnail";
+                rawDir = FileTools.addSlashOrBackslash(rawDir);
+            }
+        }
+    }
+    public boolean isThumbnails() {
+        return this.resultsDir != null && resultsDir.indexOf("_tn_")>0;
+    }
     /** creates a mostly unique file key hash to be used for index files */
     public String getFileKey() {
         String h = "";
-        // we can't use that because the plugin may NOT have those values!
-//        if (this.getChipType() != null && this.getChipType().length() > 1) {
-//            h = this.getChipType() + "_";
-//        }
-//        if (this.getResultsName() != null && this.getResultsName().length() > 1) {
-//            h += this.getResultsName() + "_";
-//        }
-
+     
         String dir = this.getRawDir();
-        if (dir != null || dir.trim().length() > 1) {
+        if (dir != null && dir.trim().length() > 1) {
+            File f = new File(dir);
+            dir = f.getName();
+            if (f.getParentFile() != null) dir = f.getParentFile().getName()+dir;
+       //     p("getFileKey: rawdir="+dir);
             h += Math.abs(dir.hashCode());
         }
         dir = this.getResultsDirectory();
-        if (dir != null || dir.trim().length() > 1) {
+        if (dir != null && dir.trim().length() > 1) {
+            File f = new File(dir);
+            dir = f.getName();
+            if (f.getParentFile() != null) dir = f.getParentFile().getName()+dir;
+   //         p("getFileKey: resdir="+dir);
             h += Math.abs(dir.hashCode());
         }
         String tmp = h;
         for (int i = 0; i < tmp.length(); i++) {
             char c = tmp.charAt(i);
             if (!Character.isLetterOrDigit(c)) {
-                h = h.replace(c, '_');
+                h = h.replace(c, 'a');
             }
         }
-     //   p("Got experiment filekey: " + h);
+  //      p("Got experiment filekey: " + h);
         return h;
     }
 
@@ -227,6 +246,9 @@ public class ExperimentContext implements Serializable {
         this.cacheDir = dir;
     }
 
+    public String getBase(int flow) {
+        return ""+getWellContext().getBase(flow);
+    }
     public void expandCacheDir(String cache) {
 
         String res = getResultsName();
@@ -710,6 +732,7 @@ public class ExperimentContext implements Serializable {
      * @param ignoreRule the ignoreRule to set
      */
     public void setIgnoreRule(boolean ignoreRule) {
+        p("Setting ignore rule to true");
         this.ignoreRule = ignoreRule;
     }
 
@@ -805,8 +828,12 @@ public class ExperimentContext implements Serializable {
         return FileUtils.exists(this.getResultsDirectory() + this.getSffFileName());
     }
 
-    public boolean hasDat() {
+    public boolean hasDat() {        
         return FileUtils.exists(this.getRawDir() + "acq_00000.dat");
+    }
+    public boolean hasDat(RawType type, int flow) {
+        String file = type.getRawFileName(flow);
+        return FileUtils.exists(this.getRawDir() + file);
     }
 
     public boolean hasBam() {
@@ -879,13 +906,6 @@ public class ExperimentContext implements Serializable {
         }
     }
 
-    public void setThumbnails(boolean b) {
-        this.thumbnails = b;
-    }
-
-    public boolean isThumbnails() {
-        return thumbnails;
-    }
 
     /**
      * @return the datblock

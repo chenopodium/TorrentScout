@@ -26,6 +26,7 @@
  */
 package com.iontorrent.welltable;
 
+import com.iontorrent.guiutils.MinMaxPanel;
 import com.iontorrent.rawdataaccess.wells.ScoreMaskFlag;
 import com.iontorrent.wellmodel.WellContext;
 import com.iontorrent.wellmodel.WellFilter;

@@ -221,23 +221,23 @@ public final class PGMAcquisition {
     private void readUnCompressedH3Format(int startx, int starty, int dx, int dy) {
         PGMUnCompressedFrame prev = null;
         if (startx < 0) {
-            p("Using PGM Acqusition Frame to read data");
+          //  p("Using PGM Acqusition Frame to read data");
             pgmframes = new PGMUnCompressedFrame[header.getNrFrames()];
             for (int f = 0; f < header.getNrFrames(); f++) {
-                if (f % 25 == 0) {
-                    Runtime r = Runtime.getRuntime();
-                    p("Reading frame " + f + " total memory: " + r.totalMemory() / 1000000 + " M of " + r.maxMemory() / 1000000 + " M");
-                }
+//                if (f % 25 == 0) {
+//                    Runtime r = Runtime.getRuntime();
+//                    p("Reading frame " + f + " total memory: " + r.totalMemory() / 1000000 + " M of " + r.maxMemory() / 1000000 + " M");
+//                }
                 pgmframes[f] = this.readUncompressedData(f, prev);
                 prev = (PGMUnCompressedFrame) pgmframes[f];
             }
         } else {
-            p("Using PGM UNCOMPRESSED SUB Frame to read data");
+          //  p("Using PGM UNCOMPRESSED SUB Frame to read data");
             pgmframes = new PGMSubFrame[header.getNrFrames()];
             for (int f = 0; f < header.getNrFrames(); f++) {
-                if (f % 50 == 0) {
-                    p("readUnCompressedH3Format.Reading .dat area flow=" + this.flow + ", (" + startx + "/" + starty + ")-(" + (startx + dx) + "/" + (starty + dy) + "), frame " + f + " total memory: " + Runtime.getRuntime().totalMemory() / 1000000 + " M");
-                }
+//                if (f % 50 == 0) {
+//                    p("readUnCompressedH3Format.Reading .dat area flow=" + this.flow + ", (" + startx + "/" + starty + ")-(" + (startx + dx) + "/" + (starty + dy) + "), frame " + f + " total memory: " + Runtime.getRuntime().totalMemory() / 1000000 + " M");
+//                }
                 PGMUnCompressedFrame frame = readUncompressedData(f, prev);
                 pgmframes[f] = new PGMSubFrame(frame, header, startx, starty, dx, dy);
                 prev = frame;
@@ -255,9 +255,9 @@ public final class PGMAcquisition {
             }
             pgmframes = new PGMCompressedFrame[header.getNrFrames()];
             for (int f = 0; f < header.getNrFrames(); f++) {
-                if (f % 25 == 0) {
-                    p("Reading frame " + f + " total memory: " + Runtime.getRuntime().totalMemory() / 1000000 + " M");
-                }
+//                if (f % 25 == 0) {
+//                    p("Reading frame " + f + " total memory: " + Runtime.getRuntime().totalMemory() / 1000000 + " M");
+//                }
                 pgmframes[f] = readInterlace4Data(f, prev);
                 prev = (PGMCompressedFrame) pgmframes[f];
             }
@@ -267,9 +267,9 @@ public final class PGMAcquisition {
             }
             pgmframes = new PGMSubFrame[header.getNrFrames()];
             for (int f = 0; f < header.getNrFrames(); f++) {
-                if (f % 50 == 0) {
-                    p("readCompressedH3Format. Reading .dat area flow=" + this.flow + ", (" + startx + "/" + starty + ")-(" + (startx + dx) + "/" + (starty + dy) + "), frame " + f + " total memory: " + Runtime.getRuntime().totalMemory() / 1000000 + " M");
-                }
+//                if (f % 50 == 0) {
+//                    p("readCompressedH3Format. Reading .dat area flow=" + this.flow + ", (" + startx + "/" + starty + ")-(" + (startx + dx) + "/" + (starty + dy) + "), frame " + f + " total memory: " + Runtime.getRuntime().totalMemory() / 1000000 + " M");
+//                }
                 PGMCompressedFrame frame = readInterlace4Data(f, prev);
                 pgmframes[f] = new PGMSubFrame(frame, header, startx, starty, dx, dy);
                 prev = frame;
@@ -413,7 +413,7 @@ public final class PGMAcquisition {
     }
 
     private void p(String msg) {
-        System.out.println("PGGAcquisition: " + msg);
+        Logger.getLogger(PGMAcquisition.class.getName()).log(Level.FINE,msg);
     }
 
     public PGMAcquisitionGlobalHeader getHeader() {
@@ -433,6 +433,7 @@ public final class PGMAcquisition {
 
     public boolean contains(int x, int y) {
         // the first frame usually contains the entire data
+        if (pgmframes == null || pgmframes.length<2) return false;
         return pgmframes[1].contains(x, y);
     }
 

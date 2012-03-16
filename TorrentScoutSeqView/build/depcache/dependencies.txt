@@ -44,12 +44,10 @@ com.iontorrent.seqview.TorrentScoutAlignmentTopComponent$1
 com.iontorrent.wellmodel.WellCoordinate
 com.iontorrent.threads.TaskListener
 java.lang.StringBuilder
-java.util.Iterator
 com.iontorrent.seqview.TorrentScoutAlignmentTopComponent$WellCoordinateSubscriberListener
 com.iontorrent.guiutils.netbeans.OpenWindowAction
 org.iontorrent.seq.Read
 javax.swing.GroupLayout
-java.util.Collection
 javax.swing.GroupLayout$Alignment
 com.iontorrent.expmodel.GlobalContext
 javax.swing.Action
@@ -58,7 +56,6 @@ javax.swing.GroupLayout$ParallelGroup
 java.lang.System
 com.iontorrent.seqview.TorrentScoutAlignmentTopComponent$WellSubscriberListener
 com.iontorrent.seqview.AlignmentPanel
-java.io.PrintStream
 com.iontorrent.wellmodel.WellContext
 org.openide.util.Lookup$Result
 org.openide.windows.TopComponent
@@ -80,10 +77,8 @@ com.iontorrent.seqview.TorrentScoutAlignmentTopComponent
 ||:com.iontorrent.seqview.AlignmentPanel
 com.iontorrent.wellmodel.WellContext
 java.lang.StringBuilder
-java.lang.System
 java.util.logging.Logger
 java.lang.Class
-java.io.PrintStream
 javax.swing.JScrollPane
 org.iontorrent.seq.alignment.Alignment
 javax.swing.JPanel
@@ -95,6 +90,6 @@ javax.swing.JEditorPane
 org.iontorrent.seq.Read
 java.lang.String
 java.awt.BorderLayout
-java.util.logging.Level
-java.awt.Rectangle
 java.util.Arrays
+java.awt.Rectangle
+java.util.logging.Level

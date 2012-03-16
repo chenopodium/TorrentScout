@@ -255,6 +255,6 @@ public final class IonogramOptionsPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     private void p(String string) {
-        System.out.println("IonogramOptionsPanel: "+string);
+//  System.out.println("IonogramOptionsPanel: "+string);
     }
 }

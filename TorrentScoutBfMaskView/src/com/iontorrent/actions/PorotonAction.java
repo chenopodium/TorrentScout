@@ -72,7 +72,7 @@ public final class PorotonAction implements ActionListener {
         
     }
     private static void p(String msg) {
-        System.out.println("ProtonAction: "+msg);
+//  System.out.println("ProtonAction: "+msg);
        
     }
 }

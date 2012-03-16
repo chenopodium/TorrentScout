@@ -96,8 +96,7 @@ public final class WholeChipViewTopComponent extends TopComponent {
             return;
         }
         //this.exp = exp;
-        if (chippanel == null) {
-           
+        if (chippanel == null) {           
             chippanel = new ChipPanel(exp);
             this.add("Center", chippanel); 
         }

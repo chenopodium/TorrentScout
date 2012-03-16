@@ -29,10 +29,12 @@ import com.iontorrent.expmodel.ExperimentContext;
 import com.iontorrent.expmodel.GlobalContext;
 import com.iontorrent.expmodel.LoadDataContext;
 import com.iontorrent.guiutils.GuiUtils;
+import com.iontorrent.guiutils.MinMaxPanel;
 import com.iontorrent.guiutils.wells.CoordSelectionPanel;
 import com.iontorrent.heatmaps.Parameter;
 import com.iontorrent.heatmaps.ScoreMaskCalculatorIF;
 import com.iontorrent.results.scores.ScoreMask;
+import com.iontorrent.sequenceloading.SequenceLoader;
 import com.iontorrent.utils.LookupUtils;
 import com.iontorrent.wellmodel.WellContext;
 import com.iontorrent.wellmodel.WellCoordinate;
@@ -45,6 +47,7 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
@@ -107,9 +110,9 @@ public final class TorrentScoutScoresViewTopComponent extends TopComponent imple
         add("Center", densityPanel);
 
         ScoreMaskFlag flags[] = ScoreMaskFlag.values();
-        currentflag = ScoreMaskFlag.IDENTITY;
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(flags));
-        jComboBox1.setSelectedItem(currentflag);
+        currentflag = ScoreMaskFlag.Q47LEN;
+        boxflag.setModel(new javax.swing.DefaultComboBoxModel(flags));
+        boxflag.setSelectedItem(currentflag);
 
         DOACTIONS = true;
         //   tryToLoad();
@@ -170,15 +173,15 @@ public final class TorrentScoutScoresViewTopComponent extends TopComponent imple
     }
 
     private void tryToLoad() {
-        if (global == null) {
-            GlobalContext.getContext();
-        }
-        if (global != null && global.getExperimentContext() != null && wellContext != null) {
-            mask = ScoreMask.getMask(global.getExperimentContext(), wellContext);
-            if (mask != null && currentflag != null && mask.hasImage(currentflag)) {
+//        if (global == null) {
+//            GlobalContext.getContext();
+//        }
+//        if (global != null && global.getExperimentContext() != null && wellContext != null) {
+//            mask = ScoreMask.getMask(global.getExperimentContext(), wellContext);
+         //   if (mask != null ) {
                 updateScoresPanel();
-            }
-        }
+   //         }
+    //    }
     }
 
     private void getLatestWellContext() {
@@ -211,10 +214,20 @@ public final class TorrentScoutScoresViewTopComponent extends TopComponent imple
     private void update(ExperimentContext result) {
         this.expContext = result;
         densityPanel.clear();
-        if (!result.is316() && !result.is318()) {
+        cachetask = null;
+      //  if (!result.is316() && !result.is318()) {
             tryToLoad();
-        }
+      //  }
 
+    }
+    @Override
+    public void repaint() {
+        p("repaint called");
+        super.repaint();
+        if (densityPanel != null) {
+            p("repaint of density panel called");
+            densityPanel.repaint();
+        }
     }
 
     private void update(WellContext context) {
@@ -272,54 +285,54 @@ public final class TorrentScoutScoresViewTopComponent extends TopComponent imple
         //progress.stop();
         if (t instanceof ComputeHeatMapTask) {
             ComputeHeatMapTask ct = (ComputeHeatMapTask) t;
-            customtask = null;
-            this.jComboBox1.setSelectedItem(ct.calc.getFlag());
+            if (t.isSuccess()) {
+                customtask = null;
+            } else {
+                msg("The heat map creation task " + t + " failed");
+            }
+            this.boxflag.setSelectedItem(ct.calc.getFlag());
+        } else {
+            if (t.isSuccess()) {
+                cachetask = null;
+            } else {
+                msg("The heat map creation task " + t + " failed");
+            }
         }
-//        if (t.isSuccess()) {
-//            updateScoresPanel();
-//        } else {
-//            msg("The heat map creation task "+t +" failed");
-//
-//        }
-        cachetask = null;
+
         updateScoresPanel();
 
 
     }
 
     private void updateScoresPanel() {
-
+        p("updateScoresPanel");
         global = GlobalContext.getContext();
         if (global == null) {
+            p("No global context");
             this.setStatusWarning("Got no global context, won't do anything");
-
             return;
         }
 
-        if (this.wellContext == null) {
-            this.getLatestWellContext();
+        expContext = global.getExperimentContext();
+        if (global.getExperimentContext() == null) {
+            this.setStatusWarning("Please select an experiment/result first in the Experiment Component");
+            p("Creating fake experiment context for testing");
+            expContext = ExperimentContext.createFake(global);
+
         }
-        if (expContext == null) {
-            this.getLatestExperimentContext();
-        }
+        wellContext = expContext.getWellContext();
         if (wellContext == null) {
+            p("No well context");
             this.setStatus("Got no well context yet... load a bfmask.bin file first (need to change that:-)");
             //  p("Got no wellContext - pick and experiment first and load a mask file first");
             return;
         }
-        if (global.getExperimentContext() == null) {
-            this.setStatusWarning("Please select an experiment/result first in the Experiment Component");
-            p("Creating fake experiment context for testing");
-            ExperimentContext exp = ExperimentContext.createFake(global);
-
-        }
-
         // DEPENDS ON FLAG
         mask = ScoreMask.getMask(global.getExperimentContext(), wellContext);
 
         String msg = "";
         if (!mask.hasImage(currentflag)) {
-
+            p("Don't have flag "+currentflag);
             if (currentflag.isCustom()) {
                 // p("Could not find file " + mask.getImageFile(currentflag));
                 if (customtask != null) {
@@ -328,19 +341,24 @@ public final class TorrentScoutScoresViewTopComponent extends TopComponent imple
                     GuiUtils.showNonModalMsg("To create a custom heat map, select the tools icon to compute one");
                 }
             } else if (cachetask == null) {
-                msg = "The IMAGE file " + mask.getFile(currentflag) + " does NOT seem to exist, I will have to generate it first. This might take a few minutes!";
-                setStatusWarning(msg);
-                // boolean ok = createImageFileFromScoreFlag();
-                GuiUtils.showNonModalMsg("ScoreHeatMap: I have to create the scores image files first...");
-                //   this.setStatusWarning("I have to parse some files and create images for the scores...");
-                cachetask = new CacheFilesTask(this);
-                cachetask.execute();
+                if ((this.expContext.hasSff() && currentflag.isIn(ScoreMaskFlag.SFF_FLAGS))
+                        || (this.expContext.hasBam() && currentflag.isIn(ScoreMaskFlag.SAM_FLAGS))) {
+                    msg = "The IMAGE file " + mask.getFile(currentflag) + " does NOT seem to exist, I will have to generate it first. This might take a few minutes!";
+                    setStatusWarning(msg);
+                    // boolean ok = createImageFileFromScoreFlag();
+                    GuiUtils.showNonModalMsg("ScoreHeatMap: I have to create the scores image files first...");
+                    //   this.setStatusWarning("I have to parse some files and create images for the scores...");
+                    cachetask = new CacheFilesTask(this);
+                    cachetask.execute();
+                } else {
+                    GuiUtils.showNonModalMsg("The .sff or .bam file was not found (and is needed) for this flag");
+                }
             } else {
                 msg = "Currently creating data for " + currentflag + " ... please wait...";
                 GuiUtils.showNonModalMsg("ScoreHeatMap: creating heat map...");
                 setStatusWarning(msg);
             }
-            return;
+           
         }
         //   this.setStatus("Updating heat map");
         this.updateDensityPanel();
@@ -348,11 +366,19 @@ public final class TorrentScoutScoresViewTopComponent extends TopComponent imple
     }
 
     private void updateDensityPanel() {
+        p("updateDensityPanel with flag "+currentflag);
         // GuiUtils.showNonModalMsg("ScoreHeatMap: reading heat map for " + currentflag + "....", false, 5);
         mask.readData(currentflag);
+        p("setscoremask for flag "+currentflag);
         densityPanel.setScoreMask(mask, currentflag, (Integer) spinBucket.getValue());
-
+        //this.invalidate();
+      //  this.revalidate();
+                
+       // p("repainting immediately");
+      //  paintImmediately(0,0,1000,1000);
+       // this.repaint();       
     }
+    
 
     private void setStatus(String msg) {
         p(msg);
@@ -386,7 +412,7 @@ public final class TorrentScoutScoresViewTopComponent extends TopComponent imple
         java.awt.GridBagConstraints gridBagConstraints;
 
         jPanel1 = new javax.swing.JPanel();
-        jComboBox1 = new javax.swing.JComboBox();
+        boxflag = new javax.swing.JComboBox();
         btnReload = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         spinBucket = new javax.swing.JSpinner();
@@ -395,28 +421,29 @@ public final class TorrentScoutScoresViewTopComponent extends TopComponent imple
         btnSelect = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        filter = new javax.swing.JButton();
 
         setLayout(new java.awt.BorderLayout());
 
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
-        jComboBox1.setToolTipText(org.openide.util.NbBundle.getMessage(TorrentScoutScoresViewTopComponent.class, "TorrentScoutScoresViewTopComponent.jComboBox1.toolTipText")); // NOI18N
-        jComboBox1.setMinimumSize(new java.awt.Dimension(23, 23));
-        jComboBox1.setPreferredSize(new java.awt.Dimension(28, 23));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        boxflag.setToolTipText(org.openide.util.NbBundle.getMessage(TorrentScoutScoresViewTopComponent.class, "TorrentScoutScoresViewTopComponent.boxflag.toolTipText")); // NOI18N
+        boxflag.setMinimumSize(new java.awt.Dimension(23, 23));
+        boxflag.setPreferredSize(new java.awt.Dimension(28, 23));
+        boxflag.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                boxflagActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 7;
+        gridBagConstraints.gridx = 13;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
-        jPanel1.add(jComboBox1, gridBagConstraints);
+        jPanel1.add(boxflag, gridBagConstraints);
 
         btnReload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/iontorrent/scoreview/view-refresh-3.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(btnReload, org.openide.util.NbBundle.getMessage(TorrentScoutScoresViewTopComponent.class, "TorrentScoutScoresViewTopComponent.btnReload.text")); // NOI18N
@@ -430,7 +457,7 @@ public final class TorrentScoutScoresViewTopComponent extends TopComponent imple
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 10;
+        gridBagConstraints.gridx = 15;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
@@ -444,7 +471,7 @@ public final class TorrentScoutScoresViewTopComponent extends TopComponent imple
         gridBagConstraints.insets = new java.awt.Insets(3, 0, 0, 0);
         jPanel1.add(jLabel3, gridBagConstraints);
 
-        spinBucket.setModel(new javax.swing.SpinnerNumberModel(5, 1, 200, 1));
+        spinBucket.setModel(new javax.swing.SpinnerNumberModel(1, 1, 200, 1));
         spinBucket.setToolTipText(org.openide.util.NbBundle.getMessage(TorrentScoutScoresViewTopComponent.class, "TorrentScoutScoresViewTopComponent.spinBucket.toolTipText")); // NOI18N
         spinBucket.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -518,26 +545,39 @@ public final class TorrentScoutScoresViewTopComponent extends TopComponent imple
         gridBagConstraints.gridx = 6;
         jPanel1.add(jButton2, gridBagConstraints);
 
+        filter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/iontorrent/scoreview/filter.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(filter, org.openide.util.NbBundle.getMessage(TorrentScoutScoresViewTopComponent.class, "TorrentScoutScoresViewTopComponent.filter.text")); // NOI18N
+        filter.setToolTipText(org.openide.util.NbBundle.getMessage(TorrentScoutScoresViewTopComponent.class, "TorrentScoutScoresViewTopComponent.filter.toolTipText")); // NOI18N
+        filter.setMargin(new java.awt.Insets(1, 1, 1, 1));
+        filter.setMaximumSize(new java.awt.Dimension(20, 20));
+        filter.setMinimumSize(new java.awt.Dimension(20, 20));
+        filter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                filterActionPerformed(evt);
+            }
+        });
+        jPanel1.add(filter, new java.awt.GridBagConstraints());
+
         add(jPanel1, java.awt.BorderLayout.NORTH);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+    private void boxflagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxflagActionPerformed
         if (DOACTIONS == false) {
             //   msg("doactions is false not doing action");
             return;
         }
         DOACTIONS = false;
 
-        currentflag = (ScoreMaskFlag) this.jComboBox1.getSelectedItem();
+        currentflag = (ScoreMaskFlag) this.boxflag.getSelectedItem();
         //msg("Currentflag: "+currentflag);
         if (currentflag == null) {
             return;
         }
         p("Flag got selected:" + currentflag);
-        jComboBox1.setToolTipText(currentflag.getDescription());
+        boxflag.setToolTipText(currentflag.getDescription());
         updateScoresPanel();
         DOACTIONS = true;
-}//GEN-LAST:event_jComboBox1ActionPerformed
+}//GEN-LAST:event_boxflagActionPerformed
 
     private void spinBucketStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spinBucketStateChanged
         updateScoresPanel();
@@ -551,11 +591,6 @@ public final class TorrentScoutScoresViewTopComponent extends TopComponent imple
         if (cust == null) {
             cust = new CustomScorePanel();
         }
-
-        int ans = JOptionPane.showConfirmDialog(this, cust, "Custom Heat Map", JOptionPane.OK_CANCEL_OPTION);
-        if (ans != JOptionPane.OK_OPTION) {
-            return;
-        }
         global = GlobalContext.getContext();
         if (global == null || global.getExperimentContext() == null) {
             this.getLatestExperimentContext();
@@ -564,8 +599,26 @@ public final class TorrentScoutScoresViewTopComponent extends TopComponent imple
             JOptionPane.showMessageDialog(this, "No experiment context yet");
             return;
         }
+        expContext = global.getExperimentContext();
+        if (expContext == null) {
+            GuiUtils.showNonModalMsg("No experiment loaded yet");
+            return;
+        }
+        if (!expContext.hasBam()) {
+            GuiUtils.showNonModalMsg("I need a .bam file for this");
+            SequenceLoader loader = SequenceLoader.getSequenceLoader(expContext, false, true);
 
-        currentflag = (ScoreMaskFlag) this.jComboBox1.getSelectedItem();
+            if (!expContext.hasBam()) {
+                return;
+            }
+        }
+        int ans = JOptionPane.showConfirmDialog(this, cust, "Custom Heat Map", JOptionPane.OK_CANCEL_OPTION);
+        if (ans != JOptionPane.OK_OPTION) {
+            return;
+        }
+
+
+        currentflag = (ScoreMaskFlag) this.boxflag.getSelectedItem();
         ScoreMaskCalculatorIF calc = cust.getCalculator();
         if (calc.getFlag() == null) {
             JOptionPane.showMessageDialog(this, "Must associate a score mask with this custom heat map");
@@ -616,6 +669,71 @@ public final class TorrentScoutScoresViewTopComponent extends TopComponent imple
         }
     }
 
+    private void doFilterAction() {
+
+        if (global.getExperimentContext() == null || wellContext == null) {
+            return;
+        }
+        if (mask == null) {
+            mask = ScoreMask.getMask(global.getExperimentContext(), wellContext);
+        }
+        if (mask == null) {
+            return;
+        }
+        currentflag = (ScoreMaskFlag) this.boxflag.getSelectedItem();
+        if (currentflag == null) {
+            return;
+        }
+
+        MinMaxPanel p = new MinMaxPanel();
+        double min = mask.getMin(currentflag);
+        double max = mask.getMax(currentflag);
+      //  p("Got min/max for " + currentflag + ":" + min + "/" + max);
+        p.setMin(min);
+        p.setMax(max);
+        int ans = JOptionPane.showConfirmDialog(this, p, "Interval for " + this.currentflag.getName(), JOptionPane.OK_CANCEL_OPTION);
+        // first find minmax
+
+        if (ans != JOptionPane.OK_OPTION) {
+            return;
+        }
+
+        min = p.getMin();
+        max = p.getMax();
+        if (max < min) {
+            GuiUtils.showNonModalMsg("Max should be > min :-)");
+            return;
+        }
+        p("filtering flag " + currentflag);
+
+        // pick custom flag
+        JComboBox cus = new JComboBox(ScoreMaskFlag.CUSTOM_FLAGS);
+        ans = JOptionPane.showConfirmDialog(this, cus, "Store result in what map?", JOptionPane.OK_CANCEL_OPTION);
+        if (ans != JOptionPane.OK_OPTION || cus.getSelectedIndex() < 0) {
+            return;
+        }
+
+        ScoreMaskFlag customflag = (ScoreMaskFlag) cus.getSelectedItem();
+        if (customflag == null) {
+            return;
+        }
+        customflag.setMultiplier(currentflag.multiplier());
+        ScoreMaskGenerator gen = new ScoreMaskGenerator(mask, this.expContext);
+        int count = gen.filterFlag(currentflag, customflag, min, max);
+
+        p("score mask multiplier "+customflag.getName()+"= "+customflag.multiplier());
+        
+        String desc = "Found "+count+" matches for "+currentflag.getName()+" between "+min+"-"+max;
+        GuiUtils.showNonModalMsg(desc);
+        customflag.setDescription(desc);
+        currentflag = customflag;
+        
+        this.boxflag.setSelectedItem(customflag);
+        updateScoresPanel();
+       
+
+    }
+
     private void selectAllWellsWithFlag(ScoreMaskFlag flag) {
         if (this.wellContext == null || mask == null) {
             GuiUtils.showNonModalMsg("Got no well context or score mask");
@@ -658,13 +776,18 @@ public final class TorrentScoutScoresViewTopComponent extends TopComponent imple
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         this.densityPanel.export();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void filterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_filterActionPerformed
+        doFilterAction();
+    }//GEN-LAST:event_filterActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox boxflag;
     private javax.swing.JButton btnCustom;
     private javax.swing.JButton btnReload;
     private javax.swing.JButton btnSelect;
+    private javax.swing.JButton filter;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
@@ -674,7 +797,7 @@ public final class TorrentScoutScoresViewTopComponent extends TopComponent imple
     @Override
     public void componentOpened() {
         // TODO add custom code on component opening
-        //   this.tryToLoad();
+        this.tryToLoad();
     }
 
     @Override

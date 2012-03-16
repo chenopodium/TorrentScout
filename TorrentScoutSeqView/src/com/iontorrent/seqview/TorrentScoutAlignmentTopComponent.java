@@ -98,16 +98,12 @@ public final class TorrentScoutAlignmentTopComponent extends TopComponent implem
     }
 
     private void getLatestExperimentContext() {
-        final Collection<? extends ExperimentContext> items = expContextResults.allInstances();
-        if (!items.isEmpty()) {
-            ExperimentContext data = null;
-            Iterator<ExperimentContext> it = (Iterator<ExperimentContext>) items.iterator();
-            while (it.hasNext()) {
-                data = it.next();
-            }
-            expContext = data;
-            alPanel.clear(expContext);
-        }
+       expContext = GlobalContext.getContext().getExperimentContext();
+       if (expContext != null) {
+           cur_context = expContext.getWellContext();
+       
+       //alPanel.clear(expContext);
+       }
         //   else p("No exp context in list");
     }
 
@@ -145,23 +141,8 @@ public final class TorrentScoutAlignmentTopComponent extends TopComponent implem
     }
 
     private boolean getLatestContext() {
-        final Collection<? extends WellContext> contexts = dataClassWellSelection.allInstances();
-        if (!contexts.isEmpty()) {
-            Iterator<WellContext> cit = (Iterator<WellContext>) contexts.iterator();
-            while (cit.hasNext()) {
-                cur_context = cit.next();
-                //      p("Got context: " + cur_context);
-            }
-            //  p("SubscriberListener Got WellContext:" + cur_context + ", out of " + contexts.size());
-            // lbl_coords.setText(cur_selection.toString());
-            WellCoordinate coord = cur_context.getCoordinate();
-            if (coord == cur_context.getCoordinate()) {
-                //      p("Same coordinate, returning");
-                return true;
-            } else {
-                cur_context.setCoordinate(coord);
-            }
-
+         if (GlobalContext.getContext().getExperimentContext() != null) {
+            cur_context = GlobalContext.getContext().getExperimentContext().getWellContext();
             update();
         }
         return false;
@@ -182,28 +163,13 @@ public final class TorrentScoutAlignmentTopComponent extends TopComponent implem
     }
 
     private void p(String s) {
-        System.out.println("TorrentScoutAlignmentTopComponent:" + s);
+//  System.out.println("TorrentScoutAlignmentTopComponent:" + s);
     }
 
     private void getLatestCoordinate() {
     //    p("Getting latest well coord");
         this.getLatestExperimentContext();
-        final Collection<? extends WellCoordinate> selections = dataClassWellCoordinate.allInstances();
-        if (!selections.isEmpty()) {
-            WellCoordinate coord = null;
-            Iterator<WellCoordinate> cit = (Iterator<WellCoordinate>) selections.iterator();
-            while (cit.hasNext()) {
-                coord = cit.next();
-      //          p("Got coord: " + coord);
-            }
-        //    p("SubscriberListener Got WellCoordinate:" + coord + ", out of " + selections.size());
-            // lbl_coords.setText(cur_selection.toString());
-            if (cur_context == null) {
-                getLatestContext();
-            }
-            cur_context.setCoordinate(coord);
-            
-        }
+        
     }
 
     @Override
@@ -228,7 +194,6 @@ public final class TorrentScoutAlignmentTopComponent extends TopComponent implem
     }
 
     private void update() {
-        if (cur_context == null) return;
         
 //        if (alPanel != null) {
 //            remove(alPanel);
@@ -236,6 +201,7 @@ public final class TorrentScoutAlignmentTopComponent extends TopComponent implem
         if (expContext == null) {
             this.getLatestExperimentContext();
         }
+        
         if (expContext == null) {
             setStatusWarning("Got no experiment context, don't know where the sff and sam files are - creating dummy context");
             expContext = ExperimentContext.createFake(GlobalContext.getContext());
@@ -245,6 +211,7 @@ public final class TorrentScoutAlignmentTopComponent extends TopComponent implem
         else if (!FileUtils.exists(this.cur_context.getCacheDirectory())) {
             setStatusWarning("Cannot access cache dir "+this.cur_context.getCacheDirectory());
         }
+        cur_context = expContext.getWellContext();
         this.getLatestCoordinate();
         WellCoordinate coord = cur_context.getCoordinate();
         if (coord == null) {        
@@ -293,6 +260,10 @@ public final class TorrentScoutAlignmentTopComponent extends TopComponent implem
     // End of variables declaration//GEN-END:variables
     @Override
     public void componentOpened() {
+        this.getLatestExperimentContext();
+        this.getLatestContext();
+        this.getLatestCoordinate();
+        this.update();
         // TODO add custom code on component opening
     }
 

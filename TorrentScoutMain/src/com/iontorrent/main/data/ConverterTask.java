@@ -117,7 +117,7 @@ public class ConverterTask extends Task implements Cancellable{
     }
 
     private void p(String msg) {
-        System.out.println("ConverterTask: " + msg);
+//  System.out.println("ConverterTask: " + msg);
         //Logger.getLogger( ConverterTask.class.getName()).log(Level.INFO, msg, ex);
     }
 

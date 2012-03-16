@@ -44,7 +44,7 @@ public class ExperimentChildren extends Index.ArrayChildren {
     }
 
     private void p(String s) {
-        System.out.println("RundbExperiment: " + s);
+       // System.out.println("RundbExperiment: " + s);
     }
 
     @Override

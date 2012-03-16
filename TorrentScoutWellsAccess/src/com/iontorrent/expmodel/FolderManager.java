@@ -40,7 +40,7 @@ import javax.swing.JOptionPane;
 public class FolderManager {
 
     private static FolderConfig offline = new FolderConfig("offline");
-    private static FolderConfig rule = offline;
+    private static FolderConfig rule ;
     private ExperimentContext exp;
     // cached data
     private String raw;
@@ -76,16 +76,20 @@ public class FolderManager {
     }
 
     public static String setDefaultRule() {
-        FolderManager manager = FolderManager.getManager();
-        //  p("Finding default rule in manager:");
+        manager = FolderManager.getManager();
+        p("setDefaultRule Finding default rule in manager:");
         String default_rule = null;
-        // p("Got keys: " + manager.getKeys());
+        p("setDefaultRule Got keys: " + manager.getKeys());
 
         String codebase = SystemTool.getProperty("codebase");
         String os = SystemTool.getOsName().toLowerCase();
-        if (os != null && os.equalsIgnoreCase("linux")) os = "unix";
-        if (os != null && os.startsWith("mac")) os = "unix";
-        p("Got codebase:'" + codebase + "', system os: " + os);
+        if (os != null && os.equalsIgnoreCase("linux")) {
+            os = "unix";
+        }
+        if (os != null && os.startsWith("mac")) {
+            os = "unix";
+        }
+        // p("Got codebase:'" + codebase + "', system os: " + os);
         if (codebase != null) {
             int col = codebase.lastIndexOf(":");
             if (col > 0) {
@@ -101,31 +105,33 @@ public class FolderManager {
             if (codebase.endsWith("/")) {
                 codebase = codebase.substring(0, codebase.length() - 1);
             }
-            if (codebase.endsWith(":")) {             
+            if (codebase.endsWith(":")) {
                 codebase = codebase.substring(0, codebase.length() - 1);
             }
             if (!codebase.startsWith("www")) {
                 int dot = codebase.indexOf(".");
-                if (dot > 0) codebase = codebase.substring(0, dot);
+                if (dot > 0) {
+                    codebase = codebase.substring(0, dot);
+                }
             }
-            p("Normalized codebase=" + codebase);
+           // p("Normalized codebase=" + codebase);
         }
         default_rule = null;
 
-        if (default_rule == null) {
-            for (String key : manager.getKeys()) {
-                if (manager.getConfig(key).isDefault()) {
-                    if (default_rule == null) {
-                        default_rule = key.toLowerCase();
-                  //      p("Got default rule: " + default_rule);
-                    } else {
-                        manager.getConfig(key).setDefault(false);
-                    }
+
+        for (String key : manager.getKeys()) {
+            if (manager.getConfig(key).isDefault()) {
+                if (default_rule == null) {
+                    default_rule = key.toLowerCase();
+                    p("setDefaultRule  Got default rule: " + default_rule);
+                } else {
+                    manager.getConfig(key).setDefault(false);
                 }
             }
         }
+
         if (default_rule == null && codebase != null) {
-            p("Finding rule based on codebase: " + codebase);
+            p("setDefaultRule:Finding rule based on codebase: " + codebase);
             //    p("System OS: "+os);
             for (String key : manager.getKeys()) {
                 FolderConfig config = manager.getConfig(key);
@@ -133,12 +139,12 @@ public class FolderManager {
                 if (url.startsWith("http://")) {
                     url = codebase.substring(7);
                 }
-                p("Comparing '"+url+"' starts with '"+codebase+"' ?");
+                p("setDefaultRule:Comparing '" + url + "' starts with '" + codebase + "' ?");
                 if (url.startsWith(codebase)) {
                     // also check system!
                     String cos = config.getOS().toLowerCase().substring(0, 1);
-                    
-                    p("Now comparing OS:"+os+" starts with "+cos);
+
+                    p("setDefaultRule:Now comparing OS:" + os + " starts with " + cos);
                     if (os.startsWith(cos)) {
                         default_rule = key.toLowerCase();
                         p("Found rule based on CODEBASE and matching os " + config.getOS() + ": " + default_rule);
@@ -148,7 +154,7 @@ public class FolderManager {
             }
         }
         if (default_rule == null) {
-            p("Found no default rule among: " + manager.getKeys());
+            p("setDefaultRule:Found no default rule among: " + manager.getKeys());
             if (manager.getKeys() != null && manager.getKeys().size() == 1) {
                 p("Since there is only ONE rule, using that one as default");
                 default_rule = manager.getKeys().get(0);
@@ -158,8 +164,8 @@ public class FolderManager {
         if (default_rule != null) {
             manager.setRule(default_rule, false);
         }
-    //    p("Got default rule: " + default_rule + " with url=" + manager.getDbUrl());
-        
+        p("setDefaultRule:Got default rule: " + default_rule + " with url=" + manager.getDbUrl());
+
         return default_rule;
     }
 
@@ -173,6 +179,7 @@ public class FolderManager {
     }
 
     public int findBestBaseDir(String plugindir, String expdir) {
+        if (expdir == null) return -1;
         p("Checking fstab for " + expdir);
         fstab = new Fstab(plugindir + "fstab.txt", rule.getFstab());
 
@@ -343,14 +350,18 @@ public class FolderManager {
         this.exp = exp;
         boolean ignore = false;
         if (this.getRule().toLowerCase().startsWith("offline")) {
+            p("Rule is offline, ignoring rules");
             ignore = true;
         }
-        if (update) ruleChanged(ignore);
+        if (update) {
+            ruleChanged(ignore);
+        }
     }
 
     public void setRule(String key, boolean checkFolders) {
         if (rule == null || !rule.getKey().equals(key)) {
             rule = new FolderConfig(key);
+            p("*** SETTING RULE TO "+rule.getKey());
             rule.checkForUrl();
             ruleChanged(checkFolders);
         }
@@ -365,7 +376,7 @@ public class FolderManager {
     }
 
     public void ruleChanged(boolean checkFolders) {
-        //   p("RULECHANGED");
+        p("RULECHANGED: check folders="+checkFolders);
         //  Exception e = new Exception("Who called rule change");
         //    e.printStackTrace();
         results = null;
@@ -399,6 +410,7 @@ public class FolderManager {
                 }
             }
             if (results != null && !(new File(results)).exists()) {
+                p("Could not find results path: "+results);
                 results = this.findDir(rule.getResultsRule(), results);
             }
         }
@@ -412,12 +424,15 @@ public class FolderManager {
                 rule = "";
             }
             if (exp.isIgnoreRule() || rule.startsWith("offline") || rule.length() < 1) {
-                p("Ignoring rules...");
+                p("Ignoring rule " + rule + ". exp.isIgnore: " + exp.isIgnoreRule());
             } else {
                 p("NOT ignoring rule...: " + this.getRule());
                 exp.setCacheDir(cache);
                 exp.setRawDir(raw);
                 exp.setResultsDirectory(results);
+                if (exp.isThumbnails()) {
+                    exp.setThumbnailsRaw();
+                }
                 // p("Cache is now:      " + cache);
                 p("Raw dir is now:    " + raw);
                 p("Results dir is now:" + results);
@@ -479,7 +494,7 @@ public class FolderManager {
     }
 
     private static void p(String msg) {
-        //System.out.println("FolderManager: " + msg);
+        System.out.println("FolderManager: " + msg);
         Logger.getLogger(FolderManager.class.getName()).log(Level.INFO, msg);
     }
 
@@ -505,6 +520,7 @@ public class FolderManager {
 
     public String getRule() {
         if (rule == null) {
+            p("rule is null, using offline");
             return "offline";
         }
         return rule.getKey();
@@ -517,7 +533,7 @@ public class FolderManager {
         rule.setServer(URL);
     }
 
-   public String getCacheRule() {
+    public String getCacheRule() {
         return rule.getCacheRule();
     }
 }

@@ -24,7 +24,7 @@
  *
  * Created on 24.06.2011, 11:07:11
  */
-package com.iontorrent.welltable;
+package com.iontorrent.guiutils;
 
 /**
  *
@@ -102,4 +102,11 @@ public class MinMaxPanel extends javax.swing.JPanel {
     private javax.swing.JTextField txtMax;
     private javax.swing.JTextField txtMin;
     // End of variables declaration//GEN-END:variables
+
+    public void setMin(double min) {
+        txtMin.setText(""+min);
+    }
+     public void setMax(double max) {
+        txtMax.setText(""+max);
+    }
 }

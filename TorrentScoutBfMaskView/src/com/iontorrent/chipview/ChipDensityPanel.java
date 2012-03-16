@@ -61,12 +61,12 @@ public class ChipDensityPanel extends GeneralDensityPanel implements WellModel {
     int max;
 
     public ChipDensityPanel(ExperimentContext exp) {
-        super(exp);
+        super(exp, 2);
         scoremaskflag = BfMaskFlag.RAW;
        // this.expcontext = exp;
         //this.setSendEventOnClick(false);
         setBorder(30);
-        this.setNrWidgets(3);
+        //this.setNrWidgets(3);
     }
 
    
@@ -112,8 +112,12 @@ public class ChipDensityPanel extends GeneralDensityPanel implements WellModel {
             p("Got no bfmaskflag or mask");
             return; 
         }    
-        this.info = expcontext.getRawDir()+type.getFilename()+", flow "+flow+" frame "+frame;
-        wellDensity = new ChipWellDensity (getExp(), flow, type, frame);
+        String base = "?";
+        if (type == RawType.ACQ) {
+            base = expcontext.getBase(flow);
+        }
+        this.info = expcontext.getRawDir()+type.getFilename()+", flow "+flow+"="+base+" frame "+frame;
+        wellDensity = new ChipWellDensity (getExp(), flow, type, frame, bucketsize);
        
         ((ChipWellDensity) wellDensity).setMask(mask);
 
@@ -126,7 +130,16 @@ public class ChipDensityPanel extends GeneralDensityPanel implements WellModel {
             Exceptions.printStackTrace(ex);
         }
     }
-
+     public void createDefaultSelection(int col1, int row1, int col2, int row2) {
+        if (imagePanel == null) {
+            return;
+        }
+        WellSelection selection = new WellSelection(col1, row1, col2, row2);
+        p("Creating default selection");
+        imagePanel.setWellSelection(selection);
+        publishSelection(selection);
+        repaint();
+    }
     @Override
     protected int getMax() {
         if (max != 0) {
@@ -201,7 +214,7 @@ public class ChipDensityPanel extends GeneralDensityPanel implements WellModel {
             }
 
             LookupUtils.publish(wellSelectionContent, sel);
-            if (sel.getCoord1().toString().equals(sel.getCoord2().toString())) {
+            if (wellcontext.getCoordinate()== null || sel.getCoord1().toString().equals(sel.getCoord2().toString())) {
                 this.publishCoord(sel.getCoord1());
             }
 

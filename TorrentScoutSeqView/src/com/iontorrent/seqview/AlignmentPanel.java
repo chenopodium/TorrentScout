@@ -83,6 +83,7 @@ public class AlignmentPanel extends JPanel {
         if (al != null) {
             msg += "<br><b>Flags:</b> " + read.getFlags() + " (reverse: " + read.isReverse() + ")";
             //   msg += "<br><b>Analysis command line:</b><br> " + read.getCommandLine();
+            msg += "<br><b>Reference name:</b> " + read.getReferenceName();
             msg += "<br><b>Genome position:</b> " + read.getAlignmentStart() + "-" + read.getAlignmentEnd();
 
             if (read.isReverse()) {
@@ -157,7 +158,7 @@ public class AlignmentPanel extends JPanel {
     }
 
     private void p(String msg) {
-        System.out.println("AlignmentPanel: " + msg);
+     //   System.out.println("AlignmentPanel: " + msg);
         //Logger.getLogger( AlignmentPanel.class.getName()).log(Level.INFO, msg, ex);
     }
 

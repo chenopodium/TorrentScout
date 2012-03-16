@@ -23,6 +23,7 @@ package com.iontorrent.rawdataaccess.wells;
 import ch.systemsx.cisd.base.mdarray.MDFloatArray;
 import ch.systemsx.cisd.hdf5.HDF5Factory;
 import ch.systemsx.cisd.hdf5.IHDF5Reader;
+import com.iontorrent.utils.ErrorHandler;
 import com.iontorrent.utils.io.FileUtils;
 import java.io.DataInputStream;
 import java.io.File;
@@ -229,13 +230,11 @@ public class Wells {
     }
 
     private void err(String msg, Exception ex) {
-        Logger.getLogger(Wells.class.getName()).log(Level.SEVERE, msg, ex);
-        System.out.println("ERROR IN WELLS:" + msg);
-        ex.printStackTrace();
+        Logger.getLogger(Wells.class.getName()).log(Level.SEVERE, ErrorHandler.getString(ex));        
     }
 
     private void p(String msg) {
-        System.out.println("Wells: " + msg);
+   //     System.out.println("Wells: " + msg);
     }
 
     public WellHeader getHeader() {
@@ -244,9 +243,8 @@ public class Wells {
 
     void closeFile() {
         try {
-            in.close();
-        } catch (IOException ex) {
-            Logger.getLogger(Wells.class.getName()).log(Level.SEVERE, null, ex);
+            if (in != null) in.close();
+        } catch (IOException ex) {            
         }
     }
 }

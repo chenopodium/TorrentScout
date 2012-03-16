@@ -23,6 +23,7 @@ package com.iontorrent.rawdataaccess.pgmacquisition;
 import com.iontorrent.expmodel.ExperimentContext;
 import com.iontorrent.rawdataaccess.transformation.DataTransformation;
 import com.iontorrent.rawdataaccess.transformation.TransformFactory;
+import com.iontorrent.utils.ErrorHandler;
 import com.iontorrent.utils.ProgressListener;
 import com.iontorrent.utils.io.FileUtils;
 import com.iontorrent.wellmodel.RasterData;
@@ -116,9 +117,9 @@ public class RawDataFacade {
                 if (acq.contains(coord.getX(), coord.getY()) && acq.getFlow() == flow && acq.getPath().equals(path)) {
                     return acq;
                 }
-                else if (acq.getFlow() == flow && acq.getPath().equals(path)) {
-                    p("Got same path and flow: "+flow+"/"+path+", but different coords: "+coord+" vs "+acq.contains(coord.getX(), coord.getY()));
-                }
+//                else if (acq.getFlow() == flow && acq.getPath().equals(path)) {
+//                   // p("Got same path and flow: "+flow+"/"+path+", but different coords: "+coord+" vs "+acq.contains(coord.getX(), coord.getY()));
+//                }
                 //  else p("Got cached PGM data "+acq+", but not coord "+coord+"  or not flow "+flow);
             }
 
@@ -195,6 +196,7 @@ public class RawDataFacade {
     public WellFlowData readOneWellAndTransform(WellCoordinate coord, int startflow, WellContext context) {
         ArrayList<DataTransformation> transforms = TransformFactory.getTransformations();
         WellFlowData data = readOneWell(coord, startflow);
+        if (data == null) return null;
       //  p("Data before transformations: " + data);
         for (DataTransformation trans : transforms) {
             if (trans.isEnabled()) {
@@ -210,6 +212,10 @@ public class RawDataFacade {
 
  
     public WellFlowData readOneWell(WellCoordinate coord, int startflow) {
+        if (coord == null) {
+            err("NO coordinate");
+            return null;
+        }
         int x = coord.getCol();
         int y = coord.getRow();
         WellFlowData data = null;
@@ -323,17 +329,22 @@ public class RawDataFacade {
             err("Got no header of file "+file);
             return null;
         }
+        if (data == null) {
+            err("Got no data of file "+file);
+            return null;
+        }
         p(file + ": " + header.getNrCols() + "x" + header.getNrRows() + ", reading " + startx + "/" + starty + "+" + dx + "/" + dy);
         if (startx > header.getNrCols() || starty > header.getNrRows()) {
             err("Coordinates out of bounds: "+startx+"/"+starty+", max is :"+header.getNrCols()+"/"+header.getNrRows());
             return null;
         }
+        
         try {
             //data.readFile(startx, starty, dx, dy);
             data.readFile(startx, starty, dx, dy, startframe, endframe, debug);
             //   p("read SUB file " + file);
         } catch (Exception e) {
-            String msg = "Got an exception while reading " + file + ":" + e.getMessage();
+            String msg = "Got an exception while reading " + file + ":" + ErrorHandler.getString(e);
             err(msg, e);
             this.errormsg = msg;
             return null;
@@ -361,7 +372,7 @@ public class RawDataFacade {
 
     /** ================== LOGGING ===================== */
     private void err(String msg, Exception ex) {
-        this.errormsg = msg + ":" + ex.getMessage();
+        this.errormsg = msg + ":" + ErrorHandler.getString(ex);
         // System.out.println("RawDataFacade: " + msg + ", " + ex.getMessage());
 
         Logger.getLogger(RawDataFacade.class.getName()).log(Level.SEVERE, msg, ex);
@@ -369,7 +380,7 @@ public class RawDataFacade {
 
     private void err(String msg) {
         this.errormsg = msg;
-        //  System.out.println("RawDataFacade: " + msg);
+        System.out.println("RawDataFacade: " + msg);
         Logger.getLogger(RawDataFacade.class.getName()).log(Level.WARNING, msg);
     }
 

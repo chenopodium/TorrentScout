@@ -43,6 +43,11 @@ public class ExpDateNodeFilter extends NodeFilter {
         return passes(exp);
     }
 
+     @Override
+    public String getRelevantValue(Object node) {
+        RundbExperiment n = (RundbExperiment) node;
+        return  ""+n.getDate();
+    }
     public boolean passes(RundbExperiment exp) {
         
         if (exp.getDate() == null) return true;

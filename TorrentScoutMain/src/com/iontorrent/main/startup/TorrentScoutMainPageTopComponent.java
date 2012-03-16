@@ -619,7 +619,8 @@ public final class TorrentScoutMainPageTopComponent extends TopComponent {
         genome.setVisible(true);
         if (!exp.hasBam() &&  !exp.hasSff()) {
             score.setEnabled(false);
-            score.setText("Requires a .bam and a .sff file (at least one of them)");
+            score.setToolTipText("Requires .sff and .bam file");
+            score.setToolTipText("Requires a .bam and a .sff file (at least one of them)");
         }
         else score.setEnabled(true);
         if (!exp.hasBam()) {

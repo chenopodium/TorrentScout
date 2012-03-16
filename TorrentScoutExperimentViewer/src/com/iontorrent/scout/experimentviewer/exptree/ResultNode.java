@@ -56,7 +56,12 @@ public class ResultNode extends BeanNode {
             setShortDescription(exp.getStatus() + ", dir="+exp.getReport_directory());
         }
         // this.set
-        setIconBaseWithExtension("com/iontorrent/scout/experimentviewer/exptree/view-list-icons-2.png");
+        if (exp.getResultsName() != null && exp.getResultsName().indexOf("_tn_")>0) {
+            // thumbnails!
+            setShortDescription("Thumbnails: "+this.getShortDescription());
+            setIconBaseWithExtension("com/iontorrent/scout/experimentviewer/exptree/zoom-out.png");
+        }
+        else setIconBaseWithExtension("com/iontorrent/scout/experimentviewer/exptree/view-list-icons-2.png");
     }
 
     @Override

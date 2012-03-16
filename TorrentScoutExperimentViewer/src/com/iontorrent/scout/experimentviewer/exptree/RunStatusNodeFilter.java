@@ -39,6 +39,11 @@ public class RunStatusNodeFilter extends NodeFilter {
             description =  "Only accept results with status that are NOT " + status;
         }
     }
+      @Override
+    public String getRelevantValue(Object node) {
+        MyResult n = (MyResult) node;
+        return  n.getStatus();
+    }
 
     @Override
     public boolean passes(Object node) {
